@@ -15,9 +15,9 @@ import java.io.IOException;
  */
 //Union-Find Data Type
 public interface UnionFind {
-    public void union(int p, int q);
+    public abstract void union(int p, int q);
     
-    public boolean isConnected(int p, int q);
+    public abstract boolean isConnected(int p, int q);
     
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(""));
