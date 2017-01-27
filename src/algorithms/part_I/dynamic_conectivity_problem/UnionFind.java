@@ -5,33 +5,23 @@
  */
 package algorithms.part_I.dynamic_conectivity_problem;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author psantama
  */
-//Union-Find Data Type
+/*
+Union-Find Data Type
+
+To resolve the Dynamic Conectivity Problem
+*/
 public interface UnionFind {
-    public abstract void union(int p, int q);
+    public void union(int p, int q);
     
-    public abstract boolean isConnected(int p, int q);
+    public boolean isConnected(int p, int q);
     
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(""));
-        
-        UnionFind uf = new QuickFind(Integer.parseInt(br.readLine()));
-        
-        String line;
-        while((line = br.readLine()) != null) {
-            int p = Integer.parseInt(line.split(" ")[0]);
-            int q = Integer.parseInt(line.split(" ")[1]);
-            
-            if (!uf.isConnected(p, q)) {
-                uf.union(p, q);
-            }
-        }
-    }
+    //CONNECTED COMPONENTS: Maximal set of objects that are mutually connected
+    public Map<Integer, List<Integer>> getConnectedComponents();
 }

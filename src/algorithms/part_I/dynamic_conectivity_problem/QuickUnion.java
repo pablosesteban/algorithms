@@ -5,6 +5,12 @@
  */
 package algorithms.part_I.dynamic_conectivity_problem;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  *
  * @author pabloS
@@ -13,7 +19,7 @@ package algorithms.part_I.dynamic_conectivity_problem;
 /*
 Second implementation of an algorithm for solving the dynamic connectivity problem
 
-This is a so called lazy algorithm, i.e. avoid doing work until we have to
+This is a so called LAZY algorithm, i.e. avoid doing work until we have to
 
 Can this code be effective for large problems? Well unfortunately Quick-union is faster but it's also too slow
 
@@ -27,7 +33,7 @@ public class QuickUnion implements UnionFind {
     
     The root objects of the trees point to itself
     */
-    private int[] id;
+    protected int[] id;
     
     public QuickUnion(int n) {
         id = new int[n];
@@ -47,7 +53,7 @@ public class QuickUnion implements UnionFind {
     
     Could be very expensive, if it means going from the very bottom object to the very top object
     */
-    private int getRoot(int p) {
+    protected int getRoot(int p) {
         //If it's not equal, we just move I up one level in the tree, set p equals id of p and so on
         while (p != id[p]) {
             p = id[p];
@@ -62,17 +68,82 @@ public class QuickUnion implements UnionFind {
     A union operation only involves changing one entry in the array
     
     Quick implementation to connect two objects
+    
+    But it is limited by getting the root of both, which depends on how far the objects are from root
     */
     @Override
     public void union(int p, int q) {
         id[getRoot(p)] = getRoot(q);
     }
-
+    
     /*
     Once we can calculate these roots, then we can implement the find operation just by checking whether the two items that we're supposed to check with are connective where they have the same root
+    
+    Takes time proportional to depth of both objects
     */
     @Override
     public boolean isConnected(int p, int q) {
         return getRoot(p) == getRoot(q);
+    }
+    
+    @Override
+    public Map<Integer, List<Integer>> getConnectedComponents() {
+        Map<Integer, List<Integer>> connectedComponents = new HashMap<>();
+        
+        for (int i = 0; i < id.length; i++) {
+            int root = getRoot(i);
+            
+            if (!connectedComponents.containsKey(root)) {
+                connectedComponents.put(root, new ArrayList<>());
+            }
+            
+            connectedComponents.get(root).add(i);
+        }
+        
+        return connectedComponents;
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder index = new StringBuilder();
+        StringBuilder val = new StringBuilder();
+        
+        index.append("elements: [");
+        val.append("parents: [");
+        
+        for (int i = 0; i < id.length-1; i++) {
+            index.append(i);
+            index.append(", ");
+            
+            val.append(id[i]);
+            val.append(", ");
+        }
+        index.append(id.length-1);
+        index.append("]");
+        
+        val.append(id[id.length-1]);
+        val.append("]");
+        
+        return index + "\n" + val;
+    }
+    
+    public static void main(String[] args) {
+        UnionFind uf = new QuickUnion(10);
+        
+        uf.union(1, 4);
+        uf.union(4, 5);
+        
+        uf.union(6, 2);
+        uf.union(2, 3);
+        uf.union(3, 7);
+        
+        uf.union(7, 8);
+        
+        System.out.println(uf);
+        System.out.println(uf.getConnectedComponents());
+        
+        System.out.println(uf.isConnected(4, 2));
+        System.out.println(uf.isConnected(3, 3));
+        System.out.println(uf.isConnected(7, 2));
     }
 }

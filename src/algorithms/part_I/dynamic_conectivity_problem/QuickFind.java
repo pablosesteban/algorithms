@@ -5,6 +5,11 @@
  */
 package algorithms.part_I.dynamic_conectivity_problem;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  *
  * @author psantama
@@ -13,7 +18,7 @@ package algorithms.part_I.dynamic_conectivity_problem;
 /*
 First implementation of an algorithm for solving the dynamic connectivity problem
 
-This is a so called eager algorithm, i.e. does the work even though it is not necessary
+This is a so called EAGER algorithm, i.e. does the work even though it is not necessary
 */
 public class QuickFind implements UnionFind {
     /*
@@ -43,9 +48,9 @@ public class QuickFind implements UnionFind {
     
     This is an inefficient as it has to go through the entire array each time
     
-    Bth the initialized and union operations involved the for-loop that go through the entire array
+    Both the initialized and union operations involved the for-loop that go through the entire array
     
-    So they have to touch in a constant proportional to n times after touching array entry
+    Is too expensive, it takes N^2 array accesses to process a sequence of N union commands on N objects
     
     We can't accept quadratic time algorithms for large problems as they don't scale, i.e. as computers get faster and bigger, quadratic algorithms actually get slower
     */
@@ -69,5 +74,64 @@ public class QuickFind implements UnionFind {
     @Override
     public boolean isConnected(int p, int q) {
         return id[p] == id[q];
-    }   
+    }
+    
+    @Override
+    public Map<Integer, List<Integer>> getConnectedComponents() {
+        Map<Integer, List<Integer>> connectedComponents = new HashMap<>();
+        
+        for (int i = 0; i < id.length; i++) {
+            
+            if (!connectedComponents.containsKey(id[i])) {
+                connectedComponents.put(id[i], new ArrayList<>());
+            }
+            
+            connectedComponents.get(id[i]).add(i);
+        }
+        
+        return connectedComponents;
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder index = new StringBuilder();
+        StringBuilder val = new StringBuilder();
+        
+        index.append("elements: [");
+        val.append("values: [");
+        
+        for (int i = 0; i < id.length-1; i++) {
+            index.append(i);
+            index.append(", ");
+            
+            val.append(id[i]);
+            val.append(", ");
+        }
+        index.append(id.length-1);
+        index.append("]");
+        
+        val.append(id[id.length-1]);
+        val.append("]");
+        
+        return index + "\n" + val;
+    }
+    
+    public static void main(String[] args) {
+        UnionFind uf = new QuickFind(10);
+        
+        uf.union(1, 4);
+        uf.union(4, 5);
+        
+        uf.union(6, 2);
+        uf.union(2, 3);
+        uf.union(3, 7);
+        
+        System.out.println(uf);
+        
+        System.out.println(uf.getConnectedComponents());
+        
+        System.out.println(uf.isConnected(4, 2));
+        System.out.println(uf.isConnected(3, 3));
+        System.out.println(uf.isConnected(7, 2));
+    }
 }
