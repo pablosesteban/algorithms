@@ -24,7 +24,7 @@ public class Percolation {
     
     private int openSites;
     
-    Random r = new Random();
+    private Random r = new Random();
     
     //create n-by-n grid, with all sites blocked
     public Percolation(int n) {
@@ -81,7 +81,13 @@ public class Percolation {
     a full site is an open site that can be connected to an open site in the top row via a chain of neighboring (left, right, up, down) open sites
     */
     private boolean isFull(int row, int col) {
-        return grid[row][col] == false;
+        for (int i = 0; i < n; i++) {
+            if (connections.isConnected(i, row * n + col)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     //number of open sites
@@ -89,17 +95,20 @@ public class Percolation {
         return openSites;
     }
     
-    //does the system percolate?
+    /*
+    does the system percolate?
+    
+    the system percolates if there is a full site in the bottom row
+    */
     public boolean percolates() {
-        for (int i = n * (n - 1); i < n * n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (connections.isConnected(i, j)) {
-                    return true;
-                }
+        for (int i = 0; i < n; i++) {
+            if (isFull(n - 1, i)) {
+                return true;
             }
         }
         
         return false;
+        
     }
     
     public void randomOpen() {
@@ -131,5 +140,8 @@ public class Percolation {
         System.out.println(p.connections.getConnectedComponents());
         System.out.println("Open Sites: " + p.getNumberOfOpenSites());
         System.out.println("Percolates: " + p.percolates());
+        System.out.println("Is Full Site (3, 3): " + p.isFull(3, 3));
+        System.out.println("Is Full Site (4, 1): " + p.isFull(4, 1));
+        System.out.println("Is Full Site (2, 4): " + p.isFull(2, 4));
     }
 }

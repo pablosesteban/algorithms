@@ -13,9 +13,9 @@ import java.util.List;
  * @author psantama
  */
 public class PercolationStats {
-    Percolation percolation;
-    List<Double> percolationThresholds = new ArrayList<>();
-    int trials;
+    private Percolation percolation;
+    private List<Double> percolationThresholds = new ArrayList<>();
+    private int trials;
     
     //perform trials independent experiments on an n-by-n grid
     public PercolationStats(int n, int trials) {
@@ -24,6 +24,15 @@ public class PercolationStats {
         monteCarloSimulation(n, trials);
     }
     
+    /*
+    We initialize the whole grid to be blocked all
+    
+    Then we randomly fill in open sites and every time we add an open site, we check to see if it makes the system percolate
+    
+    We keep going until we get to a point where the system percolates
+    
+    We can show that the vacancy percentage at the time that it percolates is an estimate of this threshold value
+    */
     private void monteCarloSimulation(int n, int trials) {
         if (n <= 0 || trials <= 0) {
             throw new IllegalArgumentException();
