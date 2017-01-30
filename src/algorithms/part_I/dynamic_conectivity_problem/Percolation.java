@@ -28,6 +28,10 @@ public class Percolation {
     
     //create n-by-n grid, with all sites blocked
     public Percolation(int n) {
+        if (n <= 0) {
+            throw new IllegalArgumentException();
+        }
+        
         grid = new boolean[n][n];
         connections = new QuickUnionWeighted(n * n);
         this.n = n;
