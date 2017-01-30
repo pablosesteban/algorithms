@@ -5,6 +5,7 @@
  */
 package algorithms.part_I.dynamic_conectivity_problem;
 
+import edu.princeton.cs.algs4.StdIn;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,6 +85,8 @@ public class PercolationStats {
     }
     
     public static void main(String[] args) {
+        int[] allInts = StdIn.readAllInts();
+        
         PercolationStats percolationStats = new PercolationStats(10, 30);
         
         System.out.println("Percolation Mean: " + percolationStats.mean());
