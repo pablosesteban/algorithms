@@ -18,7 +18,7 @@ public class Percolation {
     private boolean[][] grid;
     
     //data structure to hold connections between grid sites
-    private WeightedQuickUnionUF connections;
+    private UnionFind connections;
     
     //hold a reference to the number of objects by row
     private int n;
@@ -33,12 +33,30 @@ public class Percolation {
             throw new IllegalArgumentException();
         }
         
-        grid = new boolean[n][n];
-        connections = new WeightedQuickUnionUF(n * n);
+        //add extra arrays of size 1 at the beginning/end to create the virtual points
+        grid = new boolean[n + 2][];
+        //add virtual points at the beginning/end
+        connections = new QuickUnionWeighted(n * n + 2);
         this.n = n;
         
-        for (int i = 0; i < n; i++) {
+        //initialize virtual point arrays
+        grid[0] = new boolean[1];
+        grid[0][0] = true;
+        grid[n + 1] = new boolean[1];
+        grid[n + 1][0] = true;
+        
+        for (int i = 1; i <= n; i++) {
+            grid[i] = new boolean[n];
+            
             for (int j = 0; j < n; j++) {
+                if(i == 1) {
+                    connections.union(0, j + 1);
+                }
+                
+                if(i == n) {
+                    connections.union(n * n + 1, n * n - j);
+                }
+                
                 grid[i][j] = false;
             }
         }
@@ -46,6 +64,10 @@ public class Percolation {
     
     //open site (row, col) if it is not open already
     private void open(int row, int col) {
+        if (row <= 0 || row > n) {
+            throw new IndexOutOfBoundsException();
+        }
+        
         if (grid[row][col] == true){
             return;
         }
@@ -56,17 +78,17 @@ public class Percolation {
         
         //check left site and if is open connect to it
         if (col - 1 >= 0 && isOpen(row, col - 1)) {
-            connections.union(row * n + (col - 1), row * n + col);
+            connections.union(row * n - (col - 1), row * n - col);
         }
         
         //check right site and if is open connect to it
         if (col + 1 < n && isOpen(row, col + 1)) {
-            connections.union(row * n + (col + 1), row * n + col);
+            connections.union(row * n - (col + 1), row * n - col);
         }
         
         //check upper site and if is open connect to it
-        if (row - 1 >= 0 && isOpen(row - 1, col)) {
-            connections.union((row - 1) * n + col, row * n + col);
+        if (row - 1 >= 1 && isOpen(row - 1, col)) {
+            connections.union((row - 1) * n - col, row * n - col);
         }
         
         //check bottom site and if is open connect to it
@@ -77,6 +99,10 @@ public class Percolation {
     
     //is site (row, col) open?
     private boolean isOpen(int row, int col) {
+        if (row <= 0 || row > n) {
+            throw new IndexOutOfBoundsException();
+        }
+        
         return grid[row][col];
     }
     
@@ -86,13 +112,25 @@ public class Percolation {
     a full site is an open site that can be connected to an open site in the top row via a chain of neighboring (left, right, up, down) open sites
     */
     private boolean isFull(int row, int col) {
+        /*
+        if (row <= 0 || row > n || col <= 0 || col > n) {
+            throw new IndexOutOfBoundsException();
+        }
+        
         for (int i = 0; i < n; i++) {
-            if (connections.connected(i, row * n + col)) {
+            if (connections.isConnected(i, row * n + col)) {
                 return true;
             }
         }
         
         return false;
+        */
+        if (row == n + 1) {
+            return connections.isConnected(0, (n * n) + 1);
+        }
+        
+        System.out.println((row * n) - ((n - 1) - col));
+        return connections.isConnected(0, (row * n) - ((n - 1) - col));
     }
     
     //number of open sites
@@ -106,6 +144,7 @@ public class Percolation {
     the system percolates if there is a full site in the bottom row
     */
     public boolean percolates() {
+        /*
         for (int i = 0; i < n; i++) {
             if (isFull(n - 1, i)) {
                 return true;
@@ -113,11 +152,20 @@ public class Percolation {
         }
         
         return false;
+        */
         
+        return isFull(n + 1, 0);
     }
     
     public void randomOpen() {
-        open(r.nextInt(n), r.nextInt(n));
+        int row = r.nextInt(n + 1);
+        if (row == 0) {
+            row = 1;
+        }
+        
+        int col = r.nextInt(n);
+        
+        open(row, col);
     }
     
     @Override
@@ -142,10 +190,10 @@ public class Percolation {
         
         System.out.println(p);
         System.out.println(p.connections);
-        System.out.println(p.connections.count());
+        System.out.println(p.connections.getConnectedComponents());
         System.out.println("Open Sites: " + p.numberOfOpenSites());
-        System.out.println("Percolates: " + p.percolates());
         System.out.println("Is Full Site (3, 3): " + p.isFull(3, 3));
+        System.out.println("Is Full Site (3, 4): " + p.isFull(3, 4));
         System.out.println("Is Full Site (4, 1): " + p.isFull(4, 1));
         System.out.println("Is Full Site (2, 4): " + p.isFull(2, 4));
     }

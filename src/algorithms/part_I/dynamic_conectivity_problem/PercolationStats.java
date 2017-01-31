@@ -85,7 +85,7 @@ public class PercolationStats {
     }
     
     public static void main(String[] args) {
-        PercolationStats percolationStats = new PercolationStats(10, 30);
+        PercolationStats percolationStats = new PercolationStats(2, 10000);
         
         System.out.println("Percolation Mean: " + percolationStats.mean());
         System.out.println("Percolation Stdev: " + percolationStats.stddev());
