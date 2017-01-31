@@ -5,7 +5,6 @@
  */
 package algorithms.part_I.dynamic_conectivity_problem;
 
-import edu.princeton.cs.algs4.StdIn;
 import java.util.ArrayList;
 import java.util.List;
 
