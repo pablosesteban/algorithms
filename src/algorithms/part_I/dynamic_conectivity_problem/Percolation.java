@@ -5,9 +5,8 @@
  */
 package algorithms.part_I.dynamic_conectivity_problem;
 
-import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 import java.util.Arrays;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *
@@ -25,7 +24,7 @@ public class Percolation {
     
     private int openSites;
     
-    private Random r = new Random();
+    private ThreadLocalRandom tlr = ThreadLocalRandom.current();
     
     //create n-by-n grid, with all sites blocked
     public Percolation(int n) {
@@ -129,7 +128,6 @@ public class Percolation {
             return connections.isConnected(0, (n * n) + 1);
         }
         
-        System.out.println((row * n) - ((n - 1) - col));
         return connections.isConnected(0, (row * n) - ((n - 1) - col));
     }
     
@@ -158,14 +156,7 @@ public class Percolation {
     }
     
     public void randomOpen() {
-        int row = r.nextInt(n + 1);
-        if (row == 0) {
-            row = 1;
-        }
-        
-        int col = r.nextInt(n);
-        
-        open(row, col);
+        open(tlr.nextInt(1, n + 1), tlr.nextInt(n));
     }
     
     @Override
