@@ -5,6 +5,7 @@
  */
 package algorithms.part_I.dynamic_conectivity_problem;
 
+import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -17,7 +18,7 @@ public class Percolation {
     private boolean[][] grid;
     
     //data structure to hold connections between grid sites
-    private UnionFind connections;
+    private WeightedQuickUnionUF connections;
     
     //hold a reference to the number of objects by row
     private int n;
@@ -33,7 +34,7 @@ public class Percolation {
         }
         
         grid = new boolean[n][n];
-        connections = new QuickUnionWeighted(n * n);
+        connections = new WeightedQuickUnionUF(n * n);
         this.n = n;
         
         for (int i = 0; i < n; i++) {
@@ -86,7 +87,7 @@ public class Percolation {
     */
     private boolean isFull(int row, int col) {
         for (int i = 0; i < n; i++) {
-            if (connections.isConnected(i, row * n + col)) {
+            if (connections.connected(i, row * n + col)) {
                 return true;
             }
         }
@@ -95,7 +96,7 @@ public class Percolation {
     }
     
     //number of open sites
-    public int getNumberOfOpenSites() {
+    public int numberOfOpenSites() {
         return openSites;
     }
     
@@ -141,8 +142,8 @@ public class Percolation {
         
         System.out.println(p);
         System.out.println(p.connections);
-        System.out.println(p.connections.getConnectedComponents());
-        System.out.println("Open Sites: " + p.getNumberOfOpenSites());
+        System.out.println(p.connections.count());
+        System.out.println("Open Sites: " + p.numberOfOpenSites());
         System.out.println("Percolates: " + p.percolates());
         System.out.println("Is Full Site (3, 3): " + p.isFull(3, 3));
         System.out.println("Is Full Site (4, 1): " + p.isFull(4, 1));

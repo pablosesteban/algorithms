@@ -46,7 +46,7 @@ public class PercolationStats {
                 percolation.randomOpen();
             }
             
-            percolationThresholds.add((double) percolation.getNumberOfOpenSites() / (n * n));
+            percolationThresholds.add((double) percolation.numberOfOpenSites() / (n * n));
         }
     }
     
@@ -85,8 +85,6 @@ public class PercolationStats {
     }
     
     public static void main(String[] args) {
-        int[] allInts = StdIn.readAllInts();
-        
         PercolationStats percolationStats = new PercolationStats(10, 30);
         
         System.out.println("Percolation Mean: " + percolationStats.mean());
