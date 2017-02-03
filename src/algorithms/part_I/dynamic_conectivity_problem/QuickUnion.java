@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 /**
  *
@@ -101,6 +102,11 @@ public class QuickUnion implements UnionFind {
         
         return connectedComponents;
     }
+
+    @Override
+    public int find(int i) {
+        return new TreeSet<>(getConnectedComponents().get(getRoot(i))).last();
+    }
     
     @Override
     public String toString() {
@@ -144,5 +150,8 @@ public class QuickUnion implements UnionFind {
         System.out.println(uf.isConnected(4, 2));
         System.out.println(uf.isConnected(3, 3));
         System.out.println(uf.isConnected(7, 2));
+        
+        System.out.println(uf.find(3));
+        System.out.println(uf.find(4));
     }
 }

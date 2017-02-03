@@ -24,4 +24,11 @@ public interface UnionFind {
     
     //CONNECTED COMPONENTS: Maximal set of objects that are mutually connected
     public Map<Integer, List<Integer>> getConnectedComponents();
+    
+    /*
+    returns the largest element in the connected component containing i
+    
+    shouldtake logarithmic time or better
+    */
+    int find(int i);
 }
