@@ -18,8 +18,14 @@ public class SuccessorDelete {
         id = new int[numbers.length];
         
         for (int i = 0; i < numbers.length; i++) {
-            if (id[i] > numbers[i]) {
+            if (i == 0){
                 id[i] = numbers[i];
+            }else {
+                if (id[i - 1] > numbers[i]) {
+                    id[i] = id[i - 1];
+                    
+                    id[i - 1] = numbers[i];
+                }
             }
         }
     }
