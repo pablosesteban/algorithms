@@ -3,10 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package algorithms.part_I.dynamic_conectivity_problem;
 
 import java.util.ArrayList;
 import java.util.List;
+import edu.princeton.cs.algs4.StdRandom;
 
 /**
  *
@@ -42,7 +44,7 @@ public class PercolationStats {
             percolation = new Percolation(n);
             
             while (percolation.percolates() == false) {
-                percolation.randomOpen();
+                percolation.open(StdRandom.uniform(1, n + 1), StdRandom.uniform(n));
             }
             
             percolationThresholds.add((double) percolation.numberOfOpenSites() / (n * n));

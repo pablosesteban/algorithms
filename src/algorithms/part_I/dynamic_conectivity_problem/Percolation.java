@@ -3,10 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package algorithms.part_I.dynamic_conectivity_problem;
 
 import java.util.Arrays;
-import java.util.concurrent.ThreadLocalRandom;
+import edu.princeton.cs.algs4.StdRandom;
+import edu.princeton.cs.algs4.WeightedQuickUnionUF;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  *
@@ -17,14 +22,12 @@ public class Percolation {
     private boolean[][] grid;
     
     //data structure to hold connections between grid sites
-    private UnionFind connections;
+    private WeightedQuickUnionUF connections;
     
     //hold a reference to the number of objects by row
     private int n;
     
     private int openSites;
-    
-    private ThreadLocalRandom tlr = ThreadLocalRandom.current();
     
     //create n-by-n grid, with all sites blocked
     public Percolation(int n) {
@@ -35,7 +38,7 @@ public class Percolation {
         //add extra arrays of size 1 at the beginning/end to create the virtual points
         grid = new boolean[n + 2][];
         //add virtual points at the beginning/end
-        connections = new QuickUnionWeighted(n * n + 2);
+        connections = new WeightedQuickUnionUF(n * n + 2);
         this.n = n;
         
         //initialize virtual point arrays
@@ -62,45 +65,51 @@ public class Percolation {
     }
     
     //open site (row, col) if it is not open already
-    private void open(int row, int col) {
+    public void open(int row, int col) {
         if (row <= 0 || row > n) {
             throw new IndexOutOfBoundsException();
         }
         
-        if (grid[row][col] == true){
+        //col starts at 1 NOT 0
+        int colIdx = col - 1;
+        
+        if (grid[row][colIdx] == true){
             return;
         }
         
-        grid[row][col] = true;
-        
+        grid[row][colIdx] = true;
+        System.out.println("row: " + row + ", col: " + colIdx);
         openSites++;
         
         //check left site and if is open connect to it
-        if (col - 1 >= 0 && isOpen(row, col - 1)) {
-            connections.union(row * n - (col - 1), row * n - col);
+        //isOpen() substract 1 from col!!
+        if (colIdx - 1 >= 0 && isOpen(row, colIdx)) {
+            connections.union(row * n - (colIdx - 1), row * n - colIdx);
         }
         
         //check right site and if is open connect to it
-        if (col + 1 < n && isOpen(row, col + 1)) {
-            connections.union(row * n - (col + 1), row * n - col);
+        if (colIdx + 1 < n && isOpen(row, colIdx + 2)) {
+            connections.union(row * n - (colIdx + 1), row * n - colIdx);
         }
         
         //check upper site and if is open connect to it
         if (row - 1 >= 1 && isOpen(row - 1, col)) {
-            connections.union((row - 1) * n - col, row * n - col);
+            connections.union((row - 1) * n - colIdx, row * n - colIdx);
         }
         
         //check bottom site and if is open connect to it
         if (row + 1 < n && isOpen(row + 1, col)) {
-            connections.union((row + 1) * n + col, row * n + col);
+            connections.union((row + 1) * n + colIdx, row * n + colIdx);
         }
     }
     
     //is site (row, col) open?
-    private boolean isOpen(int row, int col) {
+    public boolean isOpen(int row, int col) {
         if (row <= 0 || row > n) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("row: " + row);
         }
+        
+        col -= 1;
         
         return grid[row][col];
     }
@@ -110,14 +119,14 @@ public class Percolation {
     
     a full site is an open site that can be connected to an open site in the top row via a chain of neighboring (left, right, up, down) open sites
     */
-    private boolean isFull(int row, int col) {
+    public boolean isFull(int row, int col) {
         /*
         if (row <= 0 || row > n || col <= 0 || col > n) {
             throw new IndexOutOfBoundsException();
         }
         
         for (int i = 0; i < n; i++) {
-            if (connections.isConnected(i, row * n + col)) {
+            if (connections.connected(i, row * n + col)) {
                 return true;
             }
         }
@@ -125,10 +134,10 @@ public class Percolation {
         return false;
         */
         if (row == n + 1) {
-            return connections.isConnected(0, (n * n) + 1);
+            return connections.connected(0, (n * n) + 1);
         }
         
-        return connections.isConnected(0, (row * n) - ((n - 1) - col));
+        return connections.connected(0, (row * n) - ((n - 1) - col));
     }
     
     //number of open sites
@@ -155,8 +164,8 @@ public class Percolation {
         return isFull(n + 1, 0);
     }
     
-    public void randomOpen() {
-        open(tlr.nextInt(1, n + 1), tlr.nextInt(n));
+    private void randomOpen() {
+        open(StdRandom.uniform(1, n + 1), StdRandom.uniform(n));
     }
     
     @Override
@@ -172,20 +181,24 @@ public class Percolation {
         return sb.toString();
     }
     
-    public static void main(String[] args) {
-        Percolation p = new Percolation(5);
-        
-        while (p.percolates() == false) {
-            p.randomOpen();
-        }
-        
-        System.out.println(p);
-        System.out.println(p.connections);
-        System.out.println(p.connections.getConnectedComponents());
-        System.out.println("Open Sites: " + p.numberOfOpenSites());
-        System.out.println("Is Full Site (3, 3): " + p.isFull(3, 3));
-        System.out.println("Is Full Site (3, 4): " + p.isFull(3, 4));
-        System.out.println("Is Full Site (4, 1): " + p.isFull(4, 1));
-        System.out.println("Is Full Site (2, 4): " + p.isFull(2, 4));
+    public static void main(String[] args) throws IOException {
+//        BufferedReader br = new BufferedReader(new FileReader("D:/Users/psantama/Downloads/percolation/input8.txt"));
+//        
+//        Percolation p = new Percolation(Integer.parseInt(br.readLine()));
+//        
+//        String line;
+//        while (!("".equals(line = br.readLine())) || (line = br.readLine()) != null) {
+//            String[] sites = line.trim().split("\\s+");
+//            
+//            System.out.println("open {" + Integer.parseInt(sites[0]) + ", " + Integer.parseInt(sites[1]) + "} ");
+//            p.open(Integer.parseInt(sites[0]), Integer.parseInt(sites[1]));
+//            
+//            System.out.println("\tis open? {" + Integer.parseInt(sites[0]) + ", " + Integer.parseInt(sites[1]) + "} " + p.isOpen(Integer.parseInt(sites[0]), Integer.parseInt(sites[1])));
+//            System.out.println("\tpercolates? " + p.percolates());
+//            System.out.println("\t# opens sites: " + p.numberOfOpenSites());
+//            System.out.println("\tis full? {" + Integer.parseInt(sites[0]) + ", " + Integer.parseInt(sites[1]) + "} " + p.isFull(Integer.parseInt(sites[0]), Integer.parseInt(sites[1])));
+//        }
+//        
+//        System.out.println(p);
     }
 }
