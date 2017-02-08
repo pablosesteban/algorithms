@@ -181,10 +181,12 @@ public class Percolation {
     public String printParent() {
         StringBuilder sb = new StringBuilder();
         
+        sb.append("[0] ");
         sb.append(connections.parent[0]);
         sb.append("\n");
         int j = 0;
         for (int i = 1; i <= n * n; i++) {
+            sb.append("[" + i + "] ");
             sb.append(connections.parent[i]);
             
             if (i == n + j) {
@@ -195,6 +197,7 @@ public class Percolation {
                 sb.append(", ");
             }
         }
+        sb.append("[" + (n * n + 1) + "] ");
         sb.append(connections.parent[n * n + 1]);
         
         return sb.toString();
