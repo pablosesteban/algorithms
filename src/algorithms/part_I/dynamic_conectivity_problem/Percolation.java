@@ -228,7 +228,5 @@ public class Percolation {
                 System.out.println("----------");
             }
         }
-        
-        System.out.println(p.isFull(9, 1));
     }
 }

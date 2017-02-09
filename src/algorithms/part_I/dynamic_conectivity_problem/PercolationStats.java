@@ -23,7 +23,7 @@ public class PercolationStats {
     public PercolationStats(int n, int trials) {
         this.trials = trials;
         
-        monteCarloSimulation(n, trials);
+        monteCarloSimulation(n);
     }
     
     /*
@@ -35,7 +35,7 @@ public class PercolationStats {
     
     We can show that the vacancy percentage at the time that it percolates is an estimate of this threshold value
     */
-    private void monteCarloSimulation(int n, int trials) {
+    private void monteCarloSimulation(int n) {
         if (n <= 0 || trials <= 0) {
             throw new IllegalArgumentException();
         }
@@ -55,7 +55,7 @@ public class PercolationStats {
     public double mean(){
         double sum = 0;
         
-        for (Double percolationThreshold : percolationThresholds) {
+        for (double percolationThreshold : percolationThresholds) {
             sum += percolationThreshold;
         }
         
@@ -68,7 +68,7 @@ public class PercolationStats {
         
         double percolationMean = mean();
         
-        for (Double percolationThreshold : percolationThresholds) {
+        for (double percolationThreshold : percolationThresholds) {
             sum += Math.pow(percolationThreshold - percolationMean, 2);
         }
         
