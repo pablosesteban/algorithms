@@ -66,7 +66,7 @@ public class Percolation {
     //open site (row, col) if it is not open already
     public void open(int row, int col) {
         if (row <= 0 || row > n) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("row: " + row);
         }
         
         //col starts at 1 NOT 0
@@ -130,8 +130,8 @@ public class Percolation {
     a full site is an open site that can be connected to an open site in the top row via a chain of neighboring (left, right, up, down) open sites
     */
     public boolean isFull(int row, int col) {
-        if (row == n + 1) {
-            return connections.connected(0, (n * n) + 1);
+        if (row <= 0 || row > n) {
+            throw new IndexOutOfBoundsException("row: " + row);
         }
         
         if (!isOpen(row, col)) {
@@ -158,7 +158,7 @@ public class Percolation {
             return isOpen(1, 1);
         }
         
-        return isFull(n + 1, 0);
+        return connections.connected(0, (n * n) + 1);
     }
     
     public String printParent() {
@@ -200,7 +200,7 @@ public class Percolation {
     }
     
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader("D:/Users/psantama/Downloads/percolation/input10.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("D:/Users/psantama/Downloads/percolation/input6.txt"));
         
         Percolation p = new Percolation(Integer.parseInt(br.readLine()));
         

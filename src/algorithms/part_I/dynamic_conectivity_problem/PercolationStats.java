@@ -44,7 +44,7 @@ public class PercolationStats {
             percolation = new Percolation(n);
             
             while (percolation.percolates() == false) {
-                percolation.open(StdRandom.uniform(1, n + 1), StdRandom.uniform(n));
+                percolation.open(StdRandom.uniform(1, n + 1), StdRandom.uniform(1, n + 1));
             }
             
             percolationThresholds.add((double) percolation.numberOfOpenSites() / (n * n));
