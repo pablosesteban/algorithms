@@ -89,6 +89,7 @@ public class Percolation {
         }
         
         //check right site and if is open connect to it
+        //isOpen() substract 1 from col!!
         if (colIdx + 1 < n && isOpen(row, colIdx + 2)) {
             System.out.println("Right Union: {" + (row * n - (n - col - 1)) + ", " + (row * n - (n - col)) + "}");
             
@@ -96,6 +97,7 @@ public class Percolation {
         }
         
         //check upper site and if is open connect to it
+        //isOpen() substract 1 from col!!
         if (row - 1 >= 1 && isOpen(row - 1, col)) {
             System.out.println("Top Union: {" + ((row - 1) * n - (n - col)) + ", " + (row * n - (n - col)) + "}");
             
@@ -103,7 +105,8 @@ public class Percolation {
         }
         
         //check bottom site and if is open connect to it
-        if (row + 1 < n && isOpen(row + 1, col)) {
+        //isOpen() substract 1 from col!!
+        if (row + 1 <= n && isOpen(row + 1, col)) {
             System.out.println("Bottom Union: {" + ((row + 1) * n - (n - col)) + ", " + (row * n - (n - col)) + "}");
             
             connections.union((row + 1) * n - (n - col), row * n - (n - col));
@@ -127,20 +130,6 @@ public class Percolation {
     a full site is an open site that can be connected to an open site in the top row via a chain of neighboring (left, right, up, down) open sites
     */
     public boolean isFull(int row, int col) {
-        /*
-        if (row <= 0 || row > n || col <= 0 || col > n) {
-            throw new IndexOutOfBoundsException();
-        }
-        
-        for (int i = 0; i < n; i++) {
-            if (connections.connected(i, row * n + col)) {
-                return true;
-            }
-        }
-        
-        return false;
-        */
-        
         if (row == n + 1) {
             return connections.connected(0, (n * n) + 1);
         }
@@ -165,15 +154,9 @@ public class Percolation {
     the system percolates if there is a full site in the bottom row
     */
     public boolean percolates() {
-        /*
-        for (int i = 0; i < n; i++) {
-            if (isFull(n - 1, i)) {
-                return true;
-            }
+        if (n <= 1) {
+            return isOpen(1, 1);
         }
-        
-        return false;
-        */
         
         return isFull(n + 1, 0);
     }
@@ -217,46 +200,35 @@ public class Percolation {
     }
     
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader("D:/Users/psantama/Downloads/percolation/input6.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("D:/Users/psantama/Downloads/percolation/input10.txt"));
         
         Percolation p = new Percolation(Integer.parseInt(br.readLine()));
         
-//        System.out.println(p);
-//        System.out.println(p.printParent());
-//        
-//        System.out.println("Open {3, 4}");
-//        p.open(3, 4);
-//        System.out.println("Open {4, 4}");
-//        p.open(4, 4);
-//        System.out.println("Open {4, 2}");
-//        p.open(4, 2);
-//        System.out.println("Open {4, 3}");
-//        p.open(4, 3);
-//        System.out.println("Open {2, 4}");
-//        p.open(2, 4);
-//        System.out.println("Open {1, 4}");
-//        p.open(1, 4);
-//        
-//        System.out.println(p);
-//        System.out.println(p.printParent());
-//        
-//        System.out.println(p.isFull(2, 4));
+        System.out.println(p);
+        System.out.println(p.printParent());
         
         String line;
-        while (!("".equals(line = br.readLine())) || (line = br.readLine()) != null) {
-            String[] sites = line.trim().split("\\s+");
-            
-            System.out.println("----------");
-            System.out.println("open {" + Integer.parseInt(sites[0]) + ", " + Integer.parseInt(sites[1]) + "} ");
-            p.open(Integer.parseInt(sites[0]), Integer.parseInt(sites[1]));
-            
-            System.out.println("\tis open? {" + Integer.parseInt(sites[0]) + ", " + Integer.parseInt(sites[1]) + "} " + p.isOpen(Integer.parseInt(sites[0]), Integer.parseInt(sites[1])));
-            System.out.println("\tpercolates? " + p.percolates());
-            System.out.println("\t# opens sites: " + p.numberOfOpenSites());
-            System.out.println("\tis full? {" + Integer.parseInt(sites[0]) + ", " + Integer.parseInt(sites[1]) + "} " + p.isFull(Integer.parseInt(sites[0]), Integer.parseInt(sites[1])));
-            System.out.println(p);
-            System.out.println(p.printParent());
-            System.out.println("----------");
+        while ((line = br.readLine()) != null) {
+            if (!"".equals(line)) {
+                String[] sites = line.trim().split("\\s+");
+                
+                System.out.println("----------");
+                
+                System.out.println("open {" + Integer.parseInt(sites[0]) + ", " + Integer.parseInt(sites[1]) + "} ");
+                p.open(Integer.parseInt(sites[0]), Integer.parseInt(sites[1]));
+                
+                System.out.println("\tis open? {" + Integer.parseInt(sites[0]) + ", " + Integer.parseInt(sites[1]) + "} " + p.isOpen(Integer.parseInt(sites[0]), Integer.parseInt(sites[1])));
+                System.out.println("\tpercolates? " + p.percolates());
+                System.out.println("\t# opens sites: " + p.numberOfOpenSites());
+                System.out.println("\tis full? {" + Integer.parseInt(sites[0]) + ", " + Integer.parseInt(sites[1]) + "} " + p.isFull(Integer.parseInt(sites[0]), Integer.parseInt(sites[1])));
+                
+                System.out.println(p);
+                System.out.println(p.printParent());
+                
+                System.out.println("----------");
+            }
         }
+        
+        System.out.println(p.isFull(9, 1));
     }
 }
