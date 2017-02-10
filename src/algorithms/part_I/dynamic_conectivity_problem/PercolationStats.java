@@ -15,7 +15,6 @@ import edu.princeton.cs.algs4.StdRandom;
  * @author psantama
  */
 public class PercolationStats {
-    private Percolation percolation;
     private List<Double> percolationThresholds = new ArrayList<>();
     private int trials;
     
@@ -41,7 +40,7 @@ public class PercolationStats {
         }
         
         for (int i = 0; i < trials; i++) {
-            percolation = new Percolation(n);
+            Percolation percolation = new Percolation(n);
             
             while (!percolation.percolates()) {
                 percolation.open(StdRandom.uniform(1, n + 1), StdRandom.uniform(1, n + 1));

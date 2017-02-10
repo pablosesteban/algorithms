@@ -20,6 +20,9 @@ public class PercolationV2 {
     //grid n by n to hold the state of sites (open or blocked)
     private boolean[][] grid;
     
+    //array to track if a site is connected to top
+    private boolean[] topConnections;
+    
     //data structure to hold connections between grid sites
     private WeightedQuickUnionUF connections;
     
@@ -34,13 +37,15 @@ public class PercolationV2 {
             throw new IllegalArgumentException();
         }
         
-        //add extra arrays of size 1 at the beginning/end to create the virtual points
+        //add extra array of size 1 at the beginning to create the TOP virtual point
         grid = new boolean[n + 2][];
+        topConnections = new boolean[n * n + 2];
+        topConnections[0] = true;
         //add virtual points at the beginning/end
         connections = new WeightedQuickUnionUF(n * n + 2);
         this.n = n;
         
-        //initialize virtual point arrays
+        //initialize TOP virtual point array
         grid[0] = new boolean[1];
         grid[0][0] = true;
         grid[n + 1] = new boolean[1];
@@ -111,6 +116,35 @@ public class PercolationV2 {
             
             connections.union((row + 1) * n - (n - col), row * n - (n - col));
         }
+        
+        //check if is connected to top
+        connectedToTop(row, col);
+    }
+    
+    private void connectedToTop(int row, int col) {
+        int colIdx = col - 1;
+        
+        if (topConnections[row * n - (n - col)] = connections.connected(0, row * n - (n - col))) {
+            //check top node to connect to top if it is open!
+            if (row - 1 > 1 && grid[row - 1][colIdx] == true) {
+                topConnections[(row - 1) * n - (n - col)] = true;
+            }
+            
+            //check bottom node to connect to top if it is open!
+            if (row + 1 < n && grid[row + 1][colIdx] == true) {
+                topConnections[(row + 1) * n - (n - col)] = true;
+            }
+            
+            //check right node to connect to top if it is open!
+            if (colIdx + 1 < n && grid[row][colIdx + 1] == true) {
+                topConnections[row * n - (n - col - 1)] = true;
+            }
+            
+            //check left node to connect to top if it is open!
+            if (colIdx - 1 >= 0 && grid[row][colIdx - 1] == true) {
+                topConnections[row * n - (n - col + 1)] = true;
+            }
+        }
     }
     
     //is site (row, col) open?
@@ -140,7 +174,7 @@ public class PercolationV2 {
         
         int colIdx = col - 1;
         
-        return connections.connected(0, (row * n) - ((n - 1) - colIdx));
+        return topConnections[(row * n) - ((n - 1) - colIdx)];
     }
     
     //number of open sites
@@ -155,13 +189,15 @@ public class PercolationV2 {
     */
     public boolean percolates() {
         if (n <= 1) {
-            return isOpen(1, 1);
+            topConnections[n * n + 1] = isOpen(1, 1);
+        }else {
+            topConnections[n * n + 1] = connections.connected(0, (n * n) + 1);
         }
         
-        return connections.connected(0, (n * n) + 1);
+        return topConnections[n * n + 1];
     }
     
-    public String printParent() {
+    private String printParent() {
         StringBuilder sb = new StringBuilder();
         
         sb.append("[0] ");
@@ -186,6 +222,31 @@ public class PercolationV2 {
         return sb.toString();
     }
     
+    private String printTopConnections() {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append("[0] ");
+        sb.append(topConnections[0]);
+        sb.append("\n");
+        int j = 0;
+        for (int i = 1; i <= n * n; i++) {
+            sb.append("[" + i + "] ");
+            sb.append(topConnections[i]);
+            
+            if (i == n + j) {
+                sb.append("\n");
+                
+                j += n;
+            }else {
+                sb.append(", ");
+            }
+        }
+        sb.append("[" + (n * n + 1) + "] ");
+        sb.append(topConnections[n * n + 1]);
+        
+        return sb.toString();
+    }
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -206,6 +267,19 @@ public class PercolationV2 {
         
         System.out.println(p);
         System.out.println(p.printParent());
+        System.out.println(p.printTopConnections());
+        
+//        p.open(1, 4);
+//        p.open(3, 4);
+//        p.open(2, 4);
+//        
+//        System.out.println(p.isFull(1, 4));
+//        System.out.println(p.isFull(3, 4));
+//        System.out.println(p.isFull(2, 4));
+//        
+//        System.out.println(p);
+//        System.out.println(p.printParent());
+//        System.out.println(p.printTopConnections());
         
         String line;
         while ((line = br.readLine()) != null) {
@@ -224,9 +298,12 @@ public class PercolationV2 {
                 
                 System.out.println(p);
                 System.out.println(p.printParent());
+                System.out.println(p.printTopConnections());
                 
                 System.out.println("----------");
             }
         }
+        
+        System.out.println(p.isFull(2, 1));
     }
 }
