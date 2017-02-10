@@ -26,6 +26,9 @@ public class PercolationV2 {
     //data structure to hold connections between grid sites
     private WeightedQuickUnionUF connections;
     
+    //data structure to hold connections without the bottom virtual poing to avoid backwash problem
+    private WeightedQuickUnionUF backwash;
+    
     //hold a reference to the number of objects by row
     private int n;
     
@@ -43,6 +46,7 @@ public class PercolationV2 {
         topConnections[0] = true;
         //add virtual points at the beginning/end
         connections = new WeightedQuickUnionUF(n * n + 2);
+        backwash = new WeightedQuickUnionUF(n * n + 1);
         this.n = n;
         
         //initialize TOP virtual point array
@@ -57,6 +61,7 @@ public class PercolationV2 {
             for (int j = 0; j < n; j++) {
                 if (i == 1) {
                     connections.union(0, j + 1);
+                    backwash.union(0, j + 1);
                 }
                 
                 if (i == n) {
@@ -91,6 +96,7 @@ public class PercolationV2 {
             System.out.println("Left Union: {" + (row * n - (n - col + 1)) + ", " + (row * n - (n - col)) + "}");
             
             connections.union(row * n - (n - col + 1), row * n - (n - col));
+            backwash.union(row * n - (n - col + 1), row * n - (n - col));
         }
         
         //check right site and if is open connect to it
@@ -99,6 +105,7 @@ public class PercolationV2 {
             System.out.println("Right Union: {" + (row * n - (n - col - 1)) + ", " + (row * n - (n - col)) + "}");
             
             connections.union(row * n - (n - col - 1), row * n - (n - col));
+            backwash.union(row * n - (n - col - 1), row * n - (n - col));
         }
         
         //check upper site and if is open connect to it
@@ -107,6 +114,7 @@ public class PercolationV2 {
             System.out.println("Top Union: {" + ((row - 1) * n - (n - col)) + ", " + (row * n - (n - col)) + "}");
             
             connections.union((row - 1) * n - (n - col), row * n - (n - col));
+            backwash.union((row - 1) * n - (n - col), row * n - (n - col));
         }
         
         //check bottom site and if is open connect to it
@@ -115,10 +123,11 @@ public class PercolationV2 {
             System.out.println("Bottom Union: {" + ((row + 1) * n - (n - col)) + ", " + (row * n - (n - col)) + "}");
             
             connections.union((row + 1) * n - (n - col), row * n - (n - col));
+            backwash.union((row + 1) * n - (n - col), row * n - (n - col));
         }
         
         //check if is connected to top
-        connectedToTop(row, col);
+//        connectedToTop(row, col);
     }
     
     private void connectedToTop(int row, int col) {
@@ -174,7 +183,7 @@ public class PercolationV2 {
         
         int colIdx = col - 1;
         
-        return topConnections[(row * n) - ((n - 1) - colIdx)];
+        return backwash.connected(0, (row * n) - ((n - 1) - colIdx));
     }
     
     //number of open sites
@@ -189,12 +198,10 @@ public class PercolationV2 {
     */
     public boolean percolates() {
         if (n <= 1) {
-            topConnections[n * n + 1] = isOpen(1, 1);
-        }else {
-            topConnections[n * n + 1] = connections.connected(0, (n * n) + 1);
+            return isOpen(1, 1);
         }
         
-        return topConnections[n * n + 1];
+        return connections.connected(0, (n * n) + 1);
     }
     
     private String printParent() {
@@ -250,14 +257,18 @@ public class PercolationV2 {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        StringBuilder sb1 = new StringBuilder();
         
         for (int i = 0; i < grid.length - 1; i++) {
             sb.append(Arrays.toString(grid[i]));
             sb.append("\n");
+            
+            sb1.append(Arrays.toString(grid[i]));
+            sb1.append("\n");
         }
         sb.append(Arrays.toString(grid[grid.length - 1]));
         
-        return sb.toString();
+        return sb.toString() + "\n" + sb1.toString();
     }
     
     public static void main(String[] args) throws IOException {
