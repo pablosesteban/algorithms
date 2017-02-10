@@ -43,7 +43,7 @@ public class PercolationStats {
         for (int i = 0; i < trials; i++) {
             percolation = new Percolation(n);
             
-            while (percolation.percolates() == false) {
+            while (!percolation.percolates()) {
                 percolation.open(StdRandom.uniform(1, n + 1), StdRandom.uniform(1, n + 1));
             }
             
@@ -52,7 +52,7 @@ public class PercolationStats {
     }
     
     //sample mean of percolation threshold
-    public double mean(){
+    public double mean() {
         double sum = 0;
         
         for (double percolationThreshold : percolationThresholds) {

@@ -16,7 +16,7 @@ import java.io.IOException;
  *
  * @author psantama
  */
-public class Percolation {
+public class PercolationV2 {
     //grid n by n to hold the state of sites (open or blocked)
     private boolean[][] grid;
     
@@ -29,7 +29,7 @@ public class Percolation {
     private int openSites;
     
     //create n-by-n grid, with all sites blocked
-    public Percolation(int n) {
+    public PercolationV2(int n) {
         if (n <= 0) {
             throw new IllegalArgumentException();
         }
@@ -161,7 +161,7 @@ public class Percolation {
         return connections.connected(0, (n * n) + 1);
     }
     
-    private String printParent() {
+    public String printParent() {
         StringBuilder sb = new StringBuilder();
         
         sb.append("[0] ");
@@ -202,7 +202,7 @@ public class Percolation {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader("D:/Users/psantama/Downloads/percolation/input6.txt"));
         
-        Percolation p = new Percolation(Integer.parseInt(br.readLine()));
+        PercolationV2 p = new PercolationV2(Integer.parseInt(br.readLine()));
         
         System.out.println(p);
         System.out.println(p.printParent());
