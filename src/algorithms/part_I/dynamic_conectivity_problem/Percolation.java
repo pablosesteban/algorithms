@@ -10,7 +10,11 @@ package algorithms.part_I.dynamic_conectivity_problem;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -208,13 +212,17 @@ public class Percolation {
     }
     
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader("D:/Users/psantama/Downloads/percolation/input2.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("D:/Users/psantama/Downloads/percolation/input10-no.txt"));
         
         Percolation p = new Percolation(Integer.parseInt(br.readLine()));
         
         Set<String[]> coors = new HashSet<>();
         String line;
         while ((line = br.readLine()) != null) {
+            if (p.openSites == 41) {
+                break;
+            }
+            
             if (!"".equals(line)) {
                 String[] sites = line.trim().split("\\s+");
                 
@@ -235,8 +243,22 @@ public class Percolation {
             }
         }
         
-        for (String[] coor : coors) {
-            System.out.println("is full? {" + Integer.parseInt(coor[0]) + ", " + Integer.parseInt(coor[1]) + "} " + p.isFull(Integer.parseInt(coor[0]), Integer.parseInt(coor[1])));
+        System.out.println(p.connections.count());
+        
+        Map<Integer, List<Integer>> connectedComponents = new HashMap<>();
+        
+        for (int i = 0; i < p.connections.parent.length; i++) {
+            int root = p.connections.find(i);
+            
+            if (!connectedComponents.containsKey(root)) {
+                connectedComponents.put(root, new ArrayList<>());
+            }
+            
+            connectedComponents.get(root).add(i);
+        }
+        
+        for (Map.Entry<Integer, List<Integer>> entry : connectedComponents.entrySet()) {
+            System.out.println(entry);
         }
     }
 }

@@ -11,10 +11,6 @@ package algorithms.part_I.dynamic_conectivity_problem;
  */
 
 /*
-
-*/
-
-/*
 Proved by Friedman and Sachs, that there is no linear time algorithm for the union find problem
 
 But weighted quick union with path compression in practice is, is close enough that it's going to enable the solution of huge problems
