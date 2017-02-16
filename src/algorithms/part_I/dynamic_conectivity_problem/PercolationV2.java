@@ -6,165 +6,146 @@
 
 package algorithms.part_I.dynamic_conectivity_problem;
 
-import java.util.Arrays;
 //import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
  * @author psantama
  */
 public class PercolationV2 {
-    //grid n by n to hold the state of sites (open or blocked)
-    private boolean[][] grid;
+    private static final byte CONNECTED_TOP = 1;
+    private static final byte CONNECTED_BOTTOM = 2;
+    private static final byte CONNECTED_BOTH = 3;
     
-    //array to track if a site is connected to top
-    private boolean[] topConnections;
+    //array holding open status of each site
+    private boolean[] openStatus;
     
-    //data structure to hold connections between grid sites
+    //array holding connected status of each site
+    private byte[] connectStatus;
+    
+    //data structure to hold connections between sites
     private WeightedQuickUnionUF connections;
     
-    //data structure to hold connections without the bottom virtual poing to avoid backwash problem
-    private WeightedQuickUnionUF backwash;
-    
-    //hold a reference to the number of objects by row
     private int n;
     
     private int openSites;
     
+    private boolean percolates;
+    
     //create n-by-n grid, with all sites blocked
     public PercolationV2(int n) {
         if (n <= 0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("n: " + n);
         }
         
-        //add extra array of size 1 at the beginning to create the TOP virtual point
-        grid = new boolean[n + 2][];
-        topConnections = new boolean[n * n + 2];
-        topConnections[0] = true;
-        //add virtual points at the beginning/end
-        connections = new WeightedQuickUnionUF(n * n + 2);
-        backwash = new WeightedQuickUnionUF(n * n + 1);
+        //NO VIRTUAL POINTS!!!
+        openStatus = new boolean[n * n];
+        
+        connectStatus = new byte[n * n];
+        
+        connections = new WeightedQuickUnionUF(n * n);
+        
         this.n = n;
-        
-        //initialize TOP virtual point array
-        grid[0] = new boolean[1];
-        grid[0][0] = true;
-        grid[n + 1] = new boolean[1];
-        grid[n + 1][0] = true;
-        
-        for (int i = 1; i <= n; i++) {
-            grid[i] = new boolean[n];
-            
-            for (int j = 0; j < n; j++) {
-                if (i == 1) {
-                    connections.union(0, j + 1);
-                    backwash.union(0, j + 1);
-                }
-                
-                if (i == n) {
-                    connections.union(n * n + 1, n * n - j);
-                }
-                
-                grid[i][j] = false;
-            }
-        }
     }
     
-    //open site (row, col) if it is not open already
+    //open site (row, col) if it is not already open
     public void open(int row, int col) {
-        if (row <= 0 || row > n) {
-            throw new IndexOutOfBoundsException("row: " + row);
-        }
+        int siteIndex = getSiteIndex(row, col);
         
-        //col starts at 1 NOT 0
-        int colIdx = col - 1;
-        System.out.println("open {row, colIdx}: {" + row + ", " + colIdx + "}");
-        if (grid[row][colIdx]){
+        if (openStatus[siteIndex]){
             return;
         }
         
-        grid[row][colIdx] = true;
+        System.out.println("open {row: " + row + ", col: " + col + "}");
+        
+        openStatus[siteIndex] = true;
         
         openSites++;
         
-        //check left site and if is open connect to it
-        //isOpen() substract 1 from col!!
-        if (colIdx - 1 >= 0 && isOpen(row, colIdx)) {
-            System.out.println("Left Union: {" + (row * n - (n - col + 1)) + ", " + (row * n - (n - col)) + "}");
-            
-            connections.union(row * n - (n - col + 1), row * n - (n - col));
-            backwash.union(row * n - (n - col + 1), row * n - (n - col));
-        }
-        
-        //check right site and if is open connect to it
-        //isOpen() substract 1 from col!!
-        if (colIdx + 1 < n && isOpen(row, colIdx + 2)) {
-            System.out.println("Right Union: {" + (row * n - (n - col - 1)) + ", " + (row * n - (n - col)) + "}");
-            
-            connections.union(row * n - (n - col - 1), row * n - (n - col));
-            backwash.union(row * n - (n - col - 1), row * n - (n - col));
-        }
-        
         //check upper site and if is open connect to it
-        //isOpen() substract 1 from col!!
-        if (row - 1 >= 1 && isOpen(row - 1, col)) {
-            System.out.println("Top Union: {" + ((row - 1) * n - (n - col)) + ", " + (row * n - (n - col)) + "}");
+        if (row > 1 && isOpen(row - 1, col)) {
+            System.out.println("Top Union: {" + siteIndex + ", " + (siteIndex - n) + "}");
             
-            connections.union((row - 1) * n - (n - col), row * n - (n - col));
-            backwash.union((row - 1) * n - (n - col), row * n - (n - col));
+            updateConnectStatus(siteIndex, siteIndex - n);
+            
+            connections.union(siteIndex, siteIndex - n);
         }
         
         //check bottom site and if is open connect to it
-        //isOpen() substract 1 from col!!
-        if (row + 1 <= n && isOpen(row + 1, col)) {
-            System.out.println("Bottom Union: {" + ((row + 1) * n - (n - col)) + ", " + (row * n - (n - col)) + "}");
+        if (row < n && isOpen(row + 1, col)) {
+            System.out.println("Bottom Union: {" + siteIndex + ", " + (siteIndex + n) + "}");
             
-            connections.union((row + 1) * n - (n - col), row * n - (n - col));
-            backwash.union((row + 1) * n - (n - col), row * n - (n - col));
+            updateConnectStatus(siteIndex, siteIndex + n);
+            
+            connections.union(siteIndex, siteIndex + n);
         }
         
-        //check if is connected to top
-//        connectedToTop(row, col);
+        //check left site and if is open connect to it
+        if (col > 1 && isOpen(row, col - 1)) {
+            System.out.println("Left Union: {" + siteIndex + ", " + (siteIndex - 1) + "}");
+            
+            updateConnectStatus(siteIndex, siteIndex - 1);
+            
+            connections.union(siteIndex, siteIndex - 1);
+        }
+        
+        //check right site and if is open connect to it
+        if (col < n && isOpen(row, col + 1)) {
+            System.out.println("Right Union: {" + siteIndex + ", " + (siteIndex + 1) + "}");
+            
+            updateConnectStatus(siteIndex, siteIndex + 1);
+            
+            connections.union(siteIndex, siteIndex + 1);
+        }
+        
+        if (row == 1) {
+            connectStatus[connections.find(siteIndex)] |= CONNECTED_TOP;
+        }
+        
+        if (row == n) {
+            connectStatus[connections.find(siteIndex)] |= CONNECTED_BOTTOM;
+        }
+        
+        if ((connectStatus[connections.find(siteIndex)] & CONNECTED_BOTH) == CONNECTED_BOTH) {
+            percolates = true;
+        }
     }
     
-    private void connectedToTop(int row, int col) {
-        int colIdx = col - 1;
+    private void updateConnectStatus(int site, int neighbor) {
+        if ((connectStatus[connections.find(site)] & CONNECTED_TOP) == CONNECTED_TOP || (connectStatus[connections.find(neighbor)] & CONNECTED_TOP) == CONNECTED_TOP) {
+            connectStatus[connections.find(site)] |= CONNECTED_TOP;
+        }
         
-        if (topConnections[row * n - (n - col)] = connections.connected(0, row * n - (n - col))) {
-            //check top node to connect to top if it is open!
-            if (row - 1 > 1 && grid[row - 1][colIdx] == true) {
-                topConnections[(row - 1) * n - (n - col)] = true;
-            }
-            
-            //check bottom node to connect to top if it is open!
-            if (row + 1 < n && grid[row + 1][colIdx] == true) {
-                topConnections[(row + 1) * n - (n - col)] = true;
-            }
-            
-            //check right node to connect to top if it is open!
-            if (colIdx + 1 < n && grid[row][colIdx + 1] == true) {
-                topConnections[row * n - (n - col - 1)] = true;
-            }
-            
-            //check left node to connect to top if it is open!
-            if (colIdx - 1 >= 0 && grid[row][colIdx - 1] == true) {
-                topConnections[row * n - (n - col + 1)] = true;
-            }
+        if ((connectStatus[connections.find(site)] & CONNECTED_BOTTOM) == CONNECTED_BOTTOM || (connectStatus[connections.find(neighbor)] & CONNECTED_BOTTOM) == CONNECTED_BOTTOM) {
+            connectStatus[connections.find(site)] |= CONNECTED_BOTTOM;
         }
     }
     
     //is site (row, col) open?
     public boolean isOpen(int row, int col) {
-        if (row <= 0 || row > n) {
+        return openStatus[getSiteIndex(row, col)];
+    }
+    
+    /*
+    transform two-dimension coor to one-dimension coor
+    
+    takes into account the 1-based index
+    */
+    private int getSiteIndex(int row, int col) {
+        if (row < 1 || row > n) {
             throw new IndexOutOfBoundsException("row: " + row);
         }
         
-        col -= 1;
+        if (col < 1 || col > n) {
+            throw new IndexOutOfBoundsException("col: " + col);
+        }
         
-        return grid[row][col];
+        return (col - 1) + (row - 1) * n;
     }
     
     /*
@@ -173,17 +154,7 @@ public class PercolationV2 {
     a full site is an open site that can be connected to an open site in the top row via a chain of neighboring (left, right, up, down) open sites
     */
     public boolean isFull(int row, int col) {
-        if (row <= 0 || row > n) {
-            throw new IndexOutOfBoundsException("row: " + row);
-        }
-        
-        if (!isOpen(row, col)) {
-            return false;
-        }
-        
-        int colIdx = col - 1;
-        
-        return backwash.connected(0, (row * n) - ((n - 1) - colIdx));
+        return (connectStatus[connections.find(getSiteIndex(row, col))] & CONNECTED_TOP) == CONNECTED_TOP;
     }
     
     //number of open sites
@@ -197,101 +168,52 @@ public class PercolationV2 {
     the system percolates if there is a full site in the bottom row
     */
     public boolean percolates() {
-        if (n <= 1) {
-            return isOpen(1, 1);
-        }
-        
-        return connections.connected(0, (n * n) + 1);
-    }
-    
-    private String printParent() {
-        StringBuilder sb = new StringBuilder();
-        
-        sb.append("[0] ");
-        sb.append(connections.parent[0]);
-        sb.append("\n");
-        int j = 0;
-        for (int i = 1; i <= n * n; i++) {
-            sb.append("[" + i + "] ");
-            sb.append(connections.parent[i]);
-            
-            if (i == n + j) {
-                sb.append("\n");
-                
-                j += n;
-            }else {
-                sb.append(", ");
-            }
-        }
-        sb.append("[" + (n * n + 1) + "] ");
-        sb.append(connections.parent[n * n + 1]);
-        
-        return sb.toString();
-    }
-    
-    private String printTopConnections() {
-        StringBuilder sb = new StringBuilder();
-        
-        sb.append("[0] ");
-        sb.append(topConnections[0]);
-        sb.append("\n");
-        int j = 0;
-        for (int i = 1; i <= n * n; i++) {
-            sb.append("[" + i + "] ");
-            sb.append(topConnections[i]);
-            
-            if (i == n + j) {
-                sb.append("\n");
-                
-                j += n;
-            }else {
-                sb.append(", ");
-            }
-        }
-        sb.append("[" + (n * n + 1) + "] ");
-        sb.append(topConnections[n * n + 1]);
-        
-        return sb.toString();
+        return percolates;
     }
     
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        StringBuilder sb1 = new StringBuilder();
+        StringBuilder cStatus = new StringBuilder();
+        StringBuilder oStatus = new StringBuilder();
+        StringBuilder c = new StringBuilder();
         
-        for (int i = 0; i < grid.length - 1; i++) {
-            sb.append(Arrays.toString(grid[i]));
-            sb.append("\n");
+        cStatus.append("connectStatus:\n");
+        oStatus.append("openStatus:\n");
+        c.append("connections:\n");
+        
+        int j = 0;
+        for (int i = 0; i < n * n; i++) {
+            cStatus.append("[" + i + "] ");
+            cStatus.append(connectStatus[i]);
             
-            sb1.append(Arrays.toString(grid[i]));
-            sb1.append("\n");
+            oStatus.append("[" + i + "] ");
+            oStatus.append(openStatus[i]);
+            
+            c.append("[" + i + "] ");
+            c.append(connections.parent[i]);
+            
+            if (i == n + j - 1) {
+                cStatus.append("\n");
+                oStatus.append("\n");
+                c.append("\n");
+                
+                j += n;
+            }else {
+                cStatus.append(", ");
+                oStatus.append(", ");
+                c.append(", ");
+            }
         }
-        sb.append(Arrays.toString(grid[grid.length - 1]));
         
-        return sb.toString() + "\n" + sb1.toString();
+        return c.toString() + "\n" + oStatus.toString() + "\n" + cStatus.toString();
     }
     
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader("D:/Users/psantama/Downloads/percolation/input6.txt"));
         
         PercolationV2 p = new PercolationV2(Integer.parseInt(br.readLine()));
-        
-        System.out.println(p);
-        System.out.println(p.printParent());
-        System.out.println(p.printTopConnections());
-        
-//        p.open(1, 4);
-//        p.open(3, 4);
-//        p.open(2, 4);
-//        
-//        System.out.println(p.isFull(1, 4));
-//        System.out.println(p.isFull(3, 4));
-//        System.out.println(p.isFull(2, 4));
-//        
-//        System.out.println(p);
-//        System.out.println(p.printParent());
-//        System.out.println(p.printTopConnections());
-        
+
+        Set<String[]> coors = new HashSet<>();
         String line;
         while ((line = br.readLine()) != null) {
             if (!"".equals(line)) {
@@ -299,7 +221,8 @@ public class PercolationV2 {
                 
                 System.out.println("----------");
                 
-                System.out.println("open {" + Integer.parseInt(sites[0]) + ", " + Integer.parseInt(sites[1]) + "} ");
+                coors.add(sites);
+                
                 p.open(Integer.parseInt(sites[0]), Integer.parseInt(sites[1]));
                 
                 System.out.println("\tis open? {" + Integer.parseInt(sites[0]) + ", " + Integer.parseInt(sites[1]) + "} " + p.isOpen(Integer.parseInt(sites[0]), Integer.parseInt(sites[1])));
@@ -308,13 +231,13 @@ public class PercolationV2 {
                 System.out.println("\tis full? {" + Integer.parseInt(sites[0]) + ", " + Integer.parseInt(sites[1]) + "} " + p.isFull(Integer.parseInt(sites[0]), Integer.parseInt(sites[1])));
                 
                 System.out.println(p);
-                System.out.println(p.printParent());
-                System.out.println(p.printTopConnections());
                 
                 System.out.println("----------");
             }
         }
         
-        System.out.println(p.isFull(2, 1));
+        for (String[] coor : coors) {
+            System.out.println("is full? {" + Integer.parseInt(coor[0]) + ", " + Integer.parseInt(coor[1]) + "} " + p.isFull(Integer.parseInt(coor[0]), Integer.parseInt(coor[1])));
+        }
     }
 }

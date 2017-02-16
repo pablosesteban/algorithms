@@ -35,8 +35,12 @@ public class PercolationStats {
     We can show that the vacancy percentage at the time that it percolates is an estimate of this threshold value
     */
     private void monteCarloSimulation(int n) {
-        if (n <= 0 || trials <= 0) {
-            throw new IllegalArgumentException();
+        if (n <= 0) {
+            throw new IllegalArgumentException("n: " + n);
+        }
+        
+        if (trials <= 0) {
+            throw new IllegalArgumentException("trials: " + trials);
         }
         
         for (int i = 0; i < trials; i++) {
