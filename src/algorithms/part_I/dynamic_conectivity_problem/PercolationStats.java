@@ -6,8 +6,6 @@
 
 package algorithms.part_I.dynamic_conectivity_problem;
 
-import java.util.ArrayList;
-import java.util.List;
 import edu.princeton.cs.algs4.StdRandom;
 
 /**
@@ -15,14 +13,27 @@ import edu.princeton.cs.algs4.StdRandom;
  * @author psantama
  */
 public class PercolationStats {
-    private List<Double> percolationThresholds = new ArrayList<>();
+    private double[] percolationThresholds;
     private int trials;
     
     //perform trials independent experiments on an n-by-n grid
     public PercolationStats(int n, int trials) {
-        this.trials = trials;
+        if (n <= 0) {
+            throw new IllegalArgumentException("n: " + n);
+        }
         
-        monteCarloSimulation(n);
+        if (trials <= 0) {
+            throw new IllegalArgumentException("trials: " + trials);
+        }
+        
+        this.trials = trials;
+        percolationThresholds = new double[trials];
+        
+        for (int i = 0; i < trials; i++) {
+            Percolation percolation = new Percolation(n);
+            
+            percolationThresholds[i] = monteCarloSimulation(percolation, n);
+        }
     }
     
     /*
@@ -34,24 +45,12 @@ public class PercolationStats {
     
     We can show that the vacancy percentage at the time that it percolates is an estimate of this threshold value
     */
-    private void monteCarloSimulation(int n) {
-        if (n <= 0) {
-            throw new IllegalArgumentException("n: " + n);
+    private double monteCarloSimulation(Percolation percolation, int n) {
+        while (!percolation.percolates()) {
+            percolation.open(StdRandom.uniform(1, n + 1), StdRandom.uniform(1, n + 1));
         }
         
-        if (trials <= 0) {
-            throw new IllegalArgumentException("trials: " + trials);
-        }
-        
-        for (int i = 0; i < trials; i++) {
-            Percolation percolation = new Percolation(n);
-            
-            while (!percolation.percolates()) {
-                percolation.open(StdRandom.uniform(1, n + 1), StdRandom.uniform(1, n + 1));
-            }
-            
-            percolationThresholds.add((double) percolation.numberOfOpenSites() / (n * n));
-        }
+        return ((double) percolation.numberOfOpenSites() / (n * n));
     }
     
     //sample mean of percolation threshold

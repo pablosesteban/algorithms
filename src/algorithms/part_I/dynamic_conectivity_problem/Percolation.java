@@ -10,11 +10,7 @@ package algorithms.part_I.dynamic_conectivity_problem;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -219,10 +215,6 @@ public class Percolation {
         Set<String[]> coors = new HashSet<>();
         String line;
         while ((line = br.readLine()) != null) {
-            if (p.openSites == 41) {
-                break;
-            }
-            
             if (!"".equals(line)) {
                 String[] sites = line.trim().split("\\s+");
                 
@@ -241,24 +233,6 @@ public class Percolation {
                 
                 System.out.println("----------");
             }
-        }
-        
-        System.out.println(p.connections.count());
-        
-        Map<Integer, List<Integer>> connectedComponents = new HashMap<>();
-        
-        for (int i = 0; i < p.connections.parent.length; i++) {
-            int root = p.connections.find(i);
-            
-            if (!connectedComponents.containsKey(root)) {
-                connectedComponents.put(root, new ArrayList<>());
-            }
-            
-            connectedComponents.get(root).add(i);
-        }
-        
-        for (Map.Entry<Integer, List<Integer>> entry : connectedComponents.entrySet()) {
-            System.out.println(entry);
         }
     }
 }
