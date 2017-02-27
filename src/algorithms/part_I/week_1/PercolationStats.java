@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package algorithms.part_I.dynamic_conectivity_problem;
+package algorithms.part_I.week_1;
 
 import edu.princeton.cs.algs4.StdRandom;
 

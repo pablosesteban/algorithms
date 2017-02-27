@@ -10,7 +10,7 @@
  *
  ******************************************************************************/
 
-package algorithms.part_I.dynamic_conectivity_problem;
+package algorithms.part_I.week_1;
 
 /**
  *  The {@code WeightedQuickUnionUF} class represents a <em>union–find data type</em>

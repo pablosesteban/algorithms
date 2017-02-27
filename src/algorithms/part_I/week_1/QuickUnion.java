@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package algorithms.part_I.dynamic_conectivity_problem;
+package algorithms.part_I.week_1;
 
 import java.util.ArrayList;
 import java.util.HashMap;
