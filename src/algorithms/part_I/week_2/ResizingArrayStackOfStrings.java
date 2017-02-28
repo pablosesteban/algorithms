@@ -11,58 +11,72 @@ import java.util.Arrays;
  *
  * @author psantama
  */
-//have a good amortized time so total average over the whole process is good
-//have less wasted space and probably faster implementation of each operation
+
+/*
+have a good amortized time so total average over the whole process is good
+
+have less wasted space and probably faster implementation of each operation
+*/
 public class ResizingArrayStackOfStrings implements Stack<String> {
-    private String[] items;
+    private String[] stack;
     private int pointer;
     
     //client must provide an initial capacity
     public ResizingArrayStackOfStrings() {
-        items = new String[10];
+        //initial capacity of 10
+        stack = new String[10];
     }
     
+    //in worst cases it takes time proportional to N
     @Override
     public void push(String item) {
         if (item == null) {
             throw new IllegalArgumentException("NULL items are not allowed");
         }
         
-        //guaranteed that the amount of memory that we use is always only a constant multiple of the number of items actually on the stack
-        if (size() == items.length) {
-            resize(2 * items.length);
+        /*
+        only when the stack is full (unusual operation)
+        */
+        if (size() == stack.length) {
+            resize(2 * stack.length);
         }
         
-        items[pointer++] = item;
+        stack[pointer++] = item;
     }
     
-    @SuppressWarnings("ManualArrayToCollectionCopy")
-    private void resize(int size) {
-        String[] tmpArr = new String[size];
-        
-        for (int i = 0; i < items.length; i++) {
-            tmpArr[i] = items[i];
-        }
-        
-        items = tmpArr;
-    }
-
+    //in worst cases it takes time proportional to N
     @Override
     public String pop() {
         if (size() == 0) {
             throw new IllegalStateException("Stack is empty");
         }
         
-        //guaranteed that the amount of memory that we use is always only a constant multiple of the number of items actually on the stack
-        if (size() == items.length / 4) {
-            resize(items.length / 2);
+        /*
+        only when the stack is quarter full the array is halving the size (unsual operation)
+        
+        if we would halving the array when it gets to be half full, if the client happens to do push, pop, push, pop alternating when the array is full then, it's going to be doubling, halving, doubling, halving and creating new arrays on every operation to take time proportional to N for every operation and therefore, quadratic time
+        */
+        if (size() == stack.length / 4) {
+            resize(stack.length / 2);
         }
         
-        String item = items[--pointer];
+        String item = stack[--pointer];
         
-        items[pointer] = null;
+        stack[pointer] = null;
         
         return item;
+    }
+    
+    //resizing the array when it is full and quarter full guarantees that the amount of memory that we use is always only a constant multiple of the number of items actually on the stack
+    @SuppressWarnings("ManualArrayToCollectionCopy")
+    private void resize(int size) {
+        String[] tmpArr = new String[size];
+        
+        for (int i = 0; i < stack.length; i++) {
+            tmpArr[i] = stack[i];
+        }
+        
+        stack = tmpArr;
     }
 
     @Override
@@ -78,6 +92,6 @@ public class ResizingArrayStackOfStrings implements Stack<String> {
 
     @Override
     public String toString() {
-        return Arrays.toString(items);
+        return Arrays.toString(stack);
     }
 }

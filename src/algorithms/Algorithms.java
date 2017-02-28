@@ -5,9 +5,8 @@
  */
 package algorithms;
 
-import algorithms.part_I.week_2.FixedArrayStackOfStrings;
-import algorithms.part_I.week_2.LinkedStackOfStrings;
-import algorithms.part_I.week_2.Stack;
+import algorithms.part_I.week_2.Queue;
+import algorithms.part_I.week_2.ResizingArrayQueueOfStrings;
 
 /**
  *
@@ -19,26 +18,49 @@ public class Algorithms {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Stack stackOfString = new FixedArrayStackOfStrings(10);
+        Queue queue = new ResizingArrayQueueOfStrings();
+        queue.enqueue("pablo");
+        queue.enqueue("maria");
+        queue.enqueue("prolo");
+        queue.enqueue("roberT");
+        System.out.println(queue);
+        System.out.println(queue.size());
         
-        stackOfString.push("pablo");
-        System.out.println(stackOfString.size());
+        System.out.println(queue.dequeue());
+        System.out.println(queue);
+        System.out.println(queue.size());
         
-        stackOfString.push("maria");
-        System.out.println(stackOfString.size());
+        System.out.println(queue.dequeue());
+        System.out.println(queue);
+        System.out.println(queue.size());
         
-        stackOfString.push("prolo");
-        System.out.println(stackOfString.size());
+        System.out.println(queue.dequeue());
+        System.out.println(queue);
+        System.out.println(queue.size());
         
-        stackOfString.push("roberT");
-        System.out.println(stackOfString.size());
+        System.out.println(queue.dequeue());
+        System.out.println(queue);
+        System.out.println(queue.size());
         
-        System.out.println(stackOfString);
+        try {
+            System.out.println(queue.dequeue());
+            System.out.println(queue);
+            System.out.println(queue.size());
+        }catch (IllegalStateException ise) {
+            System.out.println(ise.getMessage());
+        }
         
-        System.out.println(stackOfString.pop());
+        queue.enqueue("lil' funesto");
+        System.out.println(queue);
+        System.out.println(queue.size());
         
-        System.out.println(stackOfString);
-        System.out.println(stackOfString.size());
+        queue.enqueue("hugo");
+        System.out.println(queue);
+        System.out.println(queue.size());
+        
+        queue.enqueue("uri");
+        System.out.println(queue);
+        System.out.println(queue.size());
     }
     
 }

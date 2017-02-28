@@ -9,30 +9,29 @@ package algorithms.part_I.week_2;
  *
  * @author psantama
  */
-
-/*
-every operation takes constant time in the worst case that's a guarantee
-
-use a little extra time and space to deal with the links
-*/
-public class LinkedStackOfStrings implements Stack<String> {
-    private Node<String> first;
+public class LinkedQueueOfStrings implements Queue<String> {
+    private Node<String> first, last;
     
     @Override
-    public void push(String item) {
+    public void enqueue(String item) {
         if (item == null) {
             throw new IllegalArgumentException("NULL items are not allowed");
         }
         
-        Node<String> oldFirst = first;
+        Node<String> oldLast = last;
+        last = new Node<>();
+        last.setItem(item);
+        last.setNext(null);
         
-        first = new Node<>();
-        first.setItem(item);
-        first.setNext(oldFirst);
+        if (isEmpty()) {
+            first = last;
+        }else {
+            oldLast.setNext(last);
+        }
     }
 
     @Override
-    public String pop() {
+    public String dequeue() {
         if (size() == 0) {
             throw new IllegalStateException("Stack is empty");
         }
@@ -49,7 +48,7 @@ public class LinkedStackOfStrings implements Stack<String> {
     public boolean isEmpty() {
         return first == null;
     }
-    
+
     @Override
     public int size() {
         int count = 0;
@@ -66,7 +65,7 @@ public class LinkedStackOfStrings implements Stack<String> {
         
         return count;
     }
-
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -94,4 +93,5 @@ public class LinkedStackOfStrings implements Stack<String> {
         
         return sb.toString();
     }
+    
 }
