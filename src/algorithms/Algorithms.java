@@ -7,6 +7,7 @@ package algorithms;
 
 import algorithms.part_I.week_2.Queue;
 import algorithms.part_I.week_2.ResizingArrayQueueOfStrings;
+import algorithms.part_I.week_2.ResizingArrayStackIterable;
 import algorithms.part_I.week_2.ResizingArrayStackOfStrings;
 import algorithms.part_I.week_2.Stack;
 
@@ -20,37 +21,27 @@ public class Algorithms {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Queue queue = new ResizingArrayQueueOfStrings();
+        ResizingArrayStackIterable<String> stackOfStrings = new ResizingArrayStackIterable<>();
         
-        for (int i = 0; i < 10; i++) {
-            queue.enqueue("pablo_" + i);
+        stackOfStrings.push("pablo");
+        stackOfStrings.push("prolo");
+        stackOfStrings.push("funesto");
+        
+        System.out.println(stackOfStrings);
+        
+        stackOfStrings.pop();
+        stackOfStrings.pop();
+        stackOfStrings.push("roberT");
+        
+        System.out.println(stackOfStrings);
+        
+        stackOfStrings.pop();
+        stackOfStrings.pop();
+        stackOfStrings.pop();
+        
+        for (String item : stackOfStrings) {
+            System.out.println(item);
         }
-        
-        System.out.println(queue);
-        System.out.println(queue.size());
-        
-//        for (int i = 0; i < 7; i++) {
-//            queue.dequeue();
-//        }
-//        
-//        System.out.println(queue);
-//        System.out.println(queue.size());
-        
-//        Stack stack = new ResizingArrayStackOfStrings();
-//        
-//        for (int i = 0; i < 10; i++) {
-//            stack.push("pablo_" + i);
-//        }
-//        
-//        System.out.println(stack);
-//        System.out.println(stack.size());
-//        
-//        for (int i = 0; i < 7; i++) {
-//            stack.pop();
-//        }
-//        
-//        System.out.println(stack);
-//        System.out.println(stack.size());
     }
     
 }
