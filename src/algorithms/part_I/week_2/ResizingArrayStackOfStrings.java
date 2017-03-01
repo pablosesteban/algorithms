@@ -23,8 +23,8 @@ public class ResizingArrayStackOfStrings implements Stack<String> {
     
     //client must provide an initial capacity
     public ResizingArrayStackOfStrings() {
-        //initial capacity of 10
-        stack = new String[10];
+        //initial capacity of 2
+        stack = new String[2];
     }
     
     //in worst cases it takes time proportional to N
@@ -48,8 +48,12 @@ public class ResizingArrayStackOfStrings implements Stack<String> {
     @Override
     public String pop() {
         if (size() == 0) {
-            throw new IllegalStateException("Stack is empty");
+            return "Stack is empty";
         }
+        
+        String item = stack[--pointer];
+        
+        stack[pointer] = null;
         
         /*
         only when the stack is quarter full the array is halving the size (unsual operation)
@@ -60,10 +64,6 @@ public class ResizingArrayStackOfStrings implements Stack<String> {
             resize(stack.length / 2);
         }
         
-        String item = stack[--pointer];
-        
-        stack[pointer] = null;
-        
         return item;
     }
     
@@ -72,9 +72,14 @@ public class ResizingArrayStackOfStrings implements Stack<String> {
     private void resize(int size) {
         String[] tmpArr = new String[size];
         
-        for (int i = 0; i < stack.length; i++) {
+        System.out.println("START RESIZING...");
+        
+        for (int i = 0; i < size(); i++) {
+            System.out.println("tmpArr[" + i + "]: " + tmpArr[i] + ", stack[" + i + "]: " + stack[i]);
             tmpArr[i] = stack[i];
         }
+        
+        System.out.println("END RESIZING...");
         
         stack = tmpArr;
     }

@@ -13,14 +13,13 @@ import java.util.Arrays;
  */
 public class ResizingArrayQueueOfStrings implements Queue<String> {
     private String[] queue;
-    private int dequeuePointer, enqueuePointer;
+    //two pointers needed
+    private int popPointer, pushPointer;
     private int size;
     
     public ResizingArrayQueueOfStrings() {
-        queue = new String[10];
-        
-        dequeuePointer = queue.length - 1;
-        enqueuePointer = queue.length;
+        //initial capacity of 2
+        queue = new String[2];
     }
     
     @Override
@@ -29,31 +28,48 @@ public class ResizingArrayQueueOfStrings implements Queue<String> {
             throw new IllegalArgumentException("NULL items are not allowed");
         }
         
+        if (isEmpty()) {
+            popPointer = pushPointer = size();
+        }
+        
         if (size() == queue.length) {
             resize(2 * queue.length);
         }
         
-        queue[--enqueuePointer] = item;
+        queue[pushPointer++] = item;
         
-        ++size;
+        //when there is space in the array (at the beginning) but the pushPointer is at the end (because of pop operations), reseting it to store next element at position 0
+        if (pushPointer == queue.length) {
+            pushPointer = 0;
+        }
+        
+        size++;
     }
-
+    
     @Override
     public String dequeue() {
         if (isEmpty()) {
-            throw new IllegalStateException("Stack is empty");
+            popPointer = pushPointer = 0;
+            
+            return "Stack is empty";
+        }
+        
+        String item = queue[popPointer];
+        
+        queue[popPointer] = null;
+        
+        popPointer++;
+        
+        size--;
+        
+        //when there was space in the array (at the beginning) and new elements were store here (because of pop operations), reseting it to pop next element at position 0
+        if (popPointer == queue.length) {
+            popPointer = 0;
         }
         
         if (size() <= queue.length / 4) {
             resize(queue.length / 2);
         }
-        
-        String item = queue[dequeuePointer];
-        
-        queue[dequeuePointer] = null;
-        
-        --dequeuePointer;
-        --size;
         
         return item;
     }
@@ -63,15 +79,21 @@ public class ResizingArrayQueueOfStrings implements Queue<String> {
         String[] tmpArr = new String[size];
         
         System.out.println("START RESIZING...");
-        for (int i = 1, j = dequeuePointer; i <= size(); i++, j--) {
-            System.out.println("tmpArr[" + (size - i) + "]: " + tmpArr[size - i] + ", queue[" + j + "]: " + queue[j]);
-            tmpArr[size - i] = queue[j];
+        for (int i = 0; i < size(); i++) {
+            if (popPointer == queue.length) {
+                popPointer = 0;
+            }
+            
+            System.out.println("tmpArr[" + (i) + "]: " + tmpArr[i] + ", queue[" + (popPointer) + "]: " + queue[popPointer]);
+            tmpArr[i] = queue[popPointer];
+            
+            popPointer++;
         }
         
-        dequeuePointer = size - 1;
-        enqueuePointer = size;
+        popPointer = 0;
+        pushPointer = size();
         
-        System.out.println("enqueuePointer: " + enqueuePointer + ", dequeuePointer: " + dequeuePointer);
+        System.out.println("enqueuePointer: " + pushPointer + ", dequeuePointer: " + popPointer);
         
         System.out.println("END RESIZING...");
         queue = tmpArr;

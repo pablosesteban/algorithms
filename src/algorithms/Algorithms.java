@@ -7,6 +7,8 @@ package algorithms;
 
 import algorithms.part_I.week_2.Queue;
 import algorithms.part_I.week_2.ResizingArrayQueueOfStrings;
+import algorithms.part_I.week_2.ResizingArrayStackOfStrings;
+import algorithms.part_I.week_2.Stack;
 
 /**
  *
@@ -19,48 +21,36 @@ public class Algorithms {
      */
     public static void main(String[] args) {
         Queue queue = new ResizingArrayQueueOfStrings();
-        queue.enqueue("pablo");
-        queue.enqueue("maria");
-        queue.enqueue("prolo");
-        queue.enqueue("roberT");
-        System.out.println(queue);
-        System.out.println(queue.size());
         
-        System.out.println(queue.dequeue());
-        System.out.println(queue);
-        System.out.println(queue.size());
-        
-        System.out.println(queue.dequeue());
-        System.out.println(queue);
-        System.out.println(queue.size());
-        
-        System.out.println(queue.dequeue());
-        System.out.println(queue);
-        System.out.println(queue.size());
-        
-        System.out.println(queue.dequeue());
-        System.out.println(queue);
-        System.out.println(queue.size());
-        
-        try {
-            System.out.println(queue.dequeue());
-            System.out.println(queue);
-            System.out.println(queue.size());
-        }catch (IllegalStateException ise) {
-            System.out.println(ise.getMessage());
+        for (int i = 0; i < 10; i++) {
+            queue.enqueue("pablo_" + i);
         }
         
-        queue.enqueue("lil' funesto");
         System.out.println(queue);
         System.out.println(queue.size());
         
-        queue.enqueue("hugo");
-        System.out.println(queue);
-        System.out.println(queue.size());
+//        for (int i = 0; i < 7; i++) {
+//            queue.dequeue();
+//        }
+//        
+//        System.out.println(queue);
+//        System.out.println(queue.size());
         
-        queue.enqueue("uri");
-        System.out.println(queue);
-        System.out.println(queue.size());
+//        Stack stack = new ResizingArrayStackOfStrings();
+//        
+//        for (int i = 0; i < 10; i++) {
+//            stack.push("pablo_" + i);
+//        }
+//        
+//        System.out.println(stack);
+//        System.out.println(stack.size());
+//        
+//        for (int i = 0; i < 7; i++) {
+//            stack.pop();
+//        }
+//        
+//        System.out.println(stack);
+//        System.out.println(stack.size());
     }
     
 }
