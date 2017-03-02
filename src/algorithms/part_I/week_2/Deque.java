@@ -31,5 +31,6 @@ public interface Deque<E> extends Iterable<E> {
     public E removeLast();
     
     // return an iterator over items in order from front to end
+    @Override
     public Iterator<E> iterator();
 }

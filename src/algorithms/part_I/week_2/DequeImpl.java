@@ -12,18 +12,14 @@ import java.util.NoSuchElementException;
  *
  * @author psantama
  */
-public class DequeImpl<E> implements Deque<E> {
-    private Node<E> head, tail;
+public class DequeImpl<Item> implements Deque<Item> {
+    private Node<Item> first, last;
     private int count;
+    public static int nodeInstances;
     
-    // construct an empty deque
-    public DequeImpl() {
-        
-    }
-
     @Override
     public boolean isEmpty() {
-        return head == null;
+        return first == null || last == null;
     }
 
     @Override
@@ -32,66 +28,118 @@ public class DequeImpl<E> implements Deque<E> {
     }
 
     @Override
-    public void addFirst(E item) {
+    public void addFirst(Item item) {
+        if (item == null) {
+            throw new NullPointerException("null items are not allowed");
+        }
+        
+        Node<Item> oldFirst = first;
+        
+        first = new Node<>();
+        first.setItem(item);
+        first.setNext(oldFirst);
+        
+        if (isEmpty()) {
+            last = first;
+        }else {
+            oldFirst.setPrevious(first);
+        }
+        
+        ++count;
+    }
+
+    @Override
+    public void addLast(Item item) {
         if (item == null) {
             throw new NullPointerException("null items not allowed");
         }
         
-        Node<E> newNode = new Node<>();
-        newNode.setItem(item);
+        Node<Item> oldLast = last;
         
-        if (size() == 0) {
-            head = newNode;
-            tail = newNode;
+        last = new Node<>();
+        last.setItem(item);
+        last.setNext(null);
+        last.setPrevious(oldLast);
+        
+        if (isEmpty()) {
+            first = last;
+        }else {
+            oldLast.setNext(last);
         }
         
+        ++count;
     }
 
     @Override
-    public void addLast(E item) {
-        if (item == null) {
-            throw new NullPointerException("null items not allowed");
-        }
-        
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public E removeFirst() {
+    public Item removeFirst() {
         if (isEmpty()) {
             throw new NoSuchElementException("Empty deque");
         }
         
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Item item = first.getItem();
+        
+        //the old first element is NOT prepared for GC as there is a references pointing to it inside "previous" field inside next element!
+        first = first.getNext();
+        
+        if  (size() > 1) {
+            //manually remove that reference
+            first.setPrevious(null);
+        }else {
+            first = last = null;
+        }
+        
+        --count;
+        
+        return item;
     }
 
     @Override
-    public E removeLast() {
+    public Item removeLast() {
         if (isEmpty()) {
             throw new NoSuchElementException("Empty deque");
         }
         
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Item item = last.getItem();
+        
+        //the old last element is NOT prepared for GC as there is a references pointing to it inside "next" field inside previous element!
+        last = last.getPrevious();
+        
+        if (size() > 1) {
+            //manually remove that reference
+            last.setNext(null);
+        }else {
+            first = last = null;
+        }
+        
+        --count;
+        
+        return item;
     }
 
     @Override
-    public Iterator<E> iterator() {
+    public Iterator<Item> iterator() {
         return new Itr<>();
     }
     
-    private class Itr<E> implements Iterator<E> {
+    private class Itr<Item> implements Iterator<Item> {
+        private Node<Item> current = (Node<Item>) first;
+        
         @Override
         public boolean hasNext() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            return current != null;
         }
 
         @Override
-        public E next() {
+        public Item next() {
             if (!hasNext()) {
                 throw new NoSuchElementException("No more items to return");
             }
             
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            Item item = current.getItem();
+            
+            current = current.getNext();
+            
+            return item;
         }
 
         @Override
@@ -100,8 +148,67 @@ public class DequeImpl<E> implements Deque<E> {
         }
     }
     
-    // unit testing (optional)
-    public static void main(String[] args) {
+    private class Node<Item> {
+        private Item item;
+        private Node<Item> next;
+        private Node<Item> previous;
+
+        public Node() {
+            nodeInstances++;
+        }
         
+        public Item getItem() {
+            return item;
+        }
+        
+        public void setItem(Item item) {
+            this.item = item;
+        }
+        
+        public Node<Item> getNext() {
+            return next;
+        }
+        
+        public void setNext(Node<Item> next) {
+            this.next = next;
+        }
+
+        public Node<Item> getPrevious() {
+            return previous;
+        }
+
+        public void setPrevious(Node<Item> previous) {
+            this.previous = previous;
+        }
+
+        @Override
+        public String toString() {
+            return "{item: " + item + ", next: " + next + "}";
+        }
+
+        @Override
+        protected void finalize() throws Throwable {
+            super.finalize();
+            
+            System.out.println("FINALIZED!");
+            
+            nodeInstances--;
+        }
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{\n");
+        
+        for (Item item : this) {
+            sb.append("\t");
+            sb.append(item);
+            sb.append("\n");
+        }
+        
+        sb.append("}");
+        
+        return sb.toString();
     }
 }
