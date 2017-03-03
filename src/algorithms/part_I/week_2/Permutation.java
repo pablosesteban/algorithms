@@ -5,6 +5,7 @@
  */
 package algorithms.part_I.week_2;
 
+import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdRandom;
 
 /**
@@ -14,8 +15,11 @@ import edu.princeton.cs.algs4.StdRandom;
 public class Permutation {
    public static void main(String[] args) {
 //       String[] input = {"AA", "BB", "BB", "BB", "BB", "BB", "CC", "CC"};
-       String[] input = {"A", "B", "C", "D", "E", "F", "G", "H", "I"};
-       int count = 3;
+//       String[] input = {"A", "B", "C", "D", "E", "F", "G", "H", "I"};
+
+       String[] input = StdIn.readString().split(" ");
+       int count = Integer.parseInt(args[0]);
+       
        boolean[] pickedInput = new boolean[input.length];
        
        DequeImpl dequeue = new DequeImpl();
