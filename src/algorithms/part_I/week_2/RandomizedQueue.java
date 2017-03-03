@@ -22,12 +22,12 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     
     // construct an empty randomized queue
     public RandomizedQueue() {
-        queue = (Item[]) new Object[2];
+        queue = (Item[]) new Object[0];
     }
     
     // is the queue empty?
     public boolean isEmpty() {
-        return size() == 0;
+        return size == 0;
     }
     
     // return the number of items on the queue
@@ -41,20 +41,16 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             throw new NullPointerException("null items are not allowed");
         }
         
-        if (isEmpty()) {
-            pointer = 0;
-        }
-        
-        if (size() == queue.length) {
-            resize(2 * queue.length);
+        if (size == queue.length) {
+            // check when the array is empty and its length is 0: (2 * 0 = 0) -> resize(0) -> throw an ArrayIndexOutOfBoundsException
+            if (size == 0) {
+                resize(1);
+            }else {
+                resize(2 * queue.length);
+            }
         }
         
         queue[pointer++] = item;
-        
-        //when there is space in the array (at the beginning) but the pushPointer is at the end (because of pop operations), reseting it to store next element at position 0
-        if (pointer == queue.length) {
-            pointer = 0;
-        }
         
         size++;
     }
@@ -65,18 +61,24 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             throw new NoSuchElementException("Empty deque");
         }
         
-        int popPointer = StdRandom.uniform(0, queue.length);
+        int index = StdRandom.uniform(0, size);
         
-        Item item = queue[popPointer];
+        Item item = queue[index];
         
-        queue[popPointer] = null;
-        
-        //check if returned element is null (already random dequeued or not set because of doubling the size) so do not change size
-        if (item != null) {
-            --size;
+        // put the last element in this random place to avoid null elements scattered
+        if (index != size - 1) {
+            queue[index] = queue[size - 1];
+            
+            queue[size - 1] = null;
+        }else {
+            queue[index] = null;
         }
         
-        if (size() <= queue.length / 4) {
+        pointer--;
+        
+        size--;
+        
+        if (size <= queue.length / 4) {
             resize(queue.length / 2);
         }
         
@@ -84,31 +86,18 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
     
     @SuppressWarnings("ManualArrayToCollectionCopy")
-    private void resize(int size) {
-        Item[] tmpArr = (Item[]) new Object[size];
+    private void resize(int newSize) {
+        Item[] tmpArr = (Item[]) new Object[newSize];
         
         System.out.println("START RESIZING...");
-        for (int i = 0; i < size();) {
-            if (pointer == queue.length) {
-                pointer = 0;
-            }
+        for (int i = 0; i < size; i++) {
+            System.out.println("tmpArr[" + (i) + "]: " + tmpArr[i] + ", queue[" + (i) + "]: " + queue[i]);
             
-            System.out.println("tmpArr[" + (i) + "]: " + tmpArr[i] + ", queue[" + (pointer) + "]: " + queue[pointer]);
-            //putting not null elements (because of random dequeue operations)
-            if (queue[pointer] != null) {
-                tmpArr[i] = queue[pointer];
-                
-                i++;
-            }
-            
-            pointer++;
+            tmpArr[i] = queue[i];
         }
         
-        pointer = size();
-        
-        System.out.println("pointer: " + pointer);
-        
         System.out.println("END RESIZING...");
+        
         queue = tmpArr;
     }
     
@@ -118,7 +107,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             throw new NoSuchElementException("Empty deque");
         }
         
-        return queue[StdRandom.uniform(0, queue.length)];
+        return queue[StdRandom.uniform(0, size)];
     }
     
     // return an independent iterator over items in random order
@@ -128,12 +117,17 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
     
     private class Itr<Item> implements Iterator<Item> {
-        private int current = StdRandom.uniform(0, queue.length);
+        // array to keep track if an item has already been picked
+        private boolean[] pickedItems;
         private int count;
+        
+        public Itr() {
+            pickedItems = new boolean[size];
+        }
         
         @Override
         public boolean hasNext() {
-            return current != count;
+            return count < size;
         }
 
         @Override
@@ -142,11 +136,17 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
                 throw new NoSuchElementException("No more items to return");
             }
             
-            Item item = (Item) queue[current];
+            int index = StdRandom.uniform(0, size);
             
-            if (item != null) {
-                count++;
+            while (pickedItems[index] == true) {
+                index = StdRandom.uniform(0, size);
             }
+            
+            Item item = (Item) queue[index];
+            
+            pickedItems[index] = true;
+                    
+            count++;
             
             return item;
         }
@@ -164,38 +164,16 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     
     public static void main(String[] args) {
         RandomizedQueue<Integer> rq = new RandomizedQueue<>();
-        System.out.println("enqueue 1");
-        rq.enqueue(1);
-        System.out.println("enqueue 2");
-        rq.enqueue(2);
-        System.out.println("enqueue 3");
-        rq.enqueue(3);
+        
+        for (int i = 0; i < 10; i++) {
+            rq.enqueue(i);
+        }
         
         System.out.println(rq);
         System.out.println("size: " + rq.size());
         
-        System.out.println("dequeue " + rq.dequeue());
-        System.out.println(rq);
-        System.out.println("size: " + rq.size());
-        
-        System.out.println("dequeue " + rq.dequeue());
-        System.out.println(rq);
-        System.out.println("size: " + rq.size());
-        
-        System.out.println("dequeue " + rq.dequeue());
-        System.out.println(rq);
-        System.out.println("size: " + rq.size());
-        
-        System.out.println("dequeue " + rq.dequeue());
-        System.out.println(rq);
-        System.out.println("size: " + rq.size());
-        
-        System.out.println("dequeue " + rq.dequeue());
-        System.out.println(rq);
-        System.out.println("size: " + rq.size());
-        
-        System.out.println("dequeue " + rq.dequeue());
-        System.out.println(rq);
-        System.out.println("size: " + rq.size());
+        for (Integer item : rq) {
+            System.out.println(item);
+        }
     }
 }
