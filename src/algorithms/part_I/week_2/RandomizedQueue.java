@@ -138,7 +138,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             
             int index = StdRandom.uniform(0, size);
             
-            while (pickedItems[index] == true) {
+            while (pickedItems[index]) {
                 index = StdRandom.uniform(0, size);
             }
             

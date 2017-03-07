@@ -6,42 +6,42 @@
 package algorithms.part_I.week_2;
 
 import edu.princeton.cs.algs4.StdIn;
-import edu.princeton.cs.algs4.StdRandom;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  *
  * @author psantama
  */
 public class Permutation {
-   public static void main(String[] args) {
-//       String[] input = {"AA", "BB", "BB", "BB", "BB", "BB", "CC", "CC"};
-//       String[] input = {"A", "B", "C", "D", "E", "F", "G", "H", "I"};
-
-       String[] input = StdIn.readString().split(" ");
-       int count = Integer.parseInt(args[0]);
-       
-       boolean[] pickedInput = new boolean[input.length];
-       
-       DequeImpl dequeue = new DequeImpl();
-       
-       for (int i = 0; i < count; i++) {
-           int rand = StdRandom.uniform(0, 2);
-           
-           int index = StdRandom.uniform(0, input.length);
-           
-           while (pickedInput[index] == true) {
-               index = StdRandom.uniform(0, count);
-           }
-           
-           if (rand == 0) {
-               dequeue.addFirst(input[index]);
-           }else {
-               dequeue.addLast(input[index]);
-           }
-           
-           pickedInput[index] = true;
-       }
-       
-       System.out.println(dequeue);
-   }
+    public static void main(String[] args) throws IOException {
+        boolean coursera = false;
+        
+        RandomizedQueue<String> dequeue = new RandomizedQueue<>();
+        
+        int count = 0;
+        
+        if (coursera) {
+            while (!StdIn.isEmpty()) {
+                dequeue.enqueue(StdIn.readString());
+            }
+            
+            count = Integer.parseInt(args[0]);
+        }else {
+            BufferedReader br = new BufferedReader(new FileReader("D:/Users/psantama/Downloads/queues/duplicates.txt"));
+            
+            count = 8;
+            
+            String[] input = br.readLine().split("\\s+");
+            
+            for (int i = 0; i < input.length; i++) {
+                dequeue.enqueue(input[i]);
+            }
+        }
+        
+        for (int i = 0; i < count; i++) {
+            System.out.println(dequeue.dequeue());
+        }
+    }
 }
