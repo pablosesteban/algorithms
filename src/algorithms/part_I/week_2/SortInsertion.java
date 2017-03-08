@@ -12,6 +12,10 @@ package algorithms.part_I.week_2;
  * INSERTION SORT: we'll move an index i from left to right and in the "ith" iteration, we're going to move elements[i] into position among the elements to its left if it is smaller
  */
 public class SortInsertion<T extends Comparable<T>> extends Sort<T> {
+    public SortInsertion(boolean debug) {
+        super(debug);
+    }
+    
     /*
     2 invariants implemented by this algorithm:
         the entries onto the left of the "ith" element are in ascending order
@@ -51,24 +55,27 @@ public class SortInsertion<T extends Comparable<T>> extends Sort<T> {
         for (int i = 0; i < elements.length; i++) {
             //go backwards swapping the "ith" element with its left neighbor as long as it is smaller
             for (int j = i; j > 0; j--) {
-                System.out.println("compare {" + j + ", " + (j - 1) + "}");
+                if (debug)
+                    System.out.println("compare {" + j + ", " + (j - 1) + "}");
                 
                 //if left neighbor is smaller, there is no need to keep going because of invariants
                 if (!less(elements[j], elements[j - 1])) {
                     break;
                 }
                 
-                System.out.println("swap {" + elements[j] + ", " + elements[j - 1] + "}");
+                if (debug)
+                    System.out.println("swap {" + elements[j] + ", " + elements[j - 1] + "}");
                 
                 swap(j, j - 1);
                 
-                System.out.println(this);
+                if (debug)
+                    System.out.println(this);
             }
         }
     }
     
     public static void main(String[] args) {
-        Sort<Integer> SortInsertionInt= new SortInsertion<>();
+        Sort<Integer> SortInsertionInt = new SortInsertion<>(true);
         
         Integer[] arrInt = {3, 1, 3, 2, 4};
         
@@ -82,7 +89,7 @@ public class SortInsertion<T extends Comparable<T>> extends Sort<T> {
         
         System.out.println("-----------------");
         
-        Sort<String> SortInsertionStr = new SortInsertion<>();
+        Sort<String> SortInsertionStr = new SortInsertion<>(true);
         
         String[] arrStr = {"prolo", "funigga", "pablo", "roberT"};
         

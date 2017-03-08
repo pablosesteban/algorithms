@@ -12,7 +12,12 @@ import java.util.Arrays;
  * @author psantama
  */
 public abstract class Sort<T extends Comparable<T>> {
+    protected boolean debug;
     protected T[] elements;
+    
+    public Sort(boolean debug) {
+        this.debug = debug;
+    }
     
     public abstract void sort();
     

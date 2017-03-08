@@ -5,121 +5,58 @@
  */
 package algorithms;
 
-import algorithms.part_I.week_2.Deque;
-import algorithms.part_I.week_2.DequeImpl;
+import algorithms.part_I.week_2.Sort;
+import algorithms.part_I.week_2.SortInsertion;
+import algorithms.part_I.week_2.SortSelection;
+import algorithms.part_I.week_2.SortShell;
+import edu.princeton.cs.algs4.StdRandom;
+import edu.princeton.cs.algs4.Stopwatch;
 
 /**
  *
  * @author psantama
  */
 public class Algorithms {
+    private static void testSortingAlgorithms(int n, Sort sortImpl) {
+        Integer[] elements = new Integer[n];
+        for (int i = 0; i < elements.length; i++) {
+            //random elements
+            elements[i] = StdRandom.uniform(n);
+            
+            //sorted elements
+//            elements[i] = i;
+            
+            //backwards sorted elements
+//            elements[n - 1 - i] = i;
+        }
+        
+        Sort<Integer> sort = sortImpl;
+        sort.setElements(elements);
+        System.out.println(sort);
+        
+        long start = System.currentTimeMillis();
 
+        sort.sort();
+
+        long end = System.currentTimeMillis();
+        
+        System.out.println(sort);
+        System.out.println("time: " + ((end - start) / 1000.0) + "s");
+    }
+    
     /**
      * @param args the command line arguments
-     * @throws java.lang.InterruptedException
      */
-    public static void main(String[] args) throws InterruptedException {
-        Deque<Integer> deque = new DequeImpl<>();
+    public static void main(String[] args) {
+        int numOfElements = 50000;
         
-        System.out.println("add first 1");
-        deque.addFirst(1);
-        System.out.println("add first 2");
-        deque.addFirst(2);
-        System.out.println("add last 3");
-        deque.addLast(3);
-        System.out.println("add last 4");
-        deque.addLast(4);
+        System.out.println("SORT SELECTION");
+        testSortingAlgorithms(numOfElements, new SortSelection(false));
         
-        System.out.println("----------------");
-        System.out.println("size: " + deque.size());
-        System.out.println(deque);
-        System.out.println("Number of nodes: " + DequeImpl.nodeInstances);
-        System.out.println("----------------");
+        System.out.println("SORT INSERTION");
+        testSortingAlgorithms(numOfElements, new SortInsertion(false));
         
-        System.out.println("remove first: " + deque.removeFirst());
-        System.out.println("remove first: " + deque.removeFirst());
-        
-        System.gc();
-        Thread.sleep(2000);
-        
-        System.out.println("----------------");
-        System.out.println("size: " + deque.size());
-        System.out.println(deque);
-        System.out.println("Number of nodes: " + DequeImpl.nodeInstances);
-        System.out.println("----------------");
-        
-        System.out.println("remove last: " + deque.removeLast());
-        
-        System.gc();
-        Thread.sleep(2000);
-        
-        System.out.println("----------------");
-        System.out.println("size: " + deque.size());
-        System.out.println(deque);
-        System.out.println("Number of nodes: " + DequeImpl.nodeInstances);
-        System.out.println("----------------");
-        
-        System.out.println("remove first: " + deque.removeFirst());
-        
-        System.gc();
-        Thread.sleep(2000);
-        
-        System.out.println("----------------");
-        System.out.println("size: " + deque.size());
-        System.out.println(deque);
-        System.out.println("Number of nodes: " + DequeImpl.nodeInstances);
-        System.out.println("----------------");
-        
-        System.out.println("add first 1");
-        deque.addFirst(1);
-        System.out.println("add first 2");
-        deque.addFirst(2);
-        
-        System.gc();
-        Thread.sleep(2000);
-        
-        System.out.println("----------------");
-        System.out.println("size: " + deque.size());
-        System.out.println(deque);
-        System.out.println("Number of nodes: " + DequeImpl.nodeInstances);
-        System.out.println("----------------");
-        
-        System.out.println("remove last: " + deque.removeLast());
-        System.out.println("remove last: " + deque.removeLast());
-        
-        System.gc();
-        Thread.sleep(2000);
-        
-        System.out.println("----------------");
-        System.out.println("size: " + deque.size());
-        System.out.println(deque);
-        System.out.println("Number of nodes: " + DequeImpl.nodeInstances);
-        System.out.println("----------------");
-        
-        System.out.println("add last 1");
-        deque.addLast(1);
-        System.out.println("add last 2");
-        deque.addLast(2);
-        
-        System.gc();
-        Thread.sleep(2000);
-        
-        System.out.println("----------------");
-        System.out.println("size: " + deque.size());
-        System.out.println(deque);
-        System.out.println("Number of nodes: " + DequeImpl.nodeInstances);
-        System.out.println("----------------");
-        
-        System.out.println("remove first: " + deque.removeFirst());
-        System.out.println("remove first: " + deque.removeFirst());
-        
-        System.gc();
-        Thread.sleep(2000);
-        
-        System.out.println("----------------");
-        System.out.println("size: " + deque.size());
-        System.out.println(deque);
-        System.out.println("Number of nodes: " + DequeImpl.nodeInstances);
-        System.out.println("----------------");
+        System.out.println("SORT SHELL");
+        testSortingAlgorithms(numOfElements, new SortShell(false));
     }
 }

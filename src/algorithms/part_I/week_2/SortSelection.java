@@ -14,6 +14,10 @@ import java.util.Arrays;
  * SELECTION SORT: we'll move an index i from left to right and in the "ith" iteration, find the smallest remaining entry to the right of i or bigger index than i and then swap that with i
  */
 public class SortSelection<T extends Comparable<T>> extends Sort<T> {
+    public SortSelection(boolean debug) {
+        super(debug);
+    }
+    
     /*
     2 invariants implemented by this algorithm:
         the entries onto the left of the "ith" element are never changed and they're in ascending order
@@ -34,14 +38,16 @@ public class SortSelection<T extends Comparable<T>> extends Sort<T> {
             
             //looking for the smallest element index between the remaining elements in the array
             for (int j = i + 1; j < elements.length; j++) {
-                System.out.println("compare {" + elements[j] + ", " + elements[minIdx] + "}");
+                if (debug)
+                    System.out.println("compare {" + elements[j] + ", " + elements[minIdx] + "}");
                 
                 if (less(elements[j], elements[minIdx])) {
                     minIdx = j;
                 }
             }
             
-            System.out.println("swap {" + i + ", " + minIdx + "}");
+            if (debug)
+                System.out.println("swap {" + i + ", " + minIdx + "}");
             
             //swap the "ith" element with the smallest one
             swap(i, minIdx);
@@ -49,7 +55,7 @@ public class SortSelection<T extends Comparable<T>> extends Sort<T> {
     }
 
     public static void main(String[] args) {
-        Sort<Integer> sortSelectionInt = new SortSelection<>();
+        Sort<Integer> sortSelectionInt = new SortSelection<>(true);
         
         Integer[] arrInt = {3, 1, 3, 2, 4};
         
@@ -63,7 +69,7 @@ public class SortSelection<T extends Comparable<T>> extends Sort<T> {
         
         System.out.println("-----------------");
         
-        Sort<String> sortSelectionStr = new SortSelection<>();
+        Sort<String> sortSelectionStr = new SortSelection<>(true);
         
         String[] arrStr = {"prolo", "funigga", "pablo", "roberT"};
         
