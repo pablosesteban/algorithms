@@ -5,6 +5,7 @@
  */
 package algorithms.part_I.week_3;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 
 /**
@@ -12,108 +13,79 @@ import java.util.Arrays;
  * @author psantama
  * 
  * DIVIDE AND CONQUER: solve a problem by dividing it into two halves, solving the two halves, and then putting the solutions together to get the appropriate answer
+ * @param <T> type of elements for sorting
  */
 public class MergeSort<T extends Comparable<T>> {
     private boolean debug;
     private T[] elements;
+    private T[] merged;
     
     public MergeSort(boolean debug) {
         this.debug = debug;
     }
     
-//    public void sort() {
-//        mergeSort(elements, 0, elements.length);
-//    }
+    public void sort() {
+        mergeSort(elements, merged, 0, elements.length - 1);
+    }
     
-//    private void mergeSort(T[] elements, int lowIdx, int highIdx) {
-//        //an array with only one element is sorted
-//        if (highIdx == lowIdx) {
-//            return;
-//        }
-//        
-//        int midIdx = (lowIdx + (highIdx - lowIdx) / 2) - 1;
-//        
-//        if(debug) {
-//            System.out.println("\tLEFT SIDE: {lowIdx: " + lowIdx + ", highIdx: " + highIdx + "}");
-//        }
-//        
-//        //left half of the elements
-//        mergeSort(elements, lowIdx, midIdx);
-//        
-//        if(debug) {
-//            System.out.println("\tRIGHT SIDE: {lowIdx: " + lowIdx + ", highIdx: " + highIdx + "}");
-//        }
-//        mergeSort(elements, midIdx, highIdx);
-//    }
+    private void mergeSort(T[] elements, T[] merged, int lowIdx, int highIdx) {
+        //an array with only one element is sorted
+        if (highIdx == lowIdx) {
+            return;
+        }
+        
+        int midIdx = lowIdx + (highIdx - lowIdx) / 2;
+        
+        //left half of the elements
+        mergeSort(elements, merged, lowIdx, midIdx);
+        
+        if(debug) {
+            System.out.println("LEFT SIDE");
+            
+            System.out.println("\tindexes: {lowIdx: " + lowIdx + ", midIdx: " + midIdx + ", highIdx: " + highIdx + "}");
+        }
+        
+        //right half of the elements
+        mergeSort(elements, merged, midIdx + 1, highIdx);
+        
+        if(debug) {
+            System.out.println("RIGHT SIDE");
+            
+            System.out.println("\tindexes: {lowIdx: " + lowIdx + ", midIdx: " + (midIdx + 1) + ", highIdx: " + highIdx + "}");
+        }
+        
+        //merge halves
+        merge(elements, merged, lowIdx, midIdx + 1, highIdx);
+    }
     
-    private void sort1(Comparable[] a, Comparable[] aux, int lo, int hi)
-   {
-      if (hi <= lo) return;
-      int mid = lo + (hi - lo) / 2;
-      
-      System.out.println("sort left: {lo: " + lo + ", hi: " + hi + "}");
-      System.out.println("\telements: " + Arrays.toString(Arrays.copyOfRange(elements, lo, hi + 1)));
-      
-      MergeSort.this.sort1(a, aux, lo, mid);
-      
-      System.out.println("sort right: {lo: " + lo + ", hi: " + hi + "}");
-      System.out.println("\telements: " + Arrays.toString(Arrays.copyOfRange(elements, lo, hi + 1)));
-      
-      MergeSort.this.sort1(a, aux, mid+1, hi);
-      
-      System.out.println("merge: {lo: " + lo + ", mid: " + mid + ", hi: " + hi + "}");
-      System.out.println("\telements left: " + Arrays.toString(Arrays.copyOfRange(elements, lo, mid)));
-      System.out.println("\telements right: " + Arrays.toString(Arrays.copyOfRange(elements, mid+1, hi + 1)));
-      
-      merge1(a, aux, lo, mid, hi);
-   }
-   public void sort1(Comparable[] a)
-   {
-      T[] aux = (T[]) new Comparable[a.length];
-      
-      MergeSort.this.sort1(a, aux, 0, a.length - 1);
-      
-      System.out.println(Arrays.toString(a));
-   }
-   
-   private void merge1(Comparable[] a, Comparable[] aux, int lo, int mid, int hi)
-   {
-       // precondition: a[mid+1..hi] sorted
-       for (int k = lo; k <= hi; k++)
-           aux[k] = a[k];
-       
-       int i = lo, j = mid+1;
-       
-       for (int k = lo; k <= hi; k++)
-       {
-           if      (i > mid)              a[k] = aux[j++];
-       
-           else if (j > hi)               a[k] = aux[i++];
-           
-           else if (aux[j].compareTo(aux[i]) <= 0) a[k] = aux[j++];
-           
-           else                           a[k] = aux[i++];
-       }
-   }
+    private void printArray(T[] arr, int lowIdx, int highIdx) {
+        System.out.print("{");
+        
+        for (int i = lowIdx; i < highIdx - 1; i++) {
+            System.out.print(arr[i] + ", ");
+        }
+        
+        System.out.print(arr[highIdx - 1] + "}");
+    }
+    
     //assuming both halves are sorted each one
-    private T[] merge(T[] elements, int midIdx){
-        T[] mergedElements = (T[]) new Comparable[elements.length];
+    private void merge(T[] elements, T[] merged, int lowIdx, int midIdx, int highIdx){
+        int leftPointer = lowIdx, rightPointer = midIdx, mergedPointer = 0;
         
-        int leftPointer = 0, rightPointer = midIdx, mergedPointer = 0;
+        if(debug) {
+            System.out.println("MERGING: {lowIdx: " + lowIdx + ", highIdx: " + midIdx + "}, {lowIdx: " + midIdx + ", highIdx: " + highIdx + "}");
+        }
         
-        if(debug)
-            System.out.println("merging halves: " + Arrays.toString(elements));
-        
-        while (leftPointer <= midIdx && rightPointer < elements.length) {
+        while (leftPointer < midIdx && rightPointer <= highIdx) {
             T leftElem = elements[leftPointer];
             T rightElem = elements[rightPointer];
             
             if (leftElem.compareTo(rightElem) <= 0) {
-                mergedElements[mergedPointer] = leftElem;
+                merged[mergedPointer] = leftElem;
                 
                 leftPointer++;
             }else {
-                mergedElements[mergedPointer] = rightElem;
+                merged[mergedPointer] = rightElem;
                 
                 rightPointer++;
             }
@@ -141,14 +113,12 @@ public class MergeSort<T extends Comparable<T>> {
         }
         
         while (pointer < length) {
-            mergedElements[mergedPointer] = elements[pointer];
+            merged[mergedPointer] = elements[pointer];
             
             pointer++;
             
             mergedPointer++;
         }
-        
-        return mergedElements;
     }
 
     public T[] getElements() {
@@ -157,13 +127,25 @@ public class MergeSort<T extends Comparable<T>> {
 
     public void setElements(T[] elements) {
         this.elements = elements;
+        
+        merged = (T[]) new Comparable[elements.length];
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(merged);
     }
     
     public static void main(String[] args) {
-        Integer[] elements = {5, 2};
+        Integer[] elements = {6,7,8,9,10,1,2,3,4,5};
         
         MergeSort<Integer> mergeSort = new MergeSort<>(true);
+        mergeSort.setElements(elements);
         
-        System.out.println(Arrays.toString(mergeSort.merge(elements, 0)));
+        System.out.println(Arrays.toString(mergeSort.elements));
+        
+        mergeSort.sort();
+        
+        System.out.println(mergeSort);
     }
 }

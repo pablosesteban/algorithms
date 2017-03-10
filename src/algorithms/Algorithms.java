@@ -5,58 +5,70 @@
  */
 package algorithms;
 
-import algorithms.part_I.week_2.Sort;
-import algorithms.part_I.week_2.SortInsertion;
-import algorithms.part_I.week_2.SortSelection;
-import algorithms.part_I.week_2.SortShell;
-import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.Stopwatch;
+import java.util.Arrays;
 
 /**
  *
  * @author psantama
  */
 public class Algorithms {
-    private static void testSortingAlgorithms(int n, Sort sortImpl) {
-        Integer[] elements = new Integer[n];
-        for (int i = 0; i < elements.length; i++) {
-            //random elements
-            elements[i] = StdRandom.uniform(n);
-            
-            //sorted elements
-//            elements[i] = i;
-            
-            //backwards sorted elements
-//            elements[n - 1 - i] = i;
+    private static void printArray(Comparable[] arr, int lowIdx, int highIdx) {
+        System.out.print("{");
+        for (int i = lowIdx; i < highIdx; i++) {
+            System.out.print(arr[i] + ", ");
         }
-        
-        Sort<Integer> sort = sortImpl;
-        sort.setElements(elements);
-        System.out.println(sort);
-        
-        long start = System.currentTimeMillis();
-
-        sort.sort();
-
-        long end = System.currentTimeMillis();
-        
-        System.out.println(sort);
-        System.out.println("time: " + ((end - start) / 1000.0) + "s");
+        System.out.println(arr[highIdx] + "}");
     }
     
-    /**
-     * @param args the command line arguments
-     */
+    private static void sort(Comparable[] a, Comparable[] aux, int lo, int hi) {
+        if (hi <= lo) return;
+        
+        int mid = lo + (hi - lo) / 2;
+        
+        sort(a, aux, lo, mid);
+        
+        System.out.println("LEFT SIDE: {lowIdx: " + lo + ", highIdx: " + hi + "}");
+        
+        printArray(a, lo, hi);
+        
+        sort(a, aux, mid+1, hi);
+        
+        System.out.println("RIGHT SIDE: {lowIdx: " + lo + ", highIdx: " + hi + "}");
+        
+        printArray(a, lo, hi);
+        
+//        merge(a, aux, lo, mid, hi);
+    }
+    
+    public static void sort(Comparable[] a) {
+        Comparable[] aux = new Comparable[a.length];
+        
+        sort(a, aux, 0, a.length - 1);
+        
+        System.out.println("a: " + Arrays.toString(a));
+        System.out.println("aux: " + Arrays.toString(aux));
+    }
+    
+    private static void merge(Comparable[] a, Comparable[] aux, int lo, int mid, int hi) {
+        for (int k = lo; k <= hi; k++)
+            aux[k] = a[k];
+        
+        int i = lo, j = mid+1;
+        
+        for (int k = lo; k <= hi; k++) {
+            if      (i > mid)              a[k] = aux[j++];
+            
+            else if (j > hi)               a[k] = aux[i++];
+            
+            else if (aux[j].compareTo(aux[i]) <= 0) a[k] = aux[j++];
+            
+            else                           a[k] = aux[i++];
+        }
+    }
+    
     public static void main(String[] args) {
-        int numOfElements = 50000;
+        Comparable[] elements = {6,7,8,9,10,1,2,3,4,5};
         
-        System.out.println("SORT SELECTION");
-        testSortingAlgorithms(numOfElements, new SortSelection(false));
-        
-        System.out.println("SORT INSERTION");
-        testSortingAlgorithms(numOfElements, new SortInsertion(false));
-        
-        System.out.println("SORT SHELL");
-        testSortingAlgorithms(numOfElements, new SortShell(false));
+        sort(elements);
     }
 }
