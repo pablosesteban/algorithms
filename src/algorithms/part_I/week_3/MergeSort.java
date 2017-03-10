@@ -46,6 +46,7 @@ public class MergeSort<T extends Comparable<T>> {
         }
         
         //right half of the elements
+        //midIdx + 1: left half includes the midIdx index
         mergeSort(elements, merged, midIdx + 1, highIdx);
         
         if(debug) {
@@ -56,6 +57,8 @@ public class MergeSort<T extends Comparable<T>> {
         
         //merge halves
         merge(elements, merged, lowIdx, midIdx + 1, highIdx);
+        
+        System.out.println("merged: " + Arrays.toString(merged));
     }
     
     private void printArray(T[] arr, int lowIdx, int highIdx) {
@@ -76,6 +79,7 @@ public class MergeSort<T extends Comparable<T>> {
             System.out.println("MERGING: {lowIdx: " + lowIdx + ", highIdx: " + midIdx + "}, {lowIdx: " + midIdx + ", highIdx: " + highIdx + "}");
         }
         
+        //midIdx = midIdx + 1: left half includes the midIdx index
         while (leftPointer < midIdx && rightPointer <= highIdx) {
             T leftElem = elements[leftPointer];
             T rightElem = elements[rightPointer];
