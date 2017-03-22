@@ -102,6 +102,7 @@ public class MergeSort<T extends Comparable<T>> {
     
     //assuming both halves of the array are sorted each one
     private void merge(int lowIdx, int midIdx, int highIdx){
+        //DO NOT use Arrays class
         T[] left = Arrays.copyOfRange(elements, lowIdx, midIdx);
         T[] right = Arrays.copyOfRange(elements, midIdx, highIdx + 1);
         
