@@ -32,9 +32,10 @@ public class FastCollinearPoints {
         for (Point point : points) {
             Point[] sorted = Arrays.copyOf(points, points.length);
             
-            // points sorted regarding "point"
+            // points sorted by slope regarding to the each point
             Arrays.sort(sorted, point.slopeOrder());
             
+            // check if 3 or more adjacent points in the sorted order have equal slopes with respect to p
             for (int i = 1; i < sorted.length; i++) {
                 if (point.compareTo(sorted[i]) == 0) {
                     
