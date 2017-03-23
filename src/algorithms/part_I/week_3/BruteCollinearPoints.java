@@ -10,7 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -18,8 +17,8 @@ import java.util.List;
  * @author psantama
  */
 public class BruteCollinearPoints {
-    private LineSegment[] segments;
-    private static final int MIN_SEGMENT_LENGTH = 4;
+    private List<LineSegment> segments;
+    private static final int SEGMENT_LENGTH = 4;
     
     // finds all line segments containing 4 points
     public BruteCollinearPoints(Point[] points) {
@@ -31,9 +30,9 @@ public class BruteCollinearPoints {
         
         checkDuplicatePoints(points);
         
-        List<LineSegment> l = new ArrayList<>();
+        segments = new ArrayList<>();
         
-        outter:for (int i = 0; i <= points.length - MIN_SEGMENT_LENGTH; i++) {
+        outter:for (int i = 0; i <= points.length - SEGMENT_LENGTH; i++) {
             Point minPoint = points[i];
             Point maxPoint = points[i+1];
             
@@ -47,7 +46,7 @@ public class BruteCollinearPoints {
                 maxPoint = tmp;
             }
             
-            for (int j = 2; j < MIN_SEGMENT_LENGTH; j++) {
+            for (int j = 2; j < SEGMENT_LENGTH; j++) {
                 Point next = points[i+j];
                 
                 if (slope != points[i].slopeTo(next)) {
@@ -63,10 +62,8 @@ public class BruteCollinearPoints {
                 }
             }
             
-            l.add(new LineSegment(minPoint, maxPoint));
+            segments.add(new LineSegment(minPoint, maxPoint));
         }
-        
-        segments = l.toArray(new LineSegment[l.size()]);
     }
     
     private void checkNullPoints(Point[] points) {
@@ -86,12 +83,12 @@ public class BruteCollinearPoints {
     
     // the number of line segments
     public int numberOfSegments() {
-        return segments.length;
+        return segments.size();
     }
     
     // the line segments
     public LineSegment[] segments() {
-        return segments;
+        return segments.toArray(new LineSegment[segments.size()]);
     }
     
     public static void main(String[] args) throws FileNotFoundException, IOException {
@@ -112,7 +109,7 @@ public class BruteCollinearPoints {
         
         BruteCollinearPoints bcp = new BruteCollinearPoints(points);
         
-        System.out.println("segments: " + Arrays.toString(bcp.segments));
+        System.out.println("segments: " + bcp.segments);
         System.out.println("# of segments: " + bcp.numberOfSegments());
     }
 }
