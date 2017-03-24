@@ -24,6 +24,27 @@ QUICK SORT:
         Invariant: no larger entry to the left of j, no smaller entry to the right of j
         
     3) Sort each piece recursively
+
+BEST CASE: N logN
+    will divide everything exactly in half and that makes it kind of like MergeSort
+
+WORST CASE: N^2
+    if the random shuffle winds up putting the items exactly in order, then partitioning doesn't really do anything except find the smallest, peel off the smallest item (discover that everything to the right is greater)
+    
+    if we shuffled randomly, it's extremely unlikely to happen
+
+AVERAGE CASE: N logN
+    faster than MergeSort in practice because of less data movement
+
+NOT STABLE: make it stable using extra space
+
+IMPROVEMENTS:
+    Median of Sample:
+        try to estimate the partitioning element to be near the middle rather than just arbitrarily using the first element
+        
+        sample the items, and then take a median of the sample
+        
+        that's actually not worth the cost for enlarged samples (media of three)
 */
 public class QuickSort<T extends Comparable<T>> {
     private T[] elements;
@@ -35,35 +56,51 @@ public class QuickSort<T extends Comparable<T>> {
     }
     
     public void sort() {
-        // SHUFFLE
+        // SHUFFLE: to choose a random origin point to compare in order to avoid worst case!
         StdRandom.shuffle(elements);
+        
+        if (debug) {
+            System.out.println(this);
+        }
         
         quickSort(0, elements.length - 1);
     }
     
-    private void quickSort(int lowIdx, int highIdx) {
-        if (highIdx <=  lowIdx) {
+    private void quickSort(int pivotIdx, int rightIdx) {
+        if (rightIdx <= pivotIdx) {
             return;
         }
         
         // PARTITION
-        int idx = partition(lowIdx, highIdx);
+        int idx = partition(pivotIdx, rightIdx);
+        
+        if (debug) {
+            System.out.println("sort left: {pivotIdx: " + pivotIdx + ", rightIdx: " + (idx - 1) + "}");
+        }
         
         // SORT LEFT
-        quickSort(lowIdx, idx - 1);
+        quickSort(pivotIdx, idx - 1);
+        
+        if (debug) {
+            System.out.println("sort right: {pivotIdx: " + (idx + 1) + ", rightIdx: " + rightIdx + "}");
+        }
         
         // SORT RIGHT
-        quickSort(idx + 1, highIdx - 1);
+        quickSort(idx + 1, rightIdx);
     }
     
     // return the index of the element which satisfy the invariant
-    private int partition(int lowIdx, int highIdx) {
-        int i = lowIdx + 1;
+    private int partition(int pivotIdx, int rightIdx) {
+        int leftIdx = pivotIdx + 1;
         
         if (debug) {
-            System.out.println("");
+            System.out.println();
             
-            System.out.println("start partition: {low: " + lowIdx + ", i: " + i + ", j: " + highIdx + "}");
+            System.out.println("start partition: {pivotIdx: " + pivotIdx + ", leftIdx: " + leftIdx + ", rightIdx: " + rightIdx + "}");
+        }
+        
+        if (debug) {
+            System.out.println("finding partition point...");
         }
         
         /*
@@ -74,47 +111,78 @@ public class QuickSort<T extends Comparable<T>> {
             
             Exchange a[i] with a[j]
         */
-        while (i < highIdx) {
+        while (true) {
             if (debug) {
-                System.out.println("-----------------------");
+                System.out.println("\t-----------------------");
             }
             
-            while (elements[lowIdx].compareTo(elements[i]) > 0) {
-                i++;
-            }
+            T originElement = elements[pivotIdx];
             
-            while (elements[lowIdx].compareTo(elements[highIdx]) < 0) {
-                highIdx--;
-            }
-            
-            if (debug) {
-                System.out.println("exchange: {low: " + lowIdx + ", i: " + i + ", j: " + highIdx + "}");
-            }
-            
-            if (i < highIdx) {
-                exchange(i, highIdx);
-            }
-            
-            if (debug) {
-                System.out.println(Arrays.toString(elements));
+            // increment left pointer
+            while (originElement.compareTo(elements[leftIdx]) > 0) {
+                // check if leftIdx reach the last index
+                if (leftIdx == rightIdx) {
+                    break;
+                }
                 
-                System.out.println("-----------------------");
+                leftIdx++;
+                
+                if (debug) {
+                    System.out.println("\tincrement leftIdx: " + leftIdx);
+                }
             }
+            
+            // decrement right pointer
+            while (originElement.compareTo(elements[rightIdx]) < 0) {
+                // check if rightIdx reach the beginning index
+                if (rightIdx == pivotIdx) {
+                    break;
+                }
+                
+                rightIdx--;
+                
+                if (debug) {
+                    System.out.println("\tdecrement rightIdx: " + rightIdx);
+                }
+            }
+            
+            if (leftIdx >= rightIdx) {
+                break;
+            }
+            
+            if (debug) {
+                System.out.println("\texchange: {pivotIdx: " + pivotIdx + ", leftIdx: " + leftIdx + ", rightIdx: " + rightIdx + "}");
+            }
+            
+            exchange(leftIdx, rightIdx);
+            
+            if (debug) {
+                System.out.println("\t" + Arrays.toString(elements));
+                
+                System.out.println("\t-----------------------");
+            }
+        }
+        
+        if (debug) {
+            System.out.println("exchange: {pivotIdx: " + pivotIdx + ", rightIdx: " + rightIdx + "}");
         }
         
         /*
         PARTITION PHASE 2: when pointers cross
             Exchange a[lo] with a[j]
         */
-        exchange(highIdx, lowIdx);
+        exchange(rightIdx, pivotIdx);
+        
         
         if (debug) {
             System.out.println(Arrays.toString(elements));
             
+            System.out.println("partition point: " + rightIdx);
+            
             System.out.println("");
         }
         
-        return highIdx;
+        return rightIdx;
     }
     
     private void exchange(int i, int j) {
@@ -131,25 +199,10 @@ public class QuickSort<T extends Comparable<T>> {
     }
     
     public static void main(String[] args) {
-        String[] arr = {"K", "R", "A", "T", "E", "L", "E", "P", "U", "I", "M", "Q", "C", "X", "O", "S"};
+        Integer[] arr = {1, 3, 2, 9, 0, 7, 8, 5, 6, 4};
+//        Integer[] arr = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         
-        System.out.println("original: " + Arrays.toString(arr));
-        System.out.print("index:    {");
-        int j = 0;
-        for (int i = 0; i < arr.length-1; i++) {
-            if (j == 10) {
-                j = 0;
-            }
-            
-            System.out.print(j + ", ");
-            
-            j++;
-        }
-        System.out.println(j + "}");
-        
-        QuickSort<String> qs = new QuickSort<>(arr, true);
-        
-//        qs.partition(0, arr.length - 1);
+        QuickSort<Integer> qs = new QuickSort<>(arr, true);
 
         qs.sort();
         
