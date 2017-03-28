@@ -5,7 +5,6 @@
  */
 package algorithms.part_I.week_3;
 
-import edu.princeton.cs.algs4.StdDraw;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
