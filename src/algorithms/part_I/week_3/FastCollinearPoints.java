@@ -19,9 +19,9 @@ import java.util.List;
  * @author psantama
  */
 public class FastCollinearPoints {
+    private static final int MIN_SEGMENT_LENGTH = 4;
     private boolean debug;
     private List<LineSegment> segments;
-    private static final int MIN_SEGMENT_LENGTH = 4;
     
     // finds all line segments containing 4 points
     public FastCollinearPoints(Point[] points, boolean debug) {

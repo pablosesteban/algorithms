@@ -18,8 +18,8 @@ import java.util.List;
  * @author psantama
  */
 public class BruteCollinearPoints {
-    private List<LineSegment> segments;
     private static final int SEGMENT_LENGTH = 4;
+    private List<LineSegment> segments;
     
     // finds all line segments containing 4 points
     public BruteCollinearPoints(Point[] points) {
