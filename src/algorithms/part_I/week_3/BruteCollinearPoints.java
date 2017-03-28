@@ -5,11 +5,13 @@
  */
 package algorithms.part_I.week_3;
 
+import edu.princeton.cs.algs4.StdDraw;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -26,43 +28,41 @@ public class BruteCollinearPoints {
             throw new NullPointerException("null argument");
         }
         
+        // check it before sorting!
         checkNullPoints(points);
-        
-        checkDuplicatePoints(points);
         
         segments = new ArrayList<>();
         
-        outter:for (int i = 0; i <= points.length - SEGMENT_LENGTH; i++) {
-            Point minPoint = points[i];
-            Point maxPoint = points[i+1];
-            
-            double slope = minPoint.slopeTo(maxPoint);
-            
-            if (minPoint.compareTo(maxPoint) > 0) {
-                Point tmp = minPoint;
+        // sort array by natural order
+        Arrays.sort(points);
+        
+        for (int i = 0; i <= points.length - SEGMENT_LENGTH; i++) {
+            for (int j = i+1; j <= points.length - (SEGMENT_LENGTH-1); j++) {
+                // calculates slope between first and second points
+                double slopeFS = points[i].slopeTo(points[j]);
                 
-                minPoint = maxPoint;
-                
-                maxPoint = tmp;
-            }
-            
-            for (int j = 2; j < SEGMENT_LENGTH; j++) {
-                Point next = points[i+j];
-                
-                if (slope != points[i].slopeTo(next)) {
-                    continue outter;
+                // by definition the slope of a point to itself is NEGATIVE_INFINITY
+                if (slopeFS == Double.NEGATIVE_INFINITY) {
+                    throw new IllegalArgumentException("repeated point at index " + i + ": " + points[i]);
                 }
                 
-                if (minPoint.compareTo(next) > 0) {
-                    minPoint = next;
-                }else {
-                    if (maxPoint.compareTo(next) < 0) {
-                        maxPoint = next;
+                for (int k = j+1; k <= points.length - (SEGMENT_LENGTH-2); k++) {
+                    // calculates slope between first and third points
+                    double slopeFT = points[i].slopeTo(points[k]);
+                    
+                    // if first two slopes are not equal there are no collinear
+                    if (slopeFS == slopeFT) {
+                        for (int l = k+1; l < points.length; l++) {
+                            // calculates slope between first and fourth points
+                            double slopeFF = points[i].slopeTo(points[l]);
+                            
+                            if (slopeFS == slopeFF) {
+                                segments.add(new LineSegment(points[i], points[l]));
+                            }
+                        }
                     }
                 }
             }
-            
-            segments.add(new LineSegment(minPoint, maxPoint));
         }
     }
     
@@ -71,13 +71,6 @@ public class BruteCollinearPoints {
             if (points[i] == null) {
                 throw new NullPointerException("null point at index " + i);
             }
-        }
-    }
-    
-    private void checkDuplicatePoints(Point[] points) {
-        for (int i = 0; i < points.length - 1; i++) {
-            if (points[i].compareTo(points[i+1]) == 0)
-                throw new IllegalArgumentException("repeated point at index " + i + ": " + points[i]);
         }
     }
     
@@ -92,7 +85,7 @@ public class BruteCollinearPoints {
     }
     
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        BufferedReader br = new BufferedReader(new FileReader("D:/Users/psantama/Downloads/collinear/input8.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("D:/Users/psantama/Downloads/collinear/input40.txt"));
         int n = Integer.parseInt(br.readLine());
         
         Point[] points = new Point[n];
