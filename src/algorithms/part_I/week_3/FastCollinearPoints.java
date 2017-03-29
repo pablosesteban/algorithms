@@ -20,7 +20,6 @@ import java.util.List;
  */
 public class FastCollinearPoints {
     private static final int MIN_SEGMENT_LENGTH = 4;
-    private boolean debug;
     private List<LineSegment> segments;
     
     // finds all line segments containing 4 points
@@ -29,95 +28,80 @@ public class FastCollinearPoints {
             throw new NullPointerException("null argument");
         }
         
-        checkNullPoints(points);
-        
-        checkDuplicatePoints(points);
+        checkDuplicatedPoints(points);
         
         segments = new ArrayList<>();
-        this.debug = debug;
         
-        Point[] toSort = Arrays.copyOf(points, points.length);
+        Point[] sorted = Arrays.copyOf(points, points.length);
         
-        for (Point point : points) {
-            // points sorted by slope regarding to the each point
-            Arrays.sort(toSort, point.slopeOrder());
-            
-            if (debug) {
-                System.out.println("---------------------");
-                System.out.println("toSort: " + Arrays.toString(toSort));
-            }
-            
-            double slope = Double.NaN;
-            
-            List<Point> collinearPoints = new LinkedList<>();
-            
-            int lastIdx = 0;
-            // check if 3 or more adjacent points in the sorted order have equal slopes regarding to each point
-            for (int i = 1; i < toSort.length; i++) {
-                if (debug) {
-                    System.out.println("slopeTo {" + point + ", " + toSort[i] + "}: " + point.slopeTo(toSort[i]));
-                }
-                
-                double slopeTo = point.slopeTo(toSort[i]);
-                
-                if (slope == slopeTo) {
-                    // add the point before
-                    collinearPoints.add(toSort[i-1]);
-                    
-                    lastIdx = i;
-                }
-                
-                slope = slopeTo;
-            }
-            
-            // add the last point
-            collinearPoints.add(toSort[lastIdx]);
-            
-            // add the point by which the slopes are sorted
-            collinearPoints.add(point);
-            
-            if (collinearPoints.size() >= MIN_SEGMENT_LENGTH) {
-                Point[] tmp = collinearPoints.toArray(new Point[collinearPoints.size()]);
-                
-                Arrays.sort(tmp);
-                
-                LineSegment lineSegment = new LineSegment(tmp[0], tmp[tmp.length - 1]);
-                
-                boolean duplicated = false;
-                
-                // check if segment is duplicated
-                for (LineSegment segment : segments) {
-                    if (segment.toString().equals(lineSegment.toString())) {
-                        duplicated = true;
-                        
-                        break;
-                    }
-                }
-                
-                if (!duplicated) {
-                    segments.add(lineSegment);
-                }
-            }
-            
-            if (debug) {
-                System.out.println("---------------------");
-            }
-        }
-    }
-    
-    private void checkNullPoints(Point[] points) {
         for (int i = 0; i < points.length; i++) {
             if (points[i] == null) {
                 throw new NullPointerException("null point at index " + i);
             }
+            
+            // points sorted by slope regarding to the each point
+            Arrays.sort(sorted, points[i].slopeOrder());
+            
+            if (debug) {
+                System.out.println("---------------------");
+                System.out.println("sorted: " + Arrays.toString(sorted));
+            }
+            
+            for (int firstIdx = 1, lastIdx = 2; lastIdx < sorted.length; lastIdx++) {
+                if (debug) {
+                    System.out.println("slopeTo {" + points[i] + ", " + sorted[firstIdx] + "}: " + points[i].slopeTo(sorted[firstIdx]));
+                }
+                
+                while (lastIdx < sorted.length && points[i].slopeTo(sorted[firstIdx]) == points[i].slopeTo(sorted[lastIdx])) {
+                    if (debug) {
+                        System.out.println("\tslopeTo {" + points[i] + ", " + sorted[lastIdx] + "}: " + points[i].slopeTo(sorted[lastIdx]));
+                    }
+                    
+                    lastIdx++;
+                }
+                
+                if (lastIdx - firstIdx >= MIN_SEGMENT_LENGTH - 1) {
+                    Arrays.sort(sorted, firstIdx, lastIdx);
+                    
+                    LineSegment lineSegment = null;
+                    
+                    // including the pivot point in the segment
+                    if (sorted[firstIdx].compareTo(points[i]) > 0) {
+                        lineSegment = new LineSegment(points[i], sorted[lastIdx - 1]);
+                    }else if (sorted[lastIdx - 1].compareTo(points[i]) < 0) {
+                        lineSegment = new LineSegment(sorted[firstIdx], points[i]);
+                    }else {
+                        lineSegment = new LineSegment(sorted[firstIdx], sorted[lastIdx - 1]);
+                    }
+                    
+                    // check if the segment was already found
+                    if (!isDuplicatedSegment(lineSegment))
+                        segments.add(lineSegment);
+                    
+                    System.out.println("lineSegment: " + lineSegment);
+                }
+                
+                firstIdx = lastIdx;
+            }
+            
+            System.out.println("---------------------");
         }
     }
     
-    private void checkDuplicatePoints(Point[] points) {
+    private void checkDuplicatedPoints(Point[] points) {
         for (int i = 0; i < points.length - 1; i++) {
             if (points[i].compareTo(points[i+1]) == 0)
                 throw new IllegalArgumentException("repeated point at index " + i + ": " + points[i]);
         }
+    }
+    
+    private boolean isDuplicatedSegment(LineSegment segment) {
+        for (LineSegment ln : segments) {
+            if (ln.toString().compareTo(segment.toString()) == 0)
+                return true;
+        }
+        
+        return false;
     }
     
     // the number of line segments
@@ -131,7 +115,7 @@ public class FastCollinearPoints {
     }
     
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        BufferedReader br = new BufferedReader(new FileReader("D:/Users/psantama/Downloads/collinear/input6.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("D:/Users/psantama/Downloads/collinear/input40.txt"));
         int n = Integer.parseInt(br.readLine());
         
         Point[] points = new Point[n];
@@ -146,7 +130,7 @@ public class FastCollinearPoints {
             i++;
         }
         
-        FastCollinearPoints bcp = new FastCollinearPoints(points, false);
+        FastCollinearPoints bcp = new FastCollinearPoints(points, true);
         
         System.out.println("segments: ");
         

@@ -29,6 +29,8 @@ public class BruteCollinearPoints {
         // check it before sorting!
         checkNullPoints(points);
         
+        checkDuplicatedPoints(points);
+        
         segments = new ArrayList<>();
         
         for (int i = 0; i <= points.length - SEGMENT_LENGTH; i++) {
@@ -58,11 +60,6 @@ public class BruteCollinearPoints {
                 
                 if (debug) {
                     System.out.println(", slopeFS: " + slopeFS);
-                }
-                
-                // by definition the slope of a point to itself is NEGATIVE_INFINITY
-                if (slopeFS == Double.NEGATIVE_INFINITY) {
-                    throw new IllegalArgumentException("repeated point at index " + i + ": " + points[i]);
                 }
                 
                 for (int k = j+1; k <= points.length - (SEGMENT_LENGTH-2); k++) {
@@ -137,6 +134,16 @@ public class BruteCollinearPoints {
         }
     }
     
+    // do better?
+    private void checkDuplicatedPoints(Point[] points) {
+        for (int i = 0; i < points.length - 1; i++) {
+            for (int j = i+1; j < points.length; j++) {
+                if (points[i].compareTo(points[j]) == 0)
+                    throw new IllegalArgumentException("repeated point at index " + i + ": " + points[i]);
+            }
+        }
+    }
+    
     // the number of line segments
     public int numberOfSegments() {
         return segments.size();
@@ -148,10 +155,10 @@ public class BruteCollinearPoints {
     }
     
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        BufferedReader br = new BufferedReader(new FileReader("D:/Users/psantama/Downloads/collinear/input40.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("D:/Users/psantama/Downloads/collinear/input8.txt"));
         int n = Integer.parseInt(br.readLine());
         
-        Point[] points = new Point[n];
+        Point[] points = new Point[n+1];
         
         String line = null;
         int i = 0;
@@ -162,6 +169,7 @@ public class BruteCollinearPoints {
             
             i++;
         }
+        points[n] = new Point(6000, 7000);
         
         BruteCollinearPoints bcp = new BruteCollinearPoints(points, true);
         
