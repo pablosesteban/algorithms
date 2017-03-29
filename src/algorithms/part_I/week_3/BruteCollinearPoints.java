@@ -10,7 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -22,7 +21,7 @@ public class BruteCollinearPoints {
     private List<LineSegment> segments;
     
     // finds all line segments containing 4 points
-    public BruteCollinearPoints(Point[] points) {
+    public BruteCollinearPoints(Point[] points, boolean debug) {
         if (points == null) {
             throw new NullPointerException("null argument");
         }
@@ -32,13 +31,34 @@ public class BruteCollinearPoints {
         
         segments = new ArrayList<>();
         
-        // sort array by natural order
-        Arrays.sort(points);
-        
         for (int i = 0; i <= points.length - SEGMENT_LENGTH; i++) {
+            Point minPoint = points[i];
+            Point maxPoint = points[i];
+            
+            if (debug) {
+                System.out.println("----------------------");
+                
+                System.out.println("First point: " + points[i]);
+            }
+            
             for (int j = i+1; j <= points.length - (SEGMENT_LENGTH-1); j++) {
+                // check if next point is max or min point
+                if (minPoint.compareTo(points[j]) > 0) {
+                    minPoint = points[j];
+                }else {
+                    maxPoint = points[j];
+                }
+                
+                if (debug) {
+                    System.out.print("\tSecond point: " + points[j]);
+                }
+                
                 // calculates slope between first and second points
                 double slopeFS = points[i].slopeTo(points[j]);
+                
+                if (debug) {
+                    System.out.println(", slopeFS: " + slopeFS);
+                }
                 
                 // by definition the slope of a point to itself is NEGATIVE_INFINITY
                 if (slopeFS == Double.NEGATIVE_INFINITY) {
@@ -46,21 +66,65 @@ public class BruteCollinearPoints {
                 }
                 
                 for (int k = j+1; k <= points.length - (SEGMENT_LENGTH-2); k++) {
+                    if (debug) {
+                        System.out.print("\t\tThird point: " + points[k]);
+                    }
+                    
                     // calculates slope between first and third points
                     double slopeFT = points[i].slopeTo(points[k]);
                     
+                    if (debug) {
+                        System.out.println(", slopeFT: " + slopeFT);
+                    }
+                    
                     // if first two slopes are not equal there are no collinear
                     if (slopeFS == slopeFT) {
+                        // check if next point is max or min point
+                        if (minPoint.compareTo(points[k]) > 0) {
+                            minPoint = points[k];
+                        }else {
+                            if (maxPoint.compareTo(points[k]) < 0)
+                                maxPoint = points[k];
+                        }
+                        
                         for (int l = k+1; l < points.length; l++) {
+                            if (debug) {
+                                System.out.print("\t\t\tFourth point: " + points[l]);
+                            }
+                            
                             // calculates slope between first and fourth points
                             double slopeFF = points[i].slopeTo(points[l]);
                             
+                            if (debug) {
+                                System.out.println(", slopeFF: " + slopeFF);
+                            }
+                            
                             if (slopeFS == slopeFF) {
-                                segments.add(new LineSegment(points[i], points[l]));
+                                // check if next point is max or min point
+                                if (minPoint.compareTo(points[l]) > 0) {
+                                    minPoint = points[l];
+                                }else {
+                                    if (maxPoint.compareTo(points[l]) < 0)
+                                        maxPoint = points[l];
+                                }
+                                
+                                LineSegment lineSegment = new LineSegment(minPoint, maxPoint);
+                                
+                                segments.add(lineSegment);
+                                
+                                if (debug) {
+                                    System.out.println("\t\t\t\tsegment: " + points[i] + "->" + points[j] + "->" + points[k] + "->" + points[l]);
+                                    
+                                    System.out.println("\t\t\t\tlineSegment: " + lineSegment);
+                                }
                             }
                         }
                     }
                 }
+            }
+            
+            if (debug) {
+                System.out.println("----------------------");
             }
         }
     }
@@ -99,7 +163,7 @@ public class BruteCollinearPoints {
             i++;
         }
         
-        BruteCollinearPoints bcp = new BruteCollinearPoints(points);
+        BruteCollinearPoints bcp = new BruteCollinearPoints(points, true);
         
         System.out.println("segments: " + bcp.segments);
         System.out.println("# of segments: " + bcp.numberOfSegments());
