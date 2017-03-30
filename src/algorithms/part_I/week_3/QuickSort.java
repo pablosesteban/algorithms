@@ -66,6 +66,74 @@ public class QuickSort<T extends Comparable<T>> {
         quickSort(0, elements.length - 1);
     }
     
+    public void sortDijkstra3way() {
+        // SHUFFLE: to choose a random origin point to compare in order to avoid worst case!
+        StdRandom.shuffle(elements);
+        
+        if (debug) {
+            System.out.println(this);
+        }
+        
+        dijkstra3wayQuickSort(0, elements.length - 1);
+    }
+    
+    /*
+    when we have significant numbers of duplicate keys to sort:
+        get the array into three parts, put equal elements into the middle and recursively go through both sides
+    
+    maintain the invariants:
+        everything to the left of leftIdx is known to be less than partitioning element
+    
+        everything between pivotIdx and leftIdx is known to be equal than partitioning element
+    
+        everything to the right of rightIdx is known to be greater than partitioning element
+    
+    this improvement is entropy-optimal, i.e. whatever the distribution of equal keys in there, this thing is going to use a number of compares that's proportional to the best that you could possibly do
+    
+    the bottom line is that if you randomize the order and use three-way partitioning then there's lot of applications where your sort routine is going to be LINEAR not N logN
+    */
+        private void dijkstra3wayQuickSort(int pivotIdx, int highIdx) {
+        if (highIdx <= pivotIdx) {
+            return;
+        }
+        
+        // three pointers to divide the array in three parts
+        int leftIdx = pivotIdx;
+        int i = pivotIdx;
+        int rightIdx = highIdx;
+        
+        //PARTITION
+        // scan i from left to right, i.e. until i and rightIdx are equals
+        while(i < rightIdx) { 
+            if (elements[pivotIdx].compareTo(elements[i]) > 0) {
+                exchange(leftIdx, i);
+                
+                leftIdx++;
+                i++;
+            }else if (elements[pivotIdx].compareTo(elements[i]) < 0) {
+                exchange(i, rightIdx);
+                
+                rightIdx--;
+            }else {
+                i++;
+            }
+        }
+        
+        if (debug) {
+            System.out.println("sort left: {pivotIdx: " + pivotIdx + ", rightIdx: " + (leftIdx - 1) + "}");
+        }
+        
+        // SORT LEFT
+        dijkstra3wayQuickSort(pivotIdx, leftIdx - 1);
+        
+        if (debug) {
+            System.out.println("sort right: {pivotIdx: " + (rightIdx + 1) + ", rightIdx: " + highIdx + "}");
+        }
+        
+        // SORT RIGHT
+        dijkstra3wayQuickSort(rightIdx + 1, highIdx);
+    }
+    
     private void quickSort(int pivotIdx, int rightIdx) {
         if (rightIdx <= pivotIdx) {
             return;
@@ -118,6 +186,7 @@ public class QuickSort<T extends Comparable<T>> {
             
             T originElement = elements[pivotIdx];
             
+            // if you did not stop the partitioning on equal keys it would run in quadratic time
             // increment left pointer
             while (originElement.compareTo(elements[leftIdx]) > 0) {
                 // check if leftIdx reach the last index
@@ -132,6 +201,7 @@ public class QuickSort<T extends Comparable<T>> {
                 }
             }
             
+            // if you did not stop the partitioning on equal keys it would run in quadratic time
             // decrement right pointer
             while (originElement.compareTo(elements[rightIdx]) < 0) {
                 // check if rightIdx reach the beginning index
@@ -200,11 +270,18 @@ public class QuickSort<T extends Comparable<T>> {
     
     public static void main(String[] args) {
         Integer[] arr = {1, 3, 2, 9, 0, 7, 8, 5, 6, 4};
-//        Integer[] arr = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         
         QuickSort<Integer> qs = new QuickSort<>(arr, true);
 
         qs.sort();
+        
+        System.out.println(qs);
+        
+        arr = new Integer[]{3, 1, 3, 4, 1, 3, 1, 5, 7};
+        
+        qs = new QuickSort<>(arr, true);
+
+        qs.sortDijkstra3way();
         
         System.out.println(qs);
     }
