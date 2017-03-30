@@ -15,7 +15,6 @@ import edu.princeton.cs.algs4.StdDraw;
 public class Point implements Comparable<Point> {
     private final int x;     // x-coordinate of this point
     private final int y;     // y-coordinate of this point
-    private final SlopeOrderComparator slopeOrder = new SlopeOrderComparator();
 
     /**
      * Initializes a new point.
@@ -108,17 +107,20 @@ public class Point implements Comparable<Point> {
      * @return the Comparator that defines this ordering on points
      */
     public Comparator<Point> slopeOrder() {
-        return slopeOrder;
+        return new SlopeOrderComparator();
     }
     
     private class SlopeOrderComparator implements Comparator<Point> {
         @Override
         public int compare(Point p1, Point p2) {
-            if (slopeTo(p1) < slopeTo(p2)) {
+            double slopeToP1 = slopeTo(p1);
+            double slopeToP2 = slopeTo(p2);
+            
+            if (slopeToP1 < slopeToP2) {
                 return -1;
             }
             
-            if (slopeTo(p1) > slopeTo(p2)) {
+            if (slopeToP1 > slopeToP2) {
                 return 1;
             }
             
