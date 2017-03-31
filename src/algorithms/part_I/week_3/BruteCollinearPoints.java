@@ -43,7 +43,7 @@ public class BruteCollinearPoints {
                 System.out.println("First point: " + points[i]);
             }
             
-            for (int j = i+1; j <= points.length - (SEGMENT_LENGTH-1); j++) {
+            for (int j = i+1; j <= points.length - (SEGMENT_LENGTH - 1); j++) {
                 if (debug) {
                     System.out.print("\tSecond point: " + points[j]);
                 }
@@ -55,7 +55,7 @@ public class BruteCollinearPoints {
                     System.out.println(", slopeFS: " + slopeFS);
                 }
                 
-                for (int k = j+1; k <= points.length - (SEGMENT_LENGTH-2); k++) {
+                for (int k = j+1; k <= points.length - (SEGMENT_LENGTH - 2); k++) {
                     if (debug) {
                         System.out.print("\t\tThird point: " + points[k]);
                     }
@@ -85,7 +85,7 @@ public class BruteCollinearPoints {
                                 // check if second point is max or min point
                                 if (minPoint.compareTo(points[j]) > 0) {
                                     minPoint = points[j];
-                                }else {
+                                } else {
                                     if (maxPoint.compareTo(points[j]) < 0)
                                         maxPoint = points[j];
                                 }
@@ -93,7 +93,7 @@ public class BruteCollinearPoints {
                                 // check if third point is max or min point
                                 if (minPoint.compareTo(points[k]) > 0) {
                                     minPoint = points[k];
-                                }else {
+                                } else {
                                     if (maxPoint.compareTo(points[k]) < 0)
                                         maxPoint = points[k];
                                 }
@@ -101,7 +101,7 @@ public class BruteCollinearPoints {
                                 // check if fourth point is max or min point
                                 if (minPoint.compareTo(points[l]) > 0) {
                                     minPoint = points[l];
-                                }else {
+                                } else {
                                     if (maxPoint.compareTo(points[l]) < 0)
                                         maxPoint = points[l];
                                 }

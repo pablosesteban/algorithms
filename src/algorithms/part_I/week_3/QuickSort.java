@@ -70,11 +70,7 @@ public class QuickSort<T extends Comparable<T>> {
         // SHUFFLE: to choose a random origin point to compare in order to avoid worst case!
         StdRandom.shuffle(elements);
         
-        if (debug) {
-            System.out.println(this);
-        }
-        
-        dijkstra3wayQuickSort(0, elements.length - 1);
+        example(0, elements.length - 1);
     }
     
     /*
@@ -92,46 +88,139 @@ public class QuickSort<T extends Comparable<T>> {
     
     the bottom line is that if you randomize the order and use three-way partitioning then there's lot of applications where your sort routine is going to be LINEAR not N logN
     */
-        private void dijkstra3wayQuickSort(int pivotIdx, int highIdx) {
-        if (highIdx <= pivotIdx) {
+    private void dijkstra3wayQuickSort(int leftIdx, int rightIdx) {
+        // third pointer to divide the array in three parts
+        int i = leftIdx + 1;
+        
+        if (rightIdx <= leftIdx) {
             return;
         }
         
-        // three pointers to divide the array in three parts
-        int leftIdx = pivotIdx;
-        int i = pivotIdx;
-        int rightIdx = highIdx;
+        if (debug) {
+            System.out.println("shuffled: " + Arrays.toString(elements));
+            
+            System.out.print("index   : {");
+            
+            for (int j = 0; j < elements.length - 1; j++) {
+                System.out.print(j + ", ");
+            }
+            
+            System.out.println(elements.length - 1 + "}");
+            
+            System.out.println("PARTITION:");
+        }
         
-        //PARTITION
-        // scan i from left to right, i.e. until i and rightIdx are equals
-        while(i < rightIdx) { 
-            if (elements[pivotIdx].compareTo(elements[i]) > 0) {
+        //3-WAY PARTITION: scan i from left to right, i.e. until i and rightIdx are equals
+        while(i <= rightIdx) {
+            if (debug) {
+                System.out.println("\t-----------------------------");
+                System.out.println("\tleftIdx: " + leftIdx + ", i: " + i + ", rightIdx: " + rightIdx);
+            }
+            
+            if (elements[leftIdx].compareTo(elements[i]) > 0) {
+                if (debug) {
+                    System.out.println("\texchange: {" + elements[leftIdx] + ", " + elements[i] + "}");
+                }
+                
                 exchange(leftIdx, i);
                 
                 leftIdx++;
                 i++;
-            }else if (elements[pivotIdx].compareTo(elements[i]) < 0) {
+            }else if (elements[leftIdx].compareTo(elements[i]) < 0) {
+                if (debug) {
+                    System.out.println("\texchange: {" + elements[i] + ", " + elements[rightIdx] + "}");
+                }
+                
                 exchange(i, rightIdx);
                 
                 rightIdx--;
             }else {
                 i++;
             }
+            
+            if (debug) {
+                System.out.println("\tshuffled: " + Arrays.toString(elements));
+                
+                System.out.print("\tindex   : {");
+                
+                for (int j = 0; j < elements.length - 1; j++) {
+                    System.out.print(j + ", ");
+                }
+                
+                System.out.println(elements.length - 1 + "}");
+                
+                System.out.println("\t-----------------------------");
+            }
+        }
+        
+//        // SORT LEFT
+//        dijkstra3wayQuickSort(0, leftIdx - 1);
+//        
+//        // SORT RIGHT
+//        dijkstra3wayQuickSort(i, rightIdx);
+    }
+    
+    private void example(int lo, int hi) {
+        if (hi <= lo) return;
+        
+        if (debug) {
+            System.out.println("shuffled: " + Arrays.toString(elements));
+            
+            System.out.print("index   : {");
+            
+            for (int j = 0; j < elements.length - 1; j++) {
+                System.out.print(j + ", ");
+            }
+            
+            System.out.println(elements.length - 1 + "}");
+            
+            System.out.println("PARTITION:");
+        }
+        
+        int lt = lo, gt = hi;
+        T v = elements[lo];
+        int i = lo;
+        
+        while (i <= gt) {
+            if (debug) {
+                System.out.println("\t-----------------------------");
+                System.out.println("\tlt: " + lt + ", i: " + i + ", gt: " + gt);
+            }
+            
+            int cmp = elements[i].compareTo(v);
+            
+            if (cmp < 0) {
+                if (debug) {
+                    System.out.println("\texchange: {" + elements[lt] + ", " + elements[i] + "}");
+                }
+                
+                exchange(lt++, i++);
+            } else if (cmp > 0) {
+                if (debug) {
+                    System.out.println("\texchange: {" + elements[i] + ", " + elements[gt] + "}");
+                }
+                
+                exchange(i, gt--);
+            } else i++;
         }
         
         if (debug) {
-            System.out.println("sort left: {pivotIdx: " + pivotIdx + ", rightIdx: " + (leftIdx - 1) + "}");
+            System.out.println("\tshuffled: " + Arrays.toString(elements));
+            
+            System.out.print("\tindex   : {");
+            
+            for (int j = 0; j < elements.length - 1; j++) {
+                System.out.print(j + ", ");
+            }
+            
+            System.out.println(elements.length - 1 + "}");
+            
+            System.out.println("\t-----------------------------");
         }
         
-        // SORT LEFT
-        dijkstra3wayQuickSort(pivotIdx, leftIdx - 1);
-        
-        if (debug) {
-            System.out.println("sort right: {pivotIdx: " + (rightIdx + 1) + ", rightIdx: " + highIdx + "}");
-        }
-        
-        // SORT RIGHT
-        dijkstra3wayQuickSort(rightIdx + 1, highIdx);
+//        example(lo, lt - 1);
+//        
+//        example(gt + 1, hi);
     }
     
     private void quickSort(int pivotIdx, int rightIdx) {
@@ -269,18 +358,12 @@ public class QuickSort<T extends Comparable<T>> {
     }
     
     public static void main(String[] args) {
-        Integer[] arr = {1, 3, 2, 9, 0, 7, 8, 5, 6, 4};
+        Integer[] arr = {0, 1, 4, 3, 4, 5, 6, 4, 3, 3};
         
         QuickSort<Integer> qs = new QuickSort<>(arr, true);
-
-        qs.sort();
         
-        System.out.println(qs);
+        System.out.println("original: " + Arrays.toString(arr));
         
-        arr = new Integer[]{3, 1, 3, 4, 1, 3, 1, 5, 7};
-        
-        qs = new QuickSort<>(arr, true);
-
         qs.sortDijkstra3way();
         
         System.out.println(qs);
