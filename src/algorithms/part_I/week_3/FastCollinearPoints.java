@@ -20,9 +20,7 @@ import java.util.List;
 public class FastCollinearPoints {
     private static final int MIN_SEGMENT_LENGTH = 4;
     private List<LineSegment> segments;
-//    private List<Point> segmentsEndpoints;
-    private List<Point> minEndpoints;
-    private List<Point> maxEndpoints;
+    private List<String> segmentsEndpoints;
     
     // finds all line segments containing 4 points
     public FastCollinearPoints(Point[] points, boolean debug) {
@@ -30,16 +28,17 @@ public class FastCollinearPoints {
             throw new NullPointerException("null argument");
         }
         
-        checkDuplicatedPoints(points);
-        
         segments = new ArrayList<>();
         
         // string representation of segment's endpoints in order to keep track of duplicates
-//        segmentsEndpoints = new ArrayList<>();
-        minEndpoints = new ArrayList<>();
-        maxEndpoints = new ArrayList<>();
+        segmentsEndpoints = new ArrayList<>();
         
         Point[] sorted = Arrays.copyOf(points, points.length);
+        
+        // sort array by natural order to check duplicates
+        Arrays.sort(sorted);
+        
+        checkDuplicatedPoints(sorted);
         
         for (int i = 0; i < points.length; i++) {
             if (points[i] == null) {
@@ -88,34 +87,20 @@ public class FastCollinearPoints {
                     if (debug)
                         System.out.println("\tlineSegment: " + lineSegment);
                     
-                    // look for duplicates
-                    if (!isDuplicatedSegment(minPoint, maxPoint)) {
+                    // string representation of a segment endpoints
+                    String endpoints = minPoint + "->" + maxPoint;
+                    
+                    // check if the segment was already found
+                    if (!isDuplicatedSegment(endpoints))
                         segments.add(lineSegment);
-                    }
                     
-                    if (!minEndpoints.contains(minPoint)) {
-                        minEndpoints.add(minPoint);
-                    }
+                    if (debug)
+                        System.out.println("lineSegment: " + lineSegment);
                     
-                    if (!maxEndpoints.contains(maxPoint)) {
-                        maxEndpoints.add(maxPoint);
+                    // add endopints to the list which takes care of duplicates
+                    if (!segmentsEndpoints.contains(endpoints)) {
+                        segmentsEndpoints.add(endpoints);
                     }
-                    
-//                    ---------------------------------------------------------
-//                    // string representation of a segment endpoints
-//                    String endpoints = minPoint + "->" + maxPoint;
-//                    
-//                    // check if the segment was already found
-//                    if (!isDuplicatedSegment(endpoints))
-//                        segments.add(lineSegment);
-//                    
-//                    System.out.println("lineSegment: " + lineSegment);
-//                    
-//                    // add endopints to the list which takes care of duplicates
-//                    if (!segmentsEndpoints.contains(endpoints)) {
-//                        segmentsEndpoints.add(endpoints);
-//                    }
-//                    ---------------------------------------------------------
                 }
                 
                 firstIdx = lastIdx;
@@ -129,35 +114,14 @@ public class FastCollinearPoints {
     // do better?
     private void checkDuplicatedPoints(Point[] points) {
         for (int i = 0; i < points.length - 1; i++) {
-            for (int j = i+1; j < points.length; j++) {
-                if (points[i].compareTo(points[j]) == 0)
-                    throw new IllegalArgumentException("repeated point at index " + i + ": " + points[i]);
-            }
+            if (points[i].compareTo(points[i+1]) == 0)
+                throw new IllegalArgumentException("repeated point: " + points[i]);
         }
     }
     
-    private boolean isDuplicatedSegment(Point minPoint, Point maxPoint) {
-        boolean checkMinPoint = false;
-        boolean checkMaxPoint = false;
-        
-        for (int i = 0; i < minEndpoints.size(); i++) {
-            if (minPoint.compareTo(minEndpoints.get(i)) == 0) {
-                checkMinPoint = true;
-            }
-        }
-        
-        for (int i = 0; i < maxEndpoints.size(); i++) {
-            if (maxPoint.compareTo(maxEndpoints.get(i)) == 0) {
-                checkMaxPoint = true;
-            }
-        }
-        
-        return checkMinPoint && checkMaxPoint;
+    private boolean isDuplicatedSegment(String endpoints) {
+        return segmentsEndpoints.contains(endpoints);
     }
-    
-//    private boolean isDuplicatedSegment(String endpoints) {
-//        return segmentsEndpoints.contains(endpoints);
-//    }
     
     // the number of line segments
     public int numberOfSegments() {
@@ -170,10 +134,10 @@ public class FastCollinearPoints {
     }
     
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        BufferedReader br = new BufferedReader(new FileReader("D:/Users/psantama/Downloads/collinear/input40.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("D:/Users/psantama/Downloads/collinear/input80.txt"));
         int n = Integer.parseInt(br.readLine());
         
-        Point[] points = new Point[n];
+        Point[] points = new Point[n+1];
         
         String line = null;
         int i = 0;
@@ -184,6 +148,7 @@ public class FastCollinearPoints {
             
             i++;
         }
+        points[n] = new Point(14000, 16000);
         
         FastCollinearPoints bcp = new FastCollinearPoints(points, true);
         
