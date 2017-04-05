@@ -5,7 +5,6 @@
  */
 package algorithms.part_I.week_3;
 
-import edu.princeton.cs.algs4.Quick3way;
 import edu.princeton.cs.algs4.StdRandom;
 import java.util.Arrays;
 
