@@ -21,4 +21,13 @@ public class Algorithms {
         
         System.out.println(arr[highIdx] + "}");
     }
+    
+    //swap elements at those index
+    public static void swap(Object[] elements, int i, int j) {
+        Object swap = elements[i];
+        
+        elements[i] = elements[j];
+        
+        elements[j] = swap;
+    }
 }
