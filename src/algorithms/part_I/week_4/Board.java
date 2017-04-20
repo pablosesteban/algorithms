@@ -12,13 +12,11 @@ import java.util.Stack;
  * @author psantama
  */
 
-/**
- * Best-First Search:
-        is a search algorithm which explores a graph by expanding the most promising node chosen according to a specified rule
- */
+// immutable data type
 public class Board {
     private int[][] blocks;
     private int n;
+    
     private boolean debug = false;
     
     // construct a board from an n-by-n array of blocks (where blocks[i][j] = block in row i, column j)
@@ -70,7 +68,7 @@ public class Board {
         return hamming;
     }
     
-    // sum of Manhattan distances between blocks and goal
+    // sum of the vertical and horizontal moves from their initial positions to their goal positions of blocks out of place
     public int manhattan() {
         if (debug)
             System.out.println("manhattan:");
@@ -110,10 +108,11 @@ public class Board {
     
     // is this board the goal board?
     public boolean isGoal() {
+        // you can use hamming() or manhattan()
         return hamming() == 0;
     }
     
-    // a board that is obtained by exchanging any pair of blocks
+    // a board that is obtained by exchanging any pair of blocks: to know if a board is unsolvable
     public Board twin() {
         Board twin = cloneBoard(this);
         
@@ -129,7 +128,7 @@ public class Board {
         return twin;
     }
     
-    // all neighboring boards
+    // all neighboring boards: at most four boards which differ from original in only one move of the blank block
     public Iterable<Board> neighbors() {
         Stack<Board> neighbors = new Stack<>();
         
@@ -200,7 +199,7 @@ public class Board {
         blocks[r2][c2] = value;
     }
     
-    // string representation in JSON of this board (in the output format specified below)
+    // string representation in JSON of this board
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
@@ -208,7 +207,8 @@ public class Board {
         s.append("{");
         
         for (int i = 0; i < n - 1; i++) {
-            s.append(i + ": [");
+            s.append(i);
+            s.append(": [");
             
             for (int j = 0; j < n-1; j++) {
                 s.append(String.format("%2d, ", blocks[i][j]));
@@ -218,19 +218,19 @@ public class Board {
             
             s.append("], ");
         }
+        s.append((n-1));
         
-        s.append((n-1) + ": [");
-        
+        s.append(": [");
         for (int j = 0; j < n-1; j++) {
             s.append(String.format("%2d, ", blocks[n-1][j]));
         }
-        
         s.append(String.format("%2d", blocks[n-1][n-1]));
         
         s.append("]}");
         
         return s.toString();
         
+        // needed for coursera
 //        StringBuilder s = new StringBuilder();
 //        
 //        s.append(n + "\n");
