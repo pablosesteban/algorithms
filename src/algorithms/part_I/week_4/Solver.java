@@ -6,7 +6,7 @@
 package algorithms.part_I.week_4;
 
 import edu.princeton.cs.algs4.MinPQ;
-import java.util.Stack;
+import java.util.LinkedList;
 
 /**
  *
@@ -14,7 +14,7 @@ import java.util.Stack;
  */
 public class Solver {
     private Node goal;
-    private Stack<Board> boardsSequence = new Stack<>();
+    private LinkedList<Board> boardsSequence = new LinkedList<>();
     private boolean solvable = true;
     
     private boolean debug = true;
@@ -81,30 +81,36 @@ public class Solver {
             min = pq.delMin();
             minTwin = pqTwin.delMin();
             
-            checkNeighbors(pq, min, false);
+            addNeighbors(pq, min, false);
             
-            checkNeighbors(pqTwin, minTwin, true);
+            addNeighbors(pqTwin, minTwin, true);
             
             if (minTwin.board.isGoal()) {
                 // if twin board reaches the goal, the original board is unsolvable!
                 solvable = false;
+                
                 break;
             }
         } while (!min.board.isGoal());
         
-        boardsSequence.add(min.board);
-        
         goal = min;
+        
+        // create boards sequence
+        while (min != null) {
+            boardsSequence.addFirst(min.board);
+            
+            min = min.previous;
+        }
     }
     
-    private void checkNeighbors(MinPQ<Node> pq, Node min, boolean isTwin) {
-        if (debug)
+    private void addNeighbors(MinPQ<Node> pq, Node min, boolean isTwin) {
+        if (debug && !isTwin)
             System.out.println("min node: " + min);
         
         for (Board neighbor : min.board.neighbors()) {
             Node neighborNode = new Node(neighbor, min);
             
-            if (debug)
+            if (debug && !isTwin)
                 System.out.println("\tneighbor node: " + neighborNode);
             
             if (min.previous == null) {
@@ -114,9 +120,6 @@ public class Solver {
                     pq.insert(neighborNode);
             }
         }
-        
-        if (min.previous != null && !isTwin)
-            boardsSequence.add(min.previous.board);
     }
     
     // is the initial board solvable?
@@ -144,7 +147,6 @@ public class Solver {
     public static void main(String[] args) {
 //        int[][] blocks = {{8, 1, 3}, {4, 0, 2}, {7, 6, 5}};
         
-        // not solvable
         int[][] blocks = {{1, 2, 3}, {0, 7, 6}, {5, 4, 8}};
         
 //        int[][] blocks = {{1, 0}, {3, 2}};
@@ -156,7 +158,8 @@ public class Solver {
         System.out.println("moves: " + s.moves());
         
         if (s.solution() != null) {
-            System.out.println("boards sequence:");
+            System.out.println("boards sequence: " + s.boardsSequence.size());
+            
             for (Board b : s.solution()) {
                 System.out.println("\t" + b);
             }
