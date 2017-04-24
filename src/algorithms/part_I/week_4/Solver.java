@@ -9,7 +9,7 @@ import edu.princeton.cs.algs4.MinPQ;
 import java.util.LinkedList;
 
 /**
- * Best-First Search (BFS):
+ * Best-First Search:
  *      is a search algorithm which explores a graph by expanding the most promising node chosen according to a specified rule
  * 
  *      was described as estimating the promise of node n by a "heuristic" evaluation function which, in general, may depend on:
@@ -183,7 +183,7 @@ public class Solver {
                 pq.insert(neighborNode);
             }else {
                 /**
-                 * BFS has one annoying feature:
+                 * Best-First Search has one annoying feature:
                  *      search nodes corresponding to the same board are enqueued on the priority queue many times
                  * 
                  *      to reduce unnecessary exploration of useless search nodes, when considering the neighbors of a search node, don't enqueue a neighbor if its board is the same as the board of the previous search node

@@ -75,7 +75,6 @@ public class SymbolTableBST<K extends Comparable<K>, V> implements SymbolTable<K
     private Node put(Node n, K key, V value) {
         // if the argument is null, return a reference to a new node that associates key with value and then that one has null links (empty ST)
         if (n == null)
-            
             return new Node(key, value);
         
         int comparison = key.compareTo((K) n.key);
@@ -122,11 +121,80 @@ public class SymbolTableBST<K extends Comparable<K>, V> implements SymbolTable<K
         return (V) searched.value;
     }
 
+    /*
+    HIBBARD DELETION:
+        three cases:
+            to delete a node that has no children just return null, and then go back up to update the counts as usual
+    
+            to delete a node that only has one child, just go ahead and return the link to that child, and then again update all the accounts after the recursive calls
+    
+            to delete a no that has two links pointing down from it:
+                find the next smallest node in the right subtree of that tree
+                
+                put that node in the spot where the node to delete is
+    
+                then delete the minimum node in the right subtree of that tree
+    
+        there is a drawback: it is asymetric and the tree's becoming much less balanced than it was
+    
+        makes all operations sqrt(N) instead of logN (sqrt(N) > logN)
+    */
     @Override
     public void delete(K key) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        root = delete(root, key);
     }
-
+    
+    private Node delete(Node n, K key) {
+        if (n == null)
+            return null;
+        
+        int comparison = key.compareTo((K) n.key);
+        
+        // searching the node
+        if (comparison > 0) {
+            n.right = delete(n.right, key);
+        }else if (comparison < 0) {
+            n.left = delete(n.left, key);
+        }else {
+            // when it reaches the node searched
+            if (n.right == null)
+                return n.left;
+            
+            if  (n.left == null)
+                return n.right;
+            
+            Node t = n;
+            n = min(t.right);
+            n.right = deleteMin(t.right);
+            n.left = t.left;
+        }
+        
+        n.count = 1 + nodeSize(n.left) + nodeSize(n.right);
+        
+        return n;
+    }
+    
+    private Node min(Node n) {
+        Node min = n.left;
+        
+        while (min != null) {
+            min = min.left;
+        }
+        
+        return min;
+    }
+    
+    private Node deleteMin(Node n) {
+        if (n.left == null)
+            return n.right;
+        
+        n.left = deleteMin(n.left);
+        
+        n.count = 1 + nodeSize(n.left) + nodeSize(n.right);
+        
+        return n;
+    }
+    
     @Override
     public boolean contains(K key) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -134,7 +202,7 @@ public class SymbolTableBST<K extends Comparable<K>, V> implements SymbolTable<K
 
     @Override
     public boolean isEmpty() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return root == null;
     }
 
     @Override
@@ -268,6 +336,12 @@ public class SymbolTableBST<K extends Comparable<K>, V> implements SymbolTable<K
         
         System.out.println("size: " + symbolTableBST.size());
         symbolTableBST.get("c");
+        
+        for (String k : symbolTableBST.keys()) {
+            System.out.println(k);
+        }
+        
+        symbolTableBST.delete("b");
         
         for (String k : symbolTableBST.keys()) {
             System.out.println(k);
