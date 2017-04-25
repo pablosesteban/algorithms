@@ -5,6 +5,7 @@
  */
 package algorithms.part_I.week_5;
 
+import java.util.*;
 import algorithms.part_I.week_4.SymbolTable;
 import edu.princeton.cs.algs4.Queue;
 
@@ -282,19 +283,6 @@ public class SymbolTableRedBlackBST<K extends Comparable<K>, V> implements Symbo
     public K ceiling(K key) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        
-        for (K key : keys()) {
-            sb.append("key: ");
-            sb.append(key);
-            sb.append(", ");
-        }
-        
-        return sb.toString();
-    }
     
     public static void main(String[] args) {
         SymbolTableRedBlackBST<String, String> symbolTableRedBlackBST = new SymbolTableRedBlackBST<>();
@@ -304,6 +292,8 @@ public class SymbolTableRedBlackBST<K extends Comparable<K>, V> implements Symbo
         symbolTableRedBlackBST.put("h", "h");
         symbolTableRedBlackBST.put("v", "v");
         
-        System.out.println(symbolTableRedBlackBST);
+        for (String key : symbolTableRedBlackBST.keys()) {
+            System.out.println(key + ", ");
+        }
     }
 }
