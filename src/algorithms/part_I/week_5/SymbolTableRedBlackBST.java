@@ -6,7 +6,7 @@
 package algorithms.part_I.week_5;
 
 import algorithms.part_I.week_4.SymbolTable;
-import algorithms.part_I.week_4.SymbolTableBST;
+import edu.princeton.cs.algs4.Queue;
 
 /**
  *
@@ -73,7 +73,7 @@ RED-BLACK BST (Left-Leaning):
     
     as red links are "internal" thing, methods from elementary BST will work here without reimplementing, and work better because of the perfect balanced tree
 */
-public class SymbolTableRedBlackBST<K extends Comparable<K>, V> extends SymbolTableBST<K, V> {
+public class SymbolTableRedBlackBST<K extends Comparable<K>, V> implements SymbolTable<K, V> {
     private static final boolean RED = true;
     private static final boolean BLACK = false;
     
@@ -219,8 +219,81 @@ public class SymbolTableRedBlackBST<K extends Comparable<K>, V> extends SymbolTa
     }
 
     @Override
+    public V get(K key) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
     public void delete(K key) {
-        throw new UnsupportedOperationException("Not implemented yet!");
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean contains(K key) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean isEmpty() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int size() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Iterable<K> keys() {
+        Queue<K> keys = new Queue<>();
+        
+        traverseInOrder(root, keys);
+        
+        return keys;
+    }
+
+    private void traverseInOrder(Node n, Queue<K> keys) {
+        if (n == null)
+            return;
+        
+        traverseInOrder(n.left, keys);
+        
+        keys.enqueue((K)n.key);
+        
+        traverseInOrder(n.right, keys);
+    }
+    
+    @Override
+    public K min() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public K max() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public K floor(K key) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public K ceiling(K key) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        
+        for (K key : keys()) {
+            sb.append("key: ");
+            sb.append(key);
+            sb.append(", ");
+        }
+        
+        return sb.toString();
     }
     
     public static void main(String[] args) {
@@ -230,5 +303,7 @@ public class SymbolTableRedBlackBST<K extends Comparable<K>, V> extends SymbolTa
         symbolTableRedBlackBST.put("a", "a");
         symbolTableRedBlackBST.put("h", "h");
         symbolTableRedBlackBST.put("v", "v");
+        
+        System.out.println(symbolTableRedBlackBST);
     }
 }
