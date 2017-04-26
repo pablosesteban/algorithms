@@ -196,9 +196,6 @@ public class SymbolTableRedBlackBST<K extends Comparable<K>, V> implements Symbo
             n.value = value;
         }
         
-        // track the number of nodes in the subtree
-        n.count = 1 + nodeSize(n.left) + nodeSize(n.right);
-        
         // applies the operations to maintain the invariants!
         if (isRed(n.right) && !isRed(n.left))
             n = roatateLeft(n);
@@ -208,6 +205,9 @@ public class SymbolTableRedBlackBST<K extends Comparable<K>, V> implements Symbo
         
         if (isRed(n.left) && isRed(n.right))
             flipColors(n);
+        
+        // track the number of nodes in the subtree
+        n.count = 1 + nodeSize(n.left) + nodeSize(n.right);
         
         return n;
     }
@@ -283,6 +283,41 @@ public class SymbolTableRedBlackBST<K extends Comparable<K>, V> implements Symbo
     public K ceiling(K key) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public String toString() {
+        List<Node> nodeRoot = new LinkedList<>();
+        nodeRoot.add(root);
+        
+        StringBuilder sb = new StringBuilder();
+        
+        traverseLevelOrder(nodeRoot, sb, 0);
+        
+        return sb.toString();
+    }
+    
+    private void traverseLevelOrder(List<Node> nodes, StringBuilder sb, int level) {
+        if (nodes.isEmpty())
+            return;
+        
+        List<Node> nextLevelNodes = new LinkedList<>();
+        
+        sb.append("level " + level + ": ");
+        for (Node node : nodes) {
+            sb.append(node.key);
+            sb.append(" ");
+            
+            if (node.left != null)
+                nextLevelNodes.add(node.left);
+            
+            if (node.right != null)
+                nextLevelNodes.add(node.right);
+        }
+        
+        sb.append("\n");
+        
+        traverseLevelOrder(nextLevelNodes, sb, ++level);
+    }
     
     public static void main(String[] args) {
         SymbolTableRedBlackBST<String, String> symbolTableRedBlackBST = new SymbolTableRedBlackBST<>();
@@ -292,8 +327,6 @@ public class SymbolTableRedBlackBST<K extends Comparable<K>, V> implements Symbo
         symbolTableRedBlackBST.put("h", "h");
         symbolTableRedBlackBST.put("v", "v");
         
-        for (String key : symbolTableRedBlackBST.keys()) {
-            System.out.println(key + ", ");
-        }
+        System.out.println(symbolTableRedBlackBST);
     }
 }
