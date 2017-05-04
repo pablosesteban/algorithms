@@ -300,7 +300,7 @@ public class KdTree {
         return sb.toString();
     }
     
-    private List<Node> levelOrder(List<Node> nodes, StringBuilder sb, int level, List<Node> output) {
+    private List<Node> levelOrder(List<Node> nodes, StringBuilder sb,int level, List<Node> output) {
         if (nodes.isEmpty())
             return null;
         
@@ -436,11 +436,13 @@ public class KdTree {
             if (Double.compare(p.x(), n.p.x()) < 0) {
                 minP = nearest(p, n.lb, ++level, minP);
                 
+                // only visit the right node if it is not null and the distance is less than the distance to the left children (there is a possibility of reaching a nearer node)
                 if (n.rt != null && (Double.compare(minP.distanceTo(p), n.rt.rect.distanceTo(p)) >= 0))
                     minP = nearest(p, n.rt, ++level, minP);
             } else {
                 minP = nearest(p, n.rt, ++level, minP);
                 
+                // only visit the left node if it is not null and the distance is less than the distance to the right children (there is a possibility of reaching a nearer node)
                 if (n.lb != null && (Double.compare(minP.distanceTo(p), n.lb.rect.distanceTo(p)) >= 0))
                     minP = nearest(p, n.lb, ++level, minP);
             }
@@ -448,11 +450,13 @@ public class KdTree {
             if (Double.compare(p.y(), n.p.y()) < 0) {
                 minP = nearest(p, n.lb, ++level, minP);
                 
+                // only visit the right node if it is not null and the distance is less than the distance to the left children (there is a possibility of reaching a nearer node)
                 if (n.rt != null && (Double.compare(minP.distanceTo(p), n.rt.rect.distanceTo(p)) >= 0))
                     minP = nearest(p, n.rt, ++level, minP);
             } else {
                 minP = nearest(p, n.rt, ++level, minP);
                 
+                // only visit the left node if it is not null and the distance is less than the distance to the right children (there is a possibility of reaching a nearer node)
                 if (n.lb != null && (Double.compare(minP.distanceTo(p), n.lb.rect.distanceTo(p)) >= 0))
                     minP = nearest(p, n.lb, ++level, minP);
             }
