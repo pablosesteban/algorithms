@@ -9,6 +9,9 @@ import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdDraw;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -19,6 +22,9 @@ import java.util.TreeSet;
 
 // mutable data type that represents a set of points in the unit square
 public class PointSET {
+    private static final double POINT_SIZE = 0.01;
+    private static final double LINE_SIZE = 0.001;
+    
     private final Set<Point2D> points;
     
     // construct an empty set of point
@@ -102,17 +108,63 @@ public class PointSET {
         return nearest;
     }
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         PointSET pointSET = new PointSET();
         
-        pointSET.insert(new Point2D(0.3, 0.8));
-        pointSET.insert(new Point2D(0.8, 0.8));
-        pointSET.insert(new Point2D(0.5, 0.3));
-        pointSET.insert(new Point2D(0.3, 0.1));
-        pointSET.insert(new Point2D(0.9, 0.3));
+        // sample data in specification
+//        kdTree.insert(new Point2D(0.7, 0.2));
+//        kdTree.insert(new Point2D(0.5, 0.4));
+//        kdTree.insert(new Point2D(0.2, 0.3));
+//        kdTree.insert(new Point2D(0.4, 0.7));
+//        kdTree.insert(new Point2D(0.9, 0.6));
+//        kdTree.insert(new Point2D(0.5, 0.4));
         
-        System.out.println(pointSET.nearest(new Point2D(0, 0)));
+        // sample data from checklist
+//        kdTree.insert(new Point2D(0.206107, 0.095492));
+//        kdTree.insert(new Point2D(0.975528, 0.654508));
+//        kdTree.insert(new Point2D(0.024472, 0.345492));
+//        kdTree.insert(new Point2D(0.793893, 0.095492));
+//        kdTree.insert(new Point2D(0.793893, 0.904508));
+//        kdTree.insert(new Point2D(0.975528, 0.345492));
+//        kdTree.insert(new Point2D(0.206107, 0.904508));
+//        kdTree.insert(new Point2D(0.500000, 0.000000));
+//        kdTree.insert(new Point2D(0.024472, 0.654508));
+//        kdTree.insert(new Point2D(0.500000, 1.000000));
+
+        String folder = "D:/Users/psantama/Downloads/kdtree/";
+        BufferedReader br = new BufferedReader(new FileReader(folder + "vertical7.txt"));
+        String line = null;
+        while((line = br.readLine()) != null) {
+            String[] coor = line.split(" ");
+            
+            pointSET.insert(new Point2D(Double.parseDouble(coor[0]), Double.parseDouble(coor[1])));
+        }
         
         pointSET.draw();
+        
+        Point2D p = new Point2D(0.761250, 0.317125);
+        StdDraw.setPenRadius(POINT_SIZE * 2);
+        StdDraw.setPenColor(StdDraw.BOOK_LIGHT_BLUE);
+        p.draw();
+        Point2D nearest = pointSET.nearest(p);
+        StdDraw.setPenRadius(POINT_SIZE);
+        StdDraw.setPenColor(StdDraw.MAGENTA);
+        nearest.draw();
+        System.out.println("nearest to " + p + ": " + nearest);
+        
+//        RectHV rect = new RectHV(0, 0.2, 0.3, 0.9);
+//        StdDraw.setPenRadius(LINE_SIZE * 4);
+//        StdDraw.setPenColor(StdDraw.GREEN);
+//        rect.draw();
+//        System.out.println("range " + rect + ": ");
+//        StdDraw.setPenRadius(POINT_SIZE);
+//        int count = 0;
+//        StdDraw.setPenColor(StdDraw.MAGENTA);
+//        for (Point2D point2D : pointSET.range(rect)) {
+//            ++count;
+//            System.out.println("\t" + point2D);
+//            point2D.draw();
+//        }
+//        System.out.println(count);
     }
 }

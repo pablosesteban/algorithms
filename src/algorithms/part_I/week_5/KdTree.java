@@ -9,6 +9,9 @@ import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdDraw;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,8 +27,8 @@ a mutable data type that uses a 2d-tree to implement the same API as PointSET
 a 2d-tree is a generalization of a BST to two-dimensional keys
 */
 public class KdTree {
-    private static final double pointSize = 0.01;
-    private static final double lineSize = 0.001;
+    private static final double POINT_SIZE = 0.01;
+    private static final double LINE_SIZE = 0.001;
     
     private Node root;
     private int size;
@@ -64,7 +67,7 @@ public class KdTree {
             
             if (parent != null) {
                 sb.append(parent.p);
-            }else {
+            } else {
                 sb.append("null");
             }
             
@@ -72,7 +75,7 @@ public class KdTree {
             
             if (lb != null) {
                 sb.append(lb.p);
-            }else {
+            } else {
                 sb.append("null");
             }
             
@@ -80,7 +83,7 @@ public class KdTree {
             
             if (rt != null) {
                 sb.append(rt.p);
-            }else {
+            } else {
                 sb.append("null");
             }
             
@@ -111,8 +114,6 @@ public class KdTree {
             throw new NullPointerException("null argument!");
         
         root = insert(root, 0, p, null);
-        
-        size++;
     }
     
     private Node insert(Node n, int level, Point2D p, Node parent) {
@@ -123,22 +124,23 @@ public class KdTree {
             RectHV rectangle = null;
             // root node
             if (parent == null) {
-                //xmin, ymin, xmas, ymax
-                rectangle = new RectHV(0, 0, 1, 1);
-            }else {
+                // xmin, ymin, xmax, ymax
+                rectangle = new RectHV(0.0, 0.0, 1.0, 1.0);
+            } else {
                 // even level (compare to its parent which is splitted by y-coor)
                 if ((level & 1) == 0) {
                     // bottom children
-                    if (Double.compare(p.y(), parent.p.y()) <= 0) {
+                    if (Double.compare(p.y(), parent.p.y()) < 0) { // if the point to be inserted has a SMALLER X/Y-COOR than the point at the root, go LEFT; OTHERWISE go RIGHT
                         rectangle = new RectHV(parent.rect.xmin(), parent.rect.ymin(), parent.rect.xmax(), parent.p.y());
-                    }else { // top children
+                        
+                    } else { // top children
                         rectangle = new RectHV(parent.rect.xmin(), parent.p.y(), parent.rect.xmax(), parent.rect.ymax());
                     }
-                }else { // odd level (compare to its parent which is splitted by x-coor)
+                } else { // odd level (compare to its parent which is splitted by x-coor)
                     // left children
-                    if (Double.compare(p.x(), parent.p.x()) <= 0) {
+                    if (Double.compare(p.x(), parent.p.x()) < 0) { // if the point to be inserted has a SMALLER X/Y-COOR than the point at the root, go LEFT; OTHERWISE go RIGHT
                         rectangle = new RectHV(parent.rect.xmin(), parent.rect.ymin(), parent.p.x(), parent.rect.ymax());
-                    }else { // right children
+                    } else { // right children
                         rectangle = new RectHV(parent.p.x(), parent.rect.ymin(), parent.rect.xmax(), parent.rect.ymax());
                     }
                 }
@@ -147,8 +149,14 @@ public class KdTree {
             
             node.rect = rectangle;
             
+            size++;
+            
             return node;
         }
+        
+        // check duplicates
+        if (n.p.compareTo(p) == 0)
+            return n;
         
         // searching
         int comparison = 0;
@@ -157,21 +165,36 @@ public class KdTree {
         if ((level & 1) == 0) {
             // even level: if the point to be inserted has a smaller x-coordinate than the point at the root, go left; otherwise go right
             comparison = Double.compare(p.x(), n.p.x());
-        }else {
+        } else {
             // odd level: if the point to be inserted has a smaller y-coordinate than the point in the node, go left; otherwise go right
             comparison = Double.compare(p.y(), n.p.y());
         }
         
-        if(comparison > 0) {
+        // if the point to be inserted has a SMALLER X/Y-COOR than the point at the root, go LEFT; OTHERWISE go RIGHT
+        if (comparison >= 0) {
             n.rt = insert(n.rt, ++level, p, n);
-        }else if(comparison <= 0) {
+        } else { // if < goes LEFT/BOTTOM
             n.lb = insert(n.lb, ++level, p, n);
-        }else {
-            // update the value if exist the key
-            n.p = p;
         }
         
         return n;
+    }
+    
+    private List<Node> getNodeTrace(Node n) {
+        LinkedList<Node> nodes = new LinkedList<>();
+        
+        getNodeTrace(n, nodes);
+        
+        return nodes;
+    }
+    
+    private void getNodeTrace(Node n, LinkedList<Node> nodes) {
+        if (n == null)
+            return;
+        
+        getNodeTrace(n.parent, nodes);
+        
+        nodes.add(nodes.size(), n);
     }
     
     // does the set contain point p?
@@ -189,13 +212,13 @@ public class KdTree {
             
             if ((level & 1) == 0) {
                 comparison = Double.compare(p.x(), n.p.x());
-            }else {
+            } else {
                 comparison = Double.compare(p.y(), n.p.y());
             }
             
-            if (comparison <= 0){
+            if (comparison < 0) {
                 n = n.lb;
-            }else {
+            } else {
                 n = n.rt;
             }
             
@@ -221,34 +244,34 @@ public class KdTree {
         
         for (Node node : nodes) {
             StdDraw.setPenColor(StdDraw.BLACK);
-            StdDraw.setPenRadius(pointSize);
+            StdDraw.setPenRadius(POINT_SIZE);
             StdDraw.point(node.p.x(), node.p.y());
             
             // root level (split y-coor)
             if (level == 0) {
                 StdDraw.setPenColor(StdDraw.RED);
                 
-                StdDraw.setPenRadius(lineSize);
+                StdDraw.setPenRadius(LINE_SIZE);
                 
                 StdDraw.line(node.p.x(), 0, node.p.x(), 1);
-            }else if ((level & 1) == 0) { // even levels (split y-coor)
+            } else if ((level & 1) == 0) { // even levels (split y-coor)
                 StdDraw.setPenColor(StdDraw.RED);
                 
-                StdDraw.setPenRadius(lineSize);
+                StdDraw.setPenRadius(LINE_SIZE);
                 
-                if(Double.compare(node.p.y(), node.parent.p.y()) <= 0) {
+                if (Double.compare(node.p.y(), node.parent.p.y()) <= 0) {
                     StdDraw.line(node.p.x(), 0, node.p.x(), node.parent.p.y());
-                }else {
+                } else {
                     StdDraw.line(node.p.x(), 1, node.p.x(), node.parent.p.y());
                 }
-            }else { //odd levels (split x-coor)
+            } else { // odd levels (split x-coor)
                 StdDraw.setPenColor(StdDraw.BLUE);
                 
-                StdDraw.setPenRadius(lineSize);
+                StdDraw.setPenRadius(LINE_SIZE);
                 
-                if(Double.compare(node.p.x(), node.parent.p.x()) <= 0) {
+                if (Double.compare(node.p.x(), node.parent.p.x()) <= 0) {
                     StdDraw.line(0, node.p.y(), node.parent.p.x(), node.p.y());
-                }else {
+                } else {
                     StdDraw.line(1, node.p.y(), node.parent.p.x(), node.p.y());
                 }
             }
@@ -293,16 +316,16 @@ public class KdTree {
                 
                 if (node.lb != null) {
                     nextLevelNodes.add(node.lb);
-                }else {
+                } else {
                     nextLevelNodes.add(null);
                 }
                 
                 if (node.rt != null) {
                     nextLevelNodes.add(node.rt);
-                }else {
+                } else {
                     nextLevelNodes.add(null);
                 }
-            }else {
+            } else {
                 sb.append("null");
                 sb.append(" ");
             }
@@ -342,19 +365,36 @@ public class KdTree {
         if (!rect.intersects(n.rect))
             return;
         
+        // splitted by x-coor
         if ((level & 1) == 0) {
             if (Double.compare(rect.xmax(), n.p.x()) <= 0) {
                 range(n.lb, rect, ++level, points);
-            }else {
+
+                // right children MUST be visited as comparison can be EQUALS (when inserting node goes right if comparison is 0)
+                range(n.rt, rect, level, points);
+            } else if (Double.compare(rect.xmin(), n.p.x()) < 0) { // if the point lies inside the rectangle search both subtrees
+                range(n.lb, rect, ++level, points);
+                
+                // ++level above!
+                range(n.rt, rect, level, points);
+            } else {
                 range(n.rt, rect, ++level, points);
             }
             
             if (rect.contains(n.p))
                 points.push(n.p);
-        }else {
+        } else { // splitted by y-coor
             if (Double.compare(rect.ymax(), n.p.y()) <= 0) {
                 range(n.lb, rect, ++level, points);
-            }else {
+                
+                // right children MUST be visited as comparison can be EQUALS (when inserting node goes right if comparison is 0)
+                range(n.rt, rect, level, points);
+            } else if (Double.compare(rect.ymin(), n.p.y()) < 0) { // if the point lies inside the rectangle search both subtrees
+                range(n.lb, rect, ++level, points);
+                
+                // ++level above!
+                range(n.rt, rect, level, points);
+            } else {
                 range(n.rt, rect, ++level, points);
             }
             
@@ -368,7 +408,7 @@ public class KdTree {
     
     NEAREST NEIGHBOR SEARCH:
         start at the root and recursively search in both subtrees using the following pruning rule:
-            if the closest point discovered so far is closer than the distance between the query point and the rectangle corresponding to a node, there is no need to explore that node (or its subtrees)
+            if the closest point discovered so far is closer than the distance between the QUERY POINT and the RECTANGLE corresponding to a node, there is no need to explore that node (or its subtrees)
     
             a node is searched only if it might contain a point that is closer than the best one found so far
             
@@ -378,50 +418,108 @@ public class KdTree {
         if (p == null)
             throw new NullPointerException("null argument!");
         
-        throw new UnsupportedOperationException("Not implemented yet!");
+        if (isEmpty())
+            return null;
+        
+        return nearest(p, root, 0, root.p);
     }
     
-    public static void main(String[] args) {
+    private Point2D nearest(Point2D p, Node n, int level, Point2D minP) {
+        if (n == null)
+            return minP;
+        
+        if (p.distanceTo(n.p) < p.distanceTo(minP))
+            minP = n.p;
+        
+        // splitted by x-coor
+        if ((level & 1) == 0) {
+            if (Double.compare(p.x(), n.p.x()) < 0) {
+                minP = nearest(p, n.lb, ++level, minP);
+                
+                if (n.rt != null && (Double.compare(minP.distanceTo(p), n.rt.rect.distanceTo(p)) >= 0))
+                    minP = nearest(p, n.rt, ++level, minP);
+            } else {
+                minP = nearest(p, n.rt, ++level, minP);
+                
+                if (n.lb != null && (Double.compare(minP.distanceTo(p), n.lb.rect.distanceTo(p)) >= 0))
+                    minP = nearest(p, n.lb, ++level, minP);
+            }
+        } else { // splitted by y-coor
+            if (Double.compare(p.y(), n.p.y()) < 0) {
+                minP = nearest(p, n.lb, ++level, minP);
+                
+                if (n.rt != null && (Double.compare(minP.distanceTo(p), n.rt.rect.distanceTo(p)) >= 0))
+                    minP = nearest(p, n.rt, ++level, minP);
+            } else {
+                minP = nearest(p, n.rt, ++level, minP);
+                
+                if (n.lb != null && (Double.compare(minP.distanceTo(p), n.lb.rect.distanceTo(p)) >= 0))
+                    minP = nearest(p, n.lb, ++level, minP);
+            }
+        }
+        
+        return minP;
+    }
+    
+    public static void main(String[] args) throws IOException {
         KdTree kdTree = new KdTree();
         
-        kdTree.insert(new Point2D(0.7, 0.2));
-        kdTree.insert(new Point2D(0.5, 0.4));
-        kdTree.insert(new Point2D(0.2, 0.3));
-        kdTree.insert(new Point2D(0.4, 0.7));
-        kdTree.insert(new Point2D(0.9, 0.6));
+        // sample data in specification
+//        kdTree.insert(new Point2D(0.7, 0.2));
+//        kdTree.insert(new Point2D(0.5, 0.4));
+//        kdTree.insert(new Point2D(0.2, 0.3));
+//        kdTree.insert(new Point2D(0.4, 0.7));
+//        kdTree.insert(new Point2D(0.9, 0.6));
+//        kdTree.insert(new Point2D(0.5, 0.4));
+        
+        // sample data from checklist
+//        kdTree.insert(new Point2D(0.206107, 0.095492));
+//        kdTree.insert(new Point2D(0.975528, 0.654508));
+//        kdTree.insert(new Point2D(0.024472, 0.345492));
+//        kdTree.insert(new Point2D(0.793893, 0.095492));
+//        kdTree.insert(new Point2D(0.793893, 0.904508));
+//        kdTree.insert(new Point2D(0.975528, 0.345492));
+//        kdTree.insert(new Point2D(0.206107, 0.904508));
+//        kdTree.insert(new Point2D(0.500000, 0.000000));
+//        kdTree.insert(new Point2D(0.024472, 0.654508));
+//        kdTree.insert(new Point2D(0.500000, 1.000000));
+
+        String folder = "D:/Users/psantama/Downloads/kdtree/";
+        BufferedReader br = new BufferedReader(new FileReader(folder + "input10.txt"));
+        String line = null;
+        while((line = br.readLine()) != null) {
+            String[] coor = line.split(" ");
+            
+            kdTree.insert(new Point2D(Double.parseDouble(coor[0]), Double.parseDouble(coor[1])));
+        }
         
         kdTree.draw();
         
-        ArrayList<Node> nodes = new ArrayList<>();
-        nodes.add(kdTree.root);
-        List<Node> output = new ArrayList<>();
-        kdTree.levelOrder(nodes, new StringBuilder(), 0, output);
-        for (Node node : output) {
-            System.out.println(node);
-        }
-        
-        RectHV rectHV = new RectHV(0.1, 0.1, 0.55, 0.45);
+        Point2D p = new Point2D(0.5078125, 0.482421875);
+        StdDraw.setPenRadius(POINT_SIZE * 2);
+        StdDraw.setPenColor(StdDraw.BOOK_LIGHT_BLUE);
+        p.draw();
+        Point2D nearest = kdTree.nearest(p);
+        StdDraw.setPenRadius(POINT_SIZE);
         StdDraw.setPenColor(StdDraw.MAGENTA);
-        rectHV.draw();
+        nearest.draw();
+        System.out.println("nearest to " + p + ": " + nearest);
         
-        Iterable<Point2D> range = kdTree.range(rectHV);
-        System.out.println(range);
-        
-//        StdDraw.setPenRadius(0.01);
-//        
-//        StdDraw.setPenColor(StdDraw.GRAY);
-//        output.get(0).rect.draw();
-//        
-//        StdDraw.setPenColor(StdDraw.CYAN);
-//        output.get(1).rect.draw();
-//        
-//        StdDraw.setPenColor(StdDraw.PINK);
-//        output.get(2).rect.draw();
-//        
-//        StdDraw.setPenColor(StdDraw.ORANGE);
-//        output.get(3).rect.draw();
-//        
+//        RectHV rect = new RectHV(0, 0.5, 0.9, 0.9);
+//        StdDraw.setPenRadius(LINE_SIZE * 4);
+//        StdDraw.setPenColor(StdDraw.GREEN);
+//        rect.draw();
+//        System.out.println("range " + rect + ": ");
+//        StdDraw.setPenRadius(POINT_SIZE);
+//        int count = 0;
 //        StdDraw.setPenColor(StdDraw.MAGENTA);
-//        output.get(4).rect.draw();
+//        for (Point2D point2D : kdTree.range(rect)) {
+//            ++count;
+//            System.out.println("\t" + point2D);
+//            point2D.draw();
+//        }
+//        System.out.println(count);
+        
+        System.out.println(kdTree);
     }
 }
