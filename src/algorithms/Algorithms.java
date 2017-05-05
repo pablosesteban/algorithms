@@ -117,14 +117,24 @@ public class Algorithms {
         }
     }
     
+    private static void printDecHexBit(int i) {
+        System.out.println("decimal: " + i);
+        System.out.println("hexadecimal: " + Integer.toHexString(i));
+        System.out.println("bits: " + Integer.toBinaryString(i));
+    }
+    
     public static void main(String[] args) {
-//        executeNearestNeighborVisualizer();
-
-        KdTree kdtree = new KdTree();
-        while (true) {
-            kdtree.size();
-            kdtree.isEmpty();
-            kdtree.nearest(new Point2D(0, 0));
-        }
+        int i = -4;
+        printDecHexBit(i);
+        
+        System.out.println("");
+        
+        int d = 0x7FFFFFFF;
+        printDecHexBit(d);
+        
+        System.out.println("");
+        
+        int j = i & 0x7FFFFFFF;
+        printDecHexBit(j);
     }
 }
