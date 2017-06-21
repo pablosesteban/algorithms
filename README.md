@@ -1,2 +1,2 @@
 # algorithms-course
-Repository for Algorithms Course in Coursera
+Repository for Algorithms, Part I Course in Coursera
