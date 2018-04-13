@@ -5,7 +5,9 @@
  */
 package algorithms.part_I.week_2;
 
+import algorithms.adt.Queue;
 import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  *
@@ -112,5 +114,10 @@ public class ResizingArrayQueueOfStrings implements Queue<String> {
     @Override
     public String toString() {
         return Arrays.toString(queue);
+    }
+
+    @Override
+    public Iterator<String> iterator() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -1,14 +1,15 @@
-package algorithms.part_I.week_2;
+/**
+ * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
+ */
+package algorithms.adt;
 
 /**
- * 
- * @author psantama
- * 
- * FIFO: First-In-First-Out
+ * An Abstract Data Type for a collection of elements that is based on the FIFO, First-In-First-Out, policy.
+ * The elements are processed in the order they were added to the queue, they come out in the same order in which they were put in.
  * 
  * @param <E> type of elements stored in the queue
  */
-public interface Queue<E> {
+public interface Queue<E> extends Iterable<E> {
     /**
      * Adds an element at the top of the queue
      * 
@@ -26,7 +27,7 @@ public interface Queue<E> {
     /**
      * Check if the queue is empty
      * 
-     * @return false if the stack is empty, otherwise true
+     * @return false if the queue is empty, otherwise true
      */
     boolean isEmpty();
     

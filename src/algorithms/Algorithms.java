@@ -136,5 +136,25 @@ public class Algorithms {
         
         int j = i & 0x7FFFFFFF;
         printDecHexBit(j);
+        
+        System.out.println("");
+        
+        /**
+         * PRIMITIVE TYPES OVERFLOW
+         **/
+        int p = 2147483647;
+        int n = p + 1;
+        System.out.println("p: " + p + ", p+1: " + n);
+        n = p + 2;
+        System.out.println("p: " + p + ", p+2: " + n);
+        n = p + 3;
+        System.out.println("p: " + p + ", p+3: " + n);
+        long k = 9223372036854775807l;
+        long u = k + 1;
+        System.out.println("k: " + k + ", k+1: " + u);
+        u = k + 2;
+        System.out.println("k: " + k + ", k+2: " + u);
+        u = k + 3;
+        System.out.println("k: " + k + ", k+3: " + u);
     }
 }

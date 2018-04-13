@@ -1,36 +1,36 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package algorithms.part_I.week_2;
 
+import algorithms.adt.Stack;
 import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  *
- * @author psantama
+ * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
+ * 
+ * An Abstract Data Type for a fixed capacity stack of strings
+ * 
+ * The primary performance characteristic of this implementation is that the push and pop operations take time independent of the stack size
  */
 public class FixedArrayStackOfStrings implements Stack<String> {
-    private String[] items;
+    private final String[] elements;
     private int pointer;
     
-    //client must provide an initial capacity
     public FixedArrayStackOfStrings(int capacity) {
-        items = new String[capacity];
+        elements = new String[capacity];
     }
     
     @Override
     public void push(String item) {
-        if (size() == items.length - 1) {
-            throw new IllegalStateException("Stack is full");
+        if (size() == elements.length - 1) {
+            throw new IllegalStateException("Stack is full of elements");
         }
         
         if (item == null) {
-            throw new IllegalArgumentException("NULL items are not allowed");
+            throw new IllegalArgumentException("null items are not allowed");
         }
         
-        items[pointer++] = item;
+        elements[pointer++] = item;
     }
 
     @Override
@@ -39,11 +39,11 @@ public class FixedArrayStackOfStrings implements Stack<String> {
             throw new IllegalStateException("Stack is empty");
         }
         
-        String item = items[--pointer];
+        String element = elements[--pointer];
         
-        items[pointer] = null;
+        elements[pointer] = null;
         
-        return item;
+        return element;
     }
 
     @Override
@@ -59,6 +59,15 @@ public class FixedArrayStackOfStrings implements Stack<String> {
 
     @Override
     public String toString() {
-        return Arrays.toString(items);
+        return Arrays.toString(elements);
+    }
+
+    @Override
+    public Iterator<String> iterator() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public static void main(String[] args) {
+        
     }
 }

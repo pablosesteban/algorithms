@@ -5,6 +5,9 @@
  */
 package algorithms.part_I.week_2;
 
+import algorithms.adt.Stack;
+import java.util.Iterator;
+
 /**
  *
  * @author psantama
@@ -93,5 +96,10 @@ public class LinkedStackOfStrings implements Stack<String> {
         }
         
         return sb.toString();
+    }
+
+    @Override
+    public Iterator<String> iterator() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

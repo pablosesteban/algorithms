@@ -5,6 +5,7 @@
  */
 package algorithms.part_I.week_2;
 
+import algorithms.adt.Stack;
 import java.util.Arrays;
 import java.util.Iterator;
 

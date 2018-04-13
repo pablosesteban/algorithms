@@ -5,6 +5,9 @@
  */
 package algorithms.part_I.week_2;
 
+import algorithms.adt.Queue;
+import java.util.Iterator;
+
 /**
  *
  * @author psantama
@@ -92,6 +95,11 @@ public class LinkedQueueOfStrings implements Queue<String> {
         }
         
         return sb.toString();
+    }
+
+    @Override
+    public Iterator<String> iterator() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

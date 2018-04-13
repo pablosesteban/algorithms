@@ -5,7 +5,9 @@
  */
 package algorithms.part_I.week_2;
 
+import algorithms.adt.Stack;
 import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  *
@@ -98,5 +100,10 @@ public class ResizingArrayStackOfStrings implements Stack<String> {
     @Override
     public String toString() {
         return Arrays.toString(stack);
+    }
+
+    @Override
+    public Iterator<String> iterator() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
