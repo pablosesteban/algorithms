@@ -7,8 +7,17 @@ package algorithms.adt.impl;
 import algorithms.adt.Stack;
 import java.util.Iterator;
 
+/**
+ * A generic iterable implementation of the Stack collection ADT based on a
+ * doubly-linked list abstract entity.
+ * 
+ * @param <E>
+ */
 public class LinkedStack<E> implements Stack<E> {
-
+    private Node first;
+    private Node last;
+    private int size;
+    
     @Override
     public void push(E item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -34,4 +43,14 @@ public class LinkedStack<E> implements Stack<E> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    /**
+     * 
+     * 
+     * @param <E> 
+     */
+    private class Node<E> {
+        private E value;
+        private Node next;
+        private Node previous;
+    }
 }
