@@ -18,7 +18,7 @@ import java.util.Iterator;
  * The implementation avoids loitering (holding a reference to an element that is no longer needed) by setting the array entry
  * corresponding to the popped element to null, making it possible for the garbage collection system to reclaim the memory associated
  * with the popped item when the client is finished with it.
- * The order of iteration follows the FIFO, First-In-First-Out, policy, as iterates the internal array representation of the stack.
+ * The order of iteration follows the LIFO, Last-In-First-Out, policy.
  * 
  * @param <E> type of elements stored in the stack
  */
@@ -85,8 +85,8 @@ public class ResizingArrayStack<E> implements Stack<E> {
         sb.append(name);
         sb.append("{elements: {");
         
-        for (Iterator iterator = iterator(); iterator.hasNext();) {
-            sb.append(iterator.next());
+        for (int i = 0; i < size(); i++) {
+            sb.append(elements[i]);
             sb.append(", ");
         }
         
@@ -103,20 +103,20 @@ public class ResizingArrayStack<E> implements Stack<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return new StackIterator<>();
+        return new ArrayStackIterator<>();
     }
     
-    private class StackIterator<E> implements Iterator<E> {
-        private int pointer = 0;
+    private class ArrayStackIterator<E> implements Iterator<E> {
+        private int pointer = size()-1;
         
         @Override
         public boolean hasNext() {
-            return pointer < elements.length && elements[pointer] != null;
+            return pointer >= 0;
         }
 
         @Override
         public E next() {
-            return (E) elements[pointer++];
+            return (E) elements[pointer--];
         }
     }
     
@@ -129,6 +129,11 @@ public class ResizingArrayStack<E> implements Stack<E> {
         return elements.length;
     }
     
+    /**
+     * Resizes the internal array to the new size
+     * 
+     * @param size the new size of the internal array
+     */
     private void resize(int size) {
         E[] tmp = (E[]) new Object[size];
         
@@ -161,8 +166,8 @@ public class ResizingArrayStack<E> implements Stack<E> {
         System.out.println("----size: " + stack.size());
         System.out.println("----length: " + stack.length());
         
-        System.out.println("----Push Michico");
-        stack.push("Michico");
+        System.out.println("----Push Alvaro");
+        stack.push("Alvaro");
         System.out.println("----Push Alfredo");
         stack.push("Alfredo");
         System.out.println("----Push Maria on full stack");
