@@ -7,26 +7,40 @@ import algorithms.adt.Stack;
 import java.util.Iterator;
 
 /**
- * An implementation of the Stack ADT based on a resizing array implementation.
- * It dynamically adjust the size of the internal array so that it is both sufficiently large to hold all of the elements and
- * not so large as to waste an excessive amount of space.
- * If there is no room in the internal array, it doubles the size. If the stack size is less than one-fourth the array size,
- * it halves the array size. This way it can accommodate a substantial number of push() and pop() operations before having to
- * change the size of the array again. The stack never overflows and never becomes less than one-quarter full (unless the stack is empty).
- * The primary performance characteristic of this implementation is that the push and pop operations take time independent of the stack size.
+ * A generic iterable implementation of the Stack collection ADT based on a
+ * resizing array.
+ * It dynamically adjust the size of the array so that it is both sufficiently
+ * large to hold all of the elements and not so large as to waste an excessive
+ * amount of space. If there is no room in the array, it doubles the size. If
+ * the stack size is less than one-fourth the array size, it halves the array
+ * size. This way it can accommodate a substantial number of push and pop
+ * operations before having to change the size of the array again. The stack
+ * never overflows and never becomes less than one-quarter full (unless the
+ * stack is empty).
+ * The primary performance characteristic of this implementation is that it
+ * resizes the array to keep the array size (the space used) within a constant
+ * factor of the stack size, i.e. achieving the first optimum performance goal
+ * for collection ADTs (the space used should always be within a constant factor
+ * of the collection size). The flaw is that not all operations are time
+ * independent of the collection size, as some pop and push operations involves
+ * resizing the array and it takes time proportional to the size of the stack,
+ * i.e. not achieving the second optimum performance goal for collection ADTs
+ * (each operation should require time independent of the collection size).
  * null elements are not allowed.
- * The implementation avoids loitering (holding a reference to an element that is no longer needed) by setting the array entry
- * corresponding to the popped element to null, making it possible for the garbage collection system to reclaim the memory associated
- * with the popped item when the client is finished with it.
+ * The implementation avoids loitering (holding a reference to an element that
+ * is no longer needed) by setting the array entry corresponding to the popped
+ * element to null, making it possible for the garbage collection system to
+ * reclaim the memory associated with the popped item when the client is
+ * finished with it.
  * The order of iteration follows the LIFO, Last-In-First-Out, policy.
  * 
  * @param <E> type of elements stored in the stack
  */
-public class ResizingArrayStack<E> implements Stack<E> {
+public class ArrayStack<E> implements Stack<E> {
     private E[] elements;
     private int pointer;
     
-    public ResizingArrayStack(int initialCapacity) {
+    public ArrayStack(int initialCapacity) {
         // generic array creation is disallowed in Java for historical and technical reasons
         elements = (E[]) new Object[initialCapacity];
     }
@@ -145,7 +159,7 @@ public class ResizingArrayStack<E> implements Stack<E> {
     }
     
     public static void main(String[] args) {
-        ResizingArrayStack<String> stack = new ResizingArrayStack(5);
+        ArrayStack<String> stack = new ArrayStack(5);
         
         System.out.println("----Push Pablo");
         stack.push("Pablo");

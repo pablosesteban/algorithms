@@ -4,8 +4,10 @@
 package algorithms.adt;
 
 /**
- * An Abstract Data Type for a collection of elements where removing any of them is not supported.
- * Its purpose is to provide clients with the ability to collect elements and then to iterate through the collected elements.
+ * An Abstract Data Type (ADT) for a collection of elements where removing any
+ * of them is not supported.
+ * Its purpose is to provide clients with the ability to collect elements and 
+ * then to iterate through the collected elements.
  * The order of iteration is unspecified and should be immaterial to the client.
  * 
  * @param <E> type of elements stored in the bag

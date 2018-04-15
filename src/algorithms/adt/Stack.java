@@ -4,8 +4,10 @@
 package algorithms.adt;
 
 /**
- * An Abstract Data Type for a collection of elements that is based on the LIFO, Last-In-First-Out, policy.
- * The elements are processed in the reverse of the order in which they were added.
+ * An Abstract Data Type (ADT) for a collection of elements that is based on the
+ * LIFO, Last-In-First-Out, policy.
+ * The elements are processed in the reverse of the order in which they were
+ * added.
  * 
  * @param <E> type of elements stored in the stack
  */

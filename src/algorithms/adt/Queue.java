@@ -4,8 +4,10 @@
 package algorithms.adt;
 
 /**
- * An Abstract Data Type for a collection of elements that is based on the FIFO, First-In-First-Out, policy.
- * The elements are processed in the order they were added to the queue, they come out in the same order in which they were put in.
+ * An Abstract Data Type (ADT) for a collection of elements that is based on the
+ * FIFO, First-In-First-Out, policy.
+ * The elements are processed in the order they were added to the queue, they
+ * come out in the same order in which they were put in.
  * 
  * @param <E> type of elements stored in the queue
  */
