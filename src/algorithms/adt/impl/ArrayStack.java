@@ -29,7 +29,7 @@ import java.util.Iterator;
  * null elements are not allowed.
  * The implementation avoids loitering (holding a reference to an element that
  * is no longer needed) by setting the array entry corresponding to the popped
- * element to null, making it possible for the garbage collection system to
+ * element to null, making it possible for the garbage collection system (GC) to
  * reclaim the memory associated with the popped item when the client is
  * finished with it.
  * The order of iteration follows the LIFO, Last-In-First-Out, policy.

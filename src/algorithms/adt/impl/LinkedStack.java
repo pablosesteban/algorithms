@@ -19,6 +19,11 @@ import java.util.Iterator;
  * to the next element in the list (in contrast to a "doubly-linked list" where
  * each Node has two links, one in each direction).
  * null elements are allowed.
+ * The implementation achieves the two optimum performance goal for collection
+ * ADTs: the space used should always be within a constant factor of the
+ * collection size and each operation should require time independent of the
+ * collection size.
+ * The order of iteration follows the LIFO, Last-In-First-Out, policy.
  * 
  * @param <E> any data that we might want to structure with a linked list
  */
@@ -46,6 +51,7 @@ public class LinkedStack<E> implements Stack<E> {
         
         E value = (E) first.value;
         
+        // the old first Node is going to be an orphan object reclaimed by the GC
         first = first.next;
         
         size--;
@@ -65,7 +71,7 @@ public class LinkedStack<E> implements Stack<E> {
 
     @Override
     public Iterator<E> iterator() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return new LinkedStackIterator<>();
     }
 
     @Override
@@ -103,6 +109,24 @@ public class LinkedStack<E> implements Stack<E> {
         @Override
         public String toString() {
             return "Node{" + "value: " + value + ", next: " + next + '}';
+        }
+    }
+    
+    private class LinkedStackIterator<E> implements Iterator<E> {
+        private Node current = first;
+        
+        @Override
+        public boolean hasNext() {
+            return current != null;
+        }
+
+        @Override
+        public E next() {
+            E value = (E) current.value;
+            
+            current = current.next;
+            
+            return value;
         }
     }
     
@@ -167,9 +191,9 @@ public class LinkedStack<E> implements Stack<E> {
         System.out.println("----stack: " + stack);
         System.out.println("----size: " + stack.size());
         
-//        System.out.println("----Iteration order");
-//        for (String element : stack) {
-//            System.out.println("\t--"+ element);
-//        }
+        System.out.println("----Iteration order");
+        for (String element : stack) {
+            System.out.println("\t--"+ element);
+        }
     }
 }
