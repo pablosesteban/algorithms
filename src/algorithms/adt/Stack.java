@@ -8,6 +8,7 @@ package algorithms.adt;
  * LIFO, Last-In-First-Out, policy.
  * The elements are processed in the reverse of the order in which they were
  * added.
+ * The order of iteration follows the LIFO, Last-In-First-Out, policy.
  * 
  * @param <E> type of elements stored in the stack
  */
@@ -15,9 +16,9 @@ public interface Stack<E> extends Iterable<E> {
     /**
      * Adds an element at the top of the stack
      * 
-     * @param item item to be stored in the stack
+     * @param element item to be stored in the stack
      */
-    void push(E item);
+    void push(E element);
 
     /**
      * Removes the last element added to the stack

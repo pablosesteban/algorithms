@@ -8,16 +8,17 @@ package algorithms.adt;
  * FIFO, First-In-First-Out, policy.
  * The elements are processed in the order they were added to the queue, they
  * come out in the same order in which they were put in.
+ * The order of iteration follows the FIFO, First-In-First-Out, policy.
  * 
  * @param <E> type of elements stored in the queue
  */
 public interface Queue<E> extends Iterable<E> {
     /**
-     * Adds an element at the top of the queue
+     * Adds an element to the end of the queue
      * 
-     * @param item item to be stored in the queue
+     * @param element item to be stored to the end of the queue
      */
-    void enqueue(E item);
+    void enqueue(E element);
     
     /**
      * Removes the first element added to the queue

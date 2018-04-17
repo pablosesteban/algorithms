@@ -10,33 +10,32 @@ import java.util.Iterator;
  * A generic iterable implementation of the Stack collection ADT based on a
  * linked list data structure.
  * A linked list is a recursive data structure that is either empty (null) or a
- * reference to a Node having a generic type and a reference to a linked list. A
+ * reference to a node having a generic type and a reference to a linked list. A
  * linked list represents a sequence of elements where inserting and removing
  * items is somehow easy.
- * The reference to Node instance characterize the linked nature of the data
- * structure. It is commonly use the term "link" to refer to Node references.
- * The stack is backed by a simple "linked list" as each Node has only one link
+ * The reference to node instance characterize the linked nature of the data
+ * structure. It is commonly use the term "link" to refer to node references.
+ * The stack is backed by a simple "linked list" as each node has only one link
  * to the next element in the list (in contrast to a "doubly-linked list" where
- * each Node has two links, one in each direction).
+ * each node has two links, one in each direction).
  * null elements are allowed.
- * The implementation achieves the two optimum performance goal for collection
+ * The implementation achieves the two optimum performance goals for collection
  * ADTs: the space used should always be within a constant factor of the
  * collection size and each operation should require time independent of the
  * collection size.
- * The order of iteration follows the LIFO, Last-In-First-Out, policy.
  * 
  * @param <E> any data that we might want to structure with a linked list
  */
 public class LinkedStack<E> implements Stack<E> {
-    // top of the stack
-    private Node first;
+    // top of the stack, i.e. link to most recently added node
+    private LinkedListNode first;
     private int size;
     
     @Override
     public void push(E item) {
-        Node oldFirst = first;
+        LinkedListNode oldFirst = first;
         
-        first = new Node();
+        first = new LinkedListNode();
         first.value = item;
         first.next = oldFirst;
         
@@ -51,7 +50,7 @@ public class LinkedStack<E> implements Stack<E> {
         
         E value = (E) first.value;
         
-        // the old first Node is going to be an orphan object reclaimed by the GC
+        // the old first node is going to be an orphan object reclaimed by the GC
         first = first.next;
         
         size--;
@@ -76,15 +75,15 @@ public class LinkedStack<E> implements Stack<E> {
 
     @Override
     public String toString() {
-        String name = getClass().getSimpleName();
+        String className = getClass().getSimpleName();
         
         if (size() == 0) {
-            return name + "{elements: {}}";
+            return className + "{elements: {}}";
         }
         
         StringBuilder sb = new StringBuilder();
         
-        sb.append(name);
+        sb.append(className);
         sb.append("{elements: {");
         sb.append(first.toString());
         sb.append("}}");
@@ -92,28 +91,8 @@ public class LinkedStack<E> implements Stack<E> {
         return sb.toString();
     }
     
-    /**
-     * A recursive data structure that might hold any kind of data, in addition to the
-     * Node reference that characterizes its role in building linked lists.
-     * To emphasize that we are just using the Node class to structure the data,
-     * we define no methods and you have to refer directly to the instance
-     * variables in code. Because of this it does not implement an abstract data
-     * type and classes of this kind are sometimes called RECORDS.
-     * 
-     * @param <E> any data that we might want to structure with a linked list
-     */
-    private class Node<E> {
-        private E value;
-        private Node next;
-
-        @Override
-        public String toString() {
-            return "Node{" + "value: " + value + ", next: " + next + '}';
-        }
-    }
-    
     private class LinkedStackIterator<E> implements Iterator<E> {
-        private Node current = first;
+        private LinkedListNode current = first;
         
         @Override
         public boolean hasNext() {
@@ -191,7 +170,7 @@ public class LinkedStack<E> implements Stack<E> {
         System.out.println("----stack: " + stack);
         System.out.println("----size: " + stack.size());
         
-        System.out.println("----Iteration order");
+        System.out.println("----LIFO iteration order");
         for (String element : stack) {
             System.out.println("\t--"+ element);
         }

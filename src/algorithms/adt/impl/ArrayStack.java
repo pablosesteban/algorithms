@@ -88,15 +88,15 @@ public class ArrayStack<E> implements Stack<E> {
 
     @Override
     public String toString() {
-        String name = getClass().getSimpleName();
+        String className = getClass().getSimpleName();
         
         if (size() == 0) {
-            return name + "{elements: {}}";
+            return className + "{elements: {}}";
         }
         
         StringBuilder sb = new StringBuilder();
         
-        sb.append(name);
+        sb.append(className);
         sb.append("{elements: {");
         
         for (int i = 0; i < size(); i++) {
