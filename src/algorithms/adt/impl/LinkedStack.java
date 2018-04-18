@@ -99,10 +99,10 @@ public class LinkedStack<E> implements Stack<E> {
     
     /**
      * A fail-fast iterator.
-     * Immediately throw a ConcurrentModificationException if the client
-     * modifies the collection (via push() or pop()) during iteration.
+     * Immediately throws a ConcurrentModificationException if the client
+     * modifies the collection (via push or pop operations) during iteration.
      * 
-     * @param <E> 
+     * @param <E> any data stored in the linked list
      */
     private class LinkedStackIterator<E> implements Iterator<E> {
         private LinkedListNode current;
@@ -200,6 +200,18 @@ public class LinkedStack<E> implements Stack<E> {
         System.out.println("----LIFO iteration order");
         for (String element : stack) {
             System.out.println("\t--"+ element);
+        }
+        
+        System.out.println("----Pop operation while LIFO iteration order");
+        
+        try {
+            for (String element : stack) {
+                System.out.println("\t--"+ element);
+
+                stack.pop();
+            }
+        }catch (ConcurrentModificationException cme) {
+            System.out.println("\t--"+ cme);
         }
     }
 }

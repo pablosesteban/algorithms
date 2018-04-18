@@ -17,28 +17,28 @@ public interface Deque<E> extends Iterable<E> {
      * 
      * @param element element to be stored to the beginning of the queue
      */
-    void pushHead(E element);
+    void addFirst(E element);
     
     /**
      * Adds an element to the end of the queue
      * 
      * @param element element to be stored to the end of the queue
      */
-    void pushTail(E element);
+    void addLast(E element);
     
     /**
      * Removes the first element from the beginning of the queue
      * 
      * @return the first element from the beginning of the queue
      */
-    E popHead();
+    E removeFirst();
     
     /**
      * Removes the first element from the end of the queue
      * 
      * @return the first element from the end of the queue
      */
-    E popTail();
+    E removeLast();
     
     /**
      * Check if the queue is empty

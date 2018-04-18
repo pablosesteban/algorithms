@@ -33,7 +33,7 @@ public class LinkedDeque<E> implements Deque<E> {
     private int size;
 
     @Override
-    public void pushHead(E element) {
+    public void addFirst(E element) {
         DoublyLinkedListNode oldFirst = first;
         
         first = new DoublyLinkedListNode();
@@ -51,7 +51,7 @@ public class LinkedDeque<E> implements Deque<E> {
     }
 
     @Override
-    public void pushTail(E element) {
+    public void addLast(E element) {
         DoublyLinkedListNode oldLast = last;
         
         last = new DoublyLinkedListNode();
@@ -69,7 +69,7 @@ public class LinkedDeque<E> implements Deque<E> {
     }
 
     @Override
-    public E popHead() {
+    public E removeFirst() {
         if (size() == 0) {
             throw new IllegalStateException("deque is empty");
         }
@@ -88,7 +88,7 @@ public class LinkedDeque<E> implements Deque<E> {
     }
 
     @Override
-    public E popTail() {
+    public E removeLast() {
         if (size() == 0) {
             throw new IllegalStateException("deque is empty");
         }
@@ -161,39 +161,39 @@ public class LinkedDeque<E> implements Deque<E> {
         LinkedDeque<String> deque = new LinkedDeque<>();
         
         System.out.println("----Push head Pablo");
-        deque.pushHead("Pablo");
+        deque.addFirst("Pablo");
         System.out.println("----Push head Alvaro");
-        deque.pushHead("Alvaro");
+        deque.addFirst("Alvaro");
         System.out.println("----Push tail Carlos");
-        deque.pushTail("Carlos");
+        deque.addLast("Carlos");
         
         System.out.println("----deque: " + deque);
         System.out.println("----size: " + deque.size());
         
         System.out.println("----Pop tail");
-        System.out.println("\t--" + deque.popTail());
+        System.out.println("\t--" + deque.removeLast());
         
         System.out.println("----deque: " + deque);
         System.out.println("----size: " + deque.size());
         
         System.out.println("----Pop tail");
-        System.out.println("\t--" + deque.popTail());
+        System.out.println("\t--" + deque.removeLast());
         
         System.out.println("----deque: " + deque);
         System.out.println("----size: " + deque.size());
         
         System.out.println("----Pop tail");
-        System.out.println("\t--" + deque.popTail());
+        System.out.println("\t--" + deque.removeLast());
         
         System.out.println("----deque: " + deque);
         System.out.println("----size: " + deque.size());
         
         System.out.println("----Push head Pablo");
-        deque.pushHead("Pablo");
+        deque.addFirst("Pablo");
         System.out.println("----Push head Alvaro");
-        deque.pushHead("Alvaro");
+        deque.addFirst("Alvaro");
         System.out.println("----Push tail Carlos");
-        deque.pushTail("Carlos");
+        deque.addLast("Carlos");
         
         System.out.println("----deque: " + deque);
         System.out.println("----size: " + deque.size());
@@ -204,55 +204,55 @@ public class LinkedDeque<E> implements Deque<E> {
         }
         
         System.out.println("----Pop head");
-        System.out.println("\t--" + deque.popHead());
+        System.out.println("\t--" + deque.removeFirst());
         
         System.out.println("----deque: " + deque);
         System.out.println("----size: " + deque.size());
         
         System.out.println("----Pop head");
-        System.out.println("\t--" + deque.popHead());
+        System.out.println("\t--" + deque.removeFirst());
         
         System.out.println("----deque: " + deque);
         System.out.println("----size: " + deque.size());
         
         System.out.println("----Pop head");
-        System.out.println("\t--" + deque.popHead());
+        System.out.println("\t--" + deque.removeFirst());
         
         System.out.println("----deque: " + deque);
         System.out.println("----size: " + deque.size());
         
         try {
             System.out.println("----Pop head on empty deque");
-            deque.popHead();
+            deque.removeFirst();
         } catch (IllegalStateException ise) {
             System.out.println("\t--" + ise);
         }
         
         try {
             System.out.println("----Pop tail on empty deque");
-            deque.popTail();
+            deque.removeLast();
         } catch (IllegalStateException ise) {
             System.out.println("\t--" + ise);
         }
         
         System.out.println("----Push tail Carlos");
-        deque.pushTail("Carlos");
+        deque.addLast("Carlos");
         System.out.println("----Push tail Pablo");
-        deque.pushTail("Pablo");
+        deque.addLast("Pablo");
         System.out.println("----Push head Alvaro");
-        deque.pushHead("Alvaro");
+        deque.addFirst("Alvaro");
         
         System.out.println("----deque: " + deque);
         System.out.println("----size: " + deque.size());
         
         System.out.println("----Pop head");
-        System.out.println("\t--" + deque.popHead());
+        System.out.println("\t--" + deque.removeFirst());
         
         System.out.println("----deque: " + deque);
         System.out.println("----size: " + deque.size());
         
         System.out.println("----Pop tail");
-        System.out.println("\t--" + deque.popTail());
+        System.out.println("\t--" + deque.removeLast());
         
         System.out.println("----deque: " + deque);
         System.out.println("----size: " + deque.size());
