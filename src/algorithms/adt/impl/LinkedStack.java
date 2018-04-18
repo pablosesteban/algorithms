@@ -70,7 +70,7 @@ public class LinkedStack<E> implements Stack<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return new LinkedStackIterator<>();
+        return new LinkedListIterator<>(first);
     }
 
     @Override
@@ -89,24 +89,6 @@ public class LinkedStack<E> implements Stack<E> {
         sb.append("}}");
         
         return sb.toString();
-    }
-    
-    private class LinkedStackIterator<E> implements Iterator<E> {
-        private LinkedListNode current = first;
-        
-        @Override
-        public boolean hasNext() {
-            return current != null;
-        }
-
-        @Override
-        public E next() {
-            E value = (E) current.value;
-            
-            current = current.next;
-            
-            return value;
-        }
     }
     
     public static void main(String[] args) {

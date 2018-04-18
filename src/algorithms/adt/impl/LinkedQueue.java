@@ -76,7 +76,7 @@ public class LinkedQueue<E> implements Queue<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return new LinkedQueueIterator<>();
+        return new LinkedListIterator<>(first);
     }
     
     @Override
@@ -95,24 +95,6 @@ public class LinkedQueue<E> implements Queue<E> {
         sb.append("}}");
         
         return sb.toString();
-    }
-    
-    private class LinkedQueueIterator<E> implements Iterator<E> {
-        private LinkedListNode current = first;
-        
-        @Override
-        public boolean hasNext() {
-            return current != null;
-        }
-
-        @Override
-        public E next() {
-            E value = (E) current.value;
-            
-            current = current.next;
-            
-            return value;
-        }
     }
     
     public static void main(String[] args) {
