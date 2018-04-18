@@ -4,6 +4,7 @@
 package algorithms.adt.impl;
 
 import algorithms.adt.Stack;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 /**
@@ -30,6 +31,7 @@ public class LinkedStack<E> implements Stack<E> {
     // top of the stack, i.e. link to most recently added node
     private LinkedListNode first;
     private int size;
+    private int numberOfOperations;
     
     @Override
     public void push(E item) {
@@ -40,6 +42,8 @@ public class LinkedStack<E> implements Stack<E> {
         first.next = oldFirst;
         
         size++;
+        
+        numberOfOperations++;
     }
 
     @Override
@@ -54,6 +58,8 @@ public class LinkedStack<E> implements Stack<E> {
         first = first.next;
         
         size--;
+        
+        numberOfOperations++;
         
         return value;
     }
@@ -70,7 +76,7 @@ public class LinkedStack<E> implements Stack<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return new LinkedListIterator<>(first);
+        return new LinkedStackIterator<>();
     }
 
     @Override
@@ -89,6 +95,45 @@ public class LinkedStack<E> implements Stack<E> {
         sb.append("}}");
         
         return sb.toString();
+    }
+    
+    /**
+     * A fail-fast iterator.
+     * Immediately throw a ConcurrentModificationException if the client
+     * modifies the collection (via push() or pop()) during iteration.
+     * 
+     * @param <E> 
+     */
+    private class LinkedStackIterator<E> implements Iterator<E> {
+        private LinkedListNode current;
+        private final int currentNumberOfOperations;
+        
+        LinkedStackIterator() {
+            current = first;
+            currentNumberOfOperations = numberOfOperations;
+        }
+        
+        @Override
+        public boolean hasNext() {
+            if (currentNumberOfOperations != numberOfOperations) {
+                throw new ConcurrentModificationException();
+            }
+            
+            return current != null;
+        }
+        
+        @Override
+        public E next() {
+            if (currentNumberOfOperations != numberOfOperations) {
+                throw new ConcurrentModificationException();
+            }
+            
+            E value = (E) current.value;
+            
+            current = current.next;
+            
+            return value;
+        }
     }
     
     public static void main(String[] args) {
