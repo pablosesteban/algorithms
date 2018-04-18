@@ -16,7 +16,7 @@ public interface Stack<E> extends Iterable<E> {
     /**
      * Adds an element at the top of the stack
      * 
-     * @param element item to be stored in the stack
+     * @param element element to be stored in the stack
      */
     void push(E element);
 
