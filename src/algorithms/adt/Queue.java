@@ -16,7 +16,7 @@ public interface Queue<E> extends Iterable<E> {
     /**
      * Adds an element to the end of the queue
      * 
-     * @param element element to be stored to the end of the queue
+     * @param element element to be stored at the end of the queue
      */
     void enqueue(E element);
     

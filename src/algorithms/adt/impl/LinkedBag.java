@@ -4,6 +4,7 @@
 package algorithms.adt.impl;
 
 import algorithms.adt.Bag;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 /**
@@ -15,20 +16,20 @@ import java.util.Iterator;
  * items is somehow easy.
  * The reference to node instance characterize the linked nature of the data
  * structure. It is commonly use the term "link" to refer to node references.
- * The bag is backed by a simple "linked list" as each node has only one link
- * to the next element in the list (in contrast to a "doubly-linked list" where
- * each node has two links, one in each direction).
+ * The bag is backed by a linked list where each node has only one link to the
+ * next element in the list.
  * null elements are allowed.
  * The implementation achieves the two optimum performance goals for collection
  * ADTs: the space used should always be within a constant factor of the
  * collection size and each operation should require time independent of the
  * collection size.
  * 
- * @param <E> any data that we might want to structure with a linked list
+ * @param <E> the data to structure the linked list
  */
 public class LinkedBag<E> implements Bag<E> {
     private LinkedListNode first;
     private int size;
+    private int numberOfOperations;
 
     @Override
     public void add(E element) {
@@ -39,6 +40,8 @@ public class LinkedBag<E> implements Bag<E> {
         first.next = oldFirst;
         
         size++;
+        
+        numberOfOperations++;
     }
 
     @Override
@@ -53,7 +56,7 @@ public class LinkedBag<E> implements Bag<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return new LinkedListIterator<>(first);
+        return new LinkedBagIterator<>();
     }
 
     @Override
@@ -72,6 +75,45 @@ public class LinkedBag<E> implements Bag<E> {
         sb.append("}}");
         
         return sb.toString();
+    }
+    
+    /**
+     * A fail-fast iterator.
+     * Immediately throws a ConcurrentModificationException if the client
+     * modifies the collection (via push or pop operations) during iteration.
+     * 
+     * @param <E> the data stored in the linked list
+     */
+    private class LinkedBagIterator<E> implements Iterator<E> {
+        private LinkedListNode currentNode;
+        private final int currentNumberOfOperations;
+        
+        LinkedBagIterator() {
+            currentNode = first;
+            currentNumberOfOperations = numberOfOperations;
+        }
+        
+        @Override
+        public boolean hasNext() {
+            if (currentNumberOfOperations != numberOfOperations) {
+                throw new ConcurrentModificationException();
+            }
+            
+            return currentNode != null;
+        }
+        
+        @Override
+        public E next() {
+            if (currentNumberOfOperations != numberOfOperations) {
+                throw new ConcurrentModificationException();
+            }
+            
+            E value = (E) currentNode.value;
+            
+            currentNode = currentNode.next;
+            
+            return value;
+        }
     }
     
     public static void main(String[] args) {
@@ -102,6 +144,17 @@ public class LinkedBag<E> implements Bag<E> {
         System.out.println("----Iteration order");
         for (String element : bag) {
             System.out.println("\t--"+ element);
+        }
+        
+        System.out.println("----Add operation while iteration");
+        try {
+            for (String element : bag) {
+                System.out.println("\t--"+ element);
+
+                bag.add("Test");
+            }
+        }catch (ConcurrentModificationException cme) {
+            System.out.println("\t--"+ cme);
         }
     }
 }

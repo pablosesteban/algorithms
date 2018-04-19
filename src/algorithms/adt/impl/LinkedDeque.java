@@ -4,6 +4,7 @@
 package algorithms.adt.impl;
 
 import algorithms.adt.Deque;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 /**
@@ -15,15 +16,15 @@ import java.util.Iterator;
  * items is somehow easy.
  * The reference to node instance characterize the linked nature of the data
  * structure. It is commonly use the term "link" to refer to node references.
- * The deque is backed by a simple doubly-linked list where each node has two
- * links, one in each direction.
+ * The deque is backed by a doubly-linked list where each node has two links,
+ * one in each direction.
  * null elements are allowed.
  * The implementation achieves the two optimum performance goals for collection
  * ADTs: the space used should always be within a constant factor of the
  * collection size and each operation should require time independent of the
  * collection size.
  * 
- * @param <E> any data that we might want to structure with a doubly-linked list
+ * @param <E> the data to structure the linked list
  */
 public class LinkedDeque<E> implements Deque<E> {
     // head of the queue, i.e. link to least recently added at the beginning node
@@ -31,6 +32,7 @@ public class LinkedDeque<E> implements Deque<E> {
     // end of the queue, i.e. link to most recently added at the end node
     private DoublyLinkedListNode last;
     private int size;
+    private int numberOfOperations;
 
     @Override
     public void addFirst(E element) {
@@ -48,6 +50,8 @@ public class LinkedDeque<E> implements Deque<E> {
         }
         
         size++;
+        
+        numberOfOperations++;
     }
 
     @Override
@@ -66,6 +70,8 @@ public class LinkedDeque<E> implements Deque<E> {
         }
         
         size++;
+        
+        numberOfOperations++;
     }
 
     @Override
@@ -83,6 +89,8 @@ public class LinkedDeque<E> implements Deque<E> {
         }
         
         size--;
+        
+        numberOfOperations++;
         
         return value;
     }
@@ -102,6 +110,8 @@ public class LinkedDeque<E> implements Deque<E> {
         }
         
         size--;
+        
+        numberOfOperations++;
         
         return value;
     }
@@ -139,19 +149,40 @@ public class LinkedDeque<E> implements Deque<E> {
         return sb.toString();
     }
     
+    /**
+     * A fail-fast iterator.
+     * Immediately throws a ConcurrentModificationException if the client
+     * modifies the collection (via push or pop operations) during iteration.
+     * 
+     * @param <E> the data stored in the linked list
+     */
     private class LinkedQueueIterator<E> implements Iterator<E> {
-        private DoublyLinkedListNode current = first;
+        private DoublyLinkedListNode currentNode;
+        private final int currentNumberOfOperations;
+        
+        LinkedQueueIterator() {
+            currentNode = first;
+            currentNumberOfOperations = numberOfOperations;
+        }
         
         @Override
         public boolean hasNext() {
-            return current != null;
+            if (currentNumberOfOperations != numberOfOperations) {
+                throw new ConcurrentModificationException();
+            }
+            
+            return currentNode != null;
         }
-
+        
         @Override
         public E next() {
-            E value = (E) current.value;
+            if (currentNumberOfOperations != numberOfOperations) {
+                throw new ConcurrentModificationException();
+            }
             
-            current = current.next;
+            E value = (E) currentNode.value;
+            
+            currentNode = currentNode.next;
             
             return value;
         }
@@ -256,5 +287,16 @@ public class LinkedDeque<E> implements Deque<E> {
         
         System.out.println("----deque: " + deque);
         System.out.println("----size: " + deque.size());
+        
+        System.out.println("----RemoveFirst operation while FIFO iteration order");
+        try {
+            for (String element : deque) {
+                System.out.println("\t--"+ element);
+
+                deque.removeFirst();
+            }
+        }catch (ConcurrentModificationException cme) {
+            System.out.println("\t--"+ cme);
+        }
     }
 }

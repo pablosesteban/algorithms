@@ -18,7 +18,7 @@ package algorithms.adt.impl;
  * the instance variables in code. Because of this it does not implement an
  * abstract data type and classes of this kind are sometimes called RECORDS.
  *
- * @param <E> any data that we might want to structure with a doubly-linked list
+ * @param <E> the data to structure the doubly-linked list
  */
 class DoublyLinkedListNode<E> {
     E value;

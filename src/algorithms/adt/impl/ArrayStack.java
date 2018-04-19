@@ -135,18 +135,18 @@ public class ArrayStack<E> implements Stack<E> {
     }
     
     /**
-     * Gets the actual capacity of the internal array that holds the elements
+     * Gets the actual capacity of the array that holds the elements
      * 
-     * @return the length of the internal array that holds the elements
+     * @return the length of the array that holds the elements
      */
     private int length() {
         return elements.length;
     }
     
     /**
-     * Resizes the internal array to the new size
+     * Resizes the array to the new size
      * 
-     * @param size the new size of the internal array
+     * @param size the new size of the array
      */
     private void resize(int size) {
         E[] tmp = (E[]) new Object[size];

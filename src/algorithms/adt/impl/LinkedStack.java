@@ -16,16 +16,15 @@ import java.util.Iterator;
  * items is somehow easy.
  * The reference to node instance characterize the linked nature of the data
  * structure. It is commonly use the term "link" to refer to node references.
- * The stack is backed by a simple "linked list" as each node has only one link
- * to the next element in the list (in contrast to a "doubly-linked list" where
- * each node has two links, one in each direction).
+ * The stack is backed by a linked list where each node has only one link to the
+ * next element in the list.
  * null elements are allowed.
  * The implementation achieves the two optimum performance goals for collection
  * ADTs: the space used should always be within a constant factor of the
  * collection size and each operation should require time independent of the
  * collection size.
  * 
- * @param <E> any data that we might want to structure with a linked list
+ * @param <E> the data to structure the linked list
  */
 public class LinkedStack<E> implements Stack<E> {
     // top of the stack, i.e. link to most recently added node
@@ -102,14 +101,14 @@ public class LinkedStack<E> implements Stack<E> {
      * Immediately throws a ConcurrentModificationException if the client
      * modifies the collection (via push or pop operations) during iteration.
      * 
-     * @param <E> any data stored in the linked list
+     * @param <E> the data stored in the linked list
      */
     private class LinkedStackIterator<E> implements Iterator<E> {
-        private LinkedListNode current;
+        private LinkedListNode currentNode;
         private final int currentNumberOfOperations;
         
         LinkedStackIterator() {
-            current = first;
+            currentNode = first;
             currentNumberOfOperations = numberOfOperations;
         }
         
@@ -119,7 +118,7 @@ public class LinkedStack<E> implements Stack<E> {
                 throw new ConcurrentModificationException();
             }
             
-            return current != null;
+            return currentNode != null;
         }
         
         @Override
@@ -128,9 +127,9 @@ public class LinkedStack<E> implements Stack<E> {
                 throw new ConcurrentModificationException();
             }
             
-            E value = (E) current.value;
+            E value = (E) currentNode.value;
             
-            current = current.next;
+            currentNode = currentNode.next;
             
             return value;
         }
@@ -203,7 +202,6 @@ public class LinkedStack<E> implements Stack<E> {
         }
         
         System.out.println("----Pop operation while LIFO iteration order");
-        
         try {
             for (String element : stack) {
                 System.out.println("\t--"+ element);

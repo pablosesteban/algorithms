@@ -4,6 +4,7 @@
 package algorithms.adt.impl;
 
 import algorithms.adt.Queue;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 /**
@@ -15,16 +16,15 @@ import java.util.Iterator;
  * items is somehow easy.
  * The reference to node instance characterize the linked nature of the data
  * structure. It is commonly use the term "link" to refer to node references.
- * The queue is backed by a simple "linked list" as each node has only one link
- * to the next element in the list (in contrast to a "doubly-linked list" where
- * each node has two links, one in each direction).
+ * The queue is backed by a linked list where each node has only one link to the
+ * next element in the list.
  * null elements are allowed.
  * The implementation achieves the two optimum performance goals for collection
  * ADTs: the space used should always be within a constant factor of the
  * collection size and each operation should require time independent of the
  * collection size.
  * 
- * @param <E> any data that we might want to structure with a linked list
+ * @param <E> the data to structure the linked list
  */
 public class LinkedQueue<E> implements Queue<E> {
     // head of the queue, i.e. link to least recently added node
@@ -32,6 +32,7 @@ public class LinkedQueue<E> implements Queue<E> {
     // end of the queue, i.e. link to most recently added node
     private LinkedListNode last;
     private int size;
+    private int numberOfOperations;
     
     @Override
     public void enqueue(E item) {
@@ -47,6 +48,8 @@ public class LinkedQueue<E> implements Queue<E> {
         }
         
         size++;
+        
+        numberOfOperations++;
     }
 
     @Override
@@ -60,6 +63,8 @@ public class LinkedQueue<E> implements Queue<E> {
         first = first.next;
         
         size--;
+        
+        numberOfOperations++;
         
         return value;
     }
@@ -76,7 +81,7 @@ public class LinkedQueue<E> implements Queue<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return new LinkedListIterator<>(first);
+        return new LinkedQueueIterator<>();
     }
     
     @Override
@@ -95,6 +100,45 @@ public class LinkedQueue<E> implements Queue<E> {
         sb.append("}}");
         
         return sb.toString();
+    }
+    
+    /**
+     * A fail-fast iterator.
+     * Immediately throws a ConcurrentModificationException if the client
+     * modifies the collection (via push or pop operations) during iteration.
+     * 
+     * @param <E> the data stored in the linked list
+     */
+    private class LinkedQueueIterator<E> implements Iterator<E> {
+        private LinkedListNode currentNode;
+        private final int currentNumberOfOperations;
+        
+        LinkedQueueIterator() {
+            currentNode = first;
+            currentNumberOfOperations = numberOfOperations;
+        }
+        
+        @Override
+        public boolean hasNext() {
+            if (currentNumberOfOperations != numberOfOperations) {
+                throw new ConcurrentModificationException();
+            }
+            
+            return currentNode != null;
+        }
+        
+        @Override
+        public E next() {
+            if (currentNumberOfOperations != numberOfOperations) {
+                throw new ConcurrentModificationException();
+            }
+            
+            E value = (E) currentNode.value;
+            
+            currentNode = currentNode.next;
+            
+            return value;
+        }
     }
     
     public static void main(String[] args) {
@@ -161,6 +205,17 @@ public class LinkedQueue<E> implements Queue<E> {
         System.out.println("----FIFO iteration order");
         for (String element : queue) {
             System.out.println("\t--"+ element);
+        }
+        
+        System.out.println("----Dequeue operation while FIFO iteration order");
+        try {
+            for (String element : queue) {
+                System.out.println("\t--"+ element);
+
+                queue.dequeue();
+            }
+        }catch (ConcurrentModificationException cme) {
+            System.out.println("\t--"+ cme);
         }
     }
 }
