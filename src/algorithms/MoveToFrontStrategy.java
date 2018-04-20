@@ -6,16 +6,16 @@ package algorithms;
 import algorithms.adt.impl.DoublyLinkedListNode;
 
 /**
- * A self-organizing list that maintains a doubly-linked list with no duplicates.
- * Is a list that reorders its elements based on some self-organizing heuristic
- * to improve average access time. The aim of a self-organizing list is to
- * improve efficiency of linear search by moving more frequently accessed items
- * towards the head of the list.
- * Achieves near constant time for element access in the best case.
- * Uses a reorganizing algorithm in such a way that when a previously unseen
- * element is added, it is inserted at the front of the list and, when a
- * duplicate element is added, it is deleted from the list and reinserted at the
- * beginning.
+ * Implementation of a self-organizing list based on the move to front strategy
+ * backed by a doubly-linked list.
+ * A self-organizing list is a list that reorders its elements based on some
+ * self-organizing heuristic to improve average access time. The aim of a
+ * self-organizing list is to improve efficiency of linear search by moving more
+ * frequently accessed items towards the head of the list.
+ * The implementation uses a reorganizing algorithm in such a way that when a
+ * previously unseen element is added, it is inserted at the front of the list
+ * and, when a duplicate element is added, it is deleted from the list and
+ * reinserted at the beginning.
  * 
  * @param <E> the data to structure the doubly-linked list
  */
