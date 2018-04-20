@@ -3,6 +3,8 @@
  */
 package algorithms.adt.impl;
 
+import java.util.Objects;
+
 /**
  * A recursive data structure that might hold any kind of data, in addition to
  * the LinkedListNode reference that characterizes its role in building linked
@@ -20,9 +22,9 @@ package algorithms.adt.impl;
  *
  * @param <E> the data to structure the linked list
  */
-class LinkedListNode<E> {
-    E value;
-    LinkedListNode next;
+public class LinkedListNode<E> {
+    public E value;
+    public LinkedListNode next;
     
     @Override
     public String toString() {
