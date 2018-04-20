@@ -20,10 +20,10 @@ package algorithms.adt.impl;
  *
  * @param <E> the data to structure the doubly-linked list
  */
-public class DoublyLinkedListNode<E> {
-    public E value;
-    public DoublyLinkedListNode next;
-    public DoublyLinkedListNode previous;
+class DoublyLinkedListNode<E> {
+    E value;
+    DoublyLinkedListNode next;
+    DoublyLinkedListNode previous;
 
     @Override
     public String toString() {

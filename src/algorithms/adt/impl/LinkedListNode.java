@@ -22,9 +22,9 @@ import java.util.Objects;
  *
  * @param <E> the data to structure the linked list
  */
-public class LinkedListNode<E> {
-    public E value;
-    public LinkedListNode next;
+class LinkedListNode<E> {
+    E value;
+    LinkedListNode next;
     
     @Override
     public String toString() {
