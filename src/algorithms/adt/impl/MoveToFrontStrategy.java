@@ -12,6 +12,12 @@ import algorithms.adt.SelfOrganizingList;
  * previously unseen element is added, it is inserted at the front of the list
  * and, when a duplicate element is added, it is deleted from the list and
  * reinserted at the beginning.
+ * This implementation has the advantage of being easily implemented and
+ * requiring no extra memory. On the other hand, it may prioritize infrequently
+ * accessed nodes, i.e. if an uncommon node is accessed even once, it is moved
+ * to the head of the list.
+ * Useful for caching, data compression, and other applications where items that
+ * have been recently accessed are more likely to be re-accessed.
  * 
  * @param <E> the data to structure the doubly-linked list
  */
@@ -36,6 +42,19 @@ public class MoveToFrontStrategy<E> implements SelfOrganizingList<E> {
         }
         
         addFirst(element);
+    }
+    
+    @Override
+    public E search(E element) {
+        E searched = null;
+        
+        for(DoublyLinkedListNode n = first; n != null; n = n.next) {
+            if (n.value.equals(element)) {
+                return (E) n.value;
+            }
+        }
+        
+        return searched;
     }
     
     @Override
