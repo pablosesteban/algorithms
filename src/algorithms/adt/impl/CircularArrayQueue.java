@@ -1,10 +1,9 @@
-/**
- * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
- */
+ /**
+  * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
+  */
 package algorithms.adt.impl;
 
 import algorithms.adt.Queue;
-import java.util.Arrays;
 import java.util.Iterator;
 
 /**
@@ -14,7 +13,7 @@ import java.util.Iterator;
  * In a circular queue, elements are always enqueue at REAR position and are
  * always dequeue from FRONT position.
  * null elements are not allowed.
- * 
+ *
  * @param <E> type of elements stored in the queue
  */
 public class CircularArrayQueue<E> implements Queue<E> {
@@ -33,7 +32,8 @@ public class CircularArrayQueue<E> implements Queue<E> {
             throw new IllegalArgumentException("null elements are not allowed");
         }
         
-        if ((rear == elements.length && front == 0) || (rear != 0 && rear == front)) {
+        // check if queue is full
+        if (size() == elements.length) {
             throw new IllegalStateException("queue is full");
         }
         
@@ -45,15 +45,16 @@ public class CircularArrayQueue<E> implements Queue<E> {
         
         size++;
     }
-
+    
     @Override
     public E dequeue() {
-        if (size() == 0 || (front == elements.length && rear == elements.length)) {
+        // check if queue is empty
+        if (size() == 0) {
             throw new IllegalStateException("stack is empty");
         }
         
         if (front == elements.length) {
-            front = rear - 1;
+            front = 0;
         }
         
         E element = elements[front];
@@ -66,17 +67,17 @@ public class CircularArrayQueue<E> implements Queue<E> {
         
         return element;
     }
-
+    
     @Override
     public boolean isEmpty() {
         return size() == 0;
     }
-
+    
     @Override
     public int size() {
         return size;
     }
-
+    
     @Override
     public Iterator<E> iterator() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -84,24 +85,43 @@ public class CircularArrayQueue<E> implements Queue<E> {
     
     @Override
     public String toString() {
-        return getClass().getSimpleName()+ "{elements: " + Arrays.toString(elements) + "}";
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append(getClass().getSimpleName());
+        sb.append("{elements: {");
+        
+        for (E element : elements) {
+            sb.append(element);
+            sb.append(", ");
+        }
+        
+        int lastComma = sb.lastIndexOf(",");
+        sb.deleteCharAt(lastComma);
+        
+        int lastWitheSpace = sb.lastIndexOf(" ");
+        sb.deleteCharAt(lastWitheSpace);
+        
+        sb.append("}}");
+        
+        return sb.toString();
+    }
+    
+    private void print() {
+        System.out.println(this);
+        System.out.println("\trear: " + rear);
+        System.out.println("\tfront: " + front);
+        System.out.println("\tsize: " + size());
     }
     
     public static void main(String[] args) {
         CircularArrayQueue<String> queue = new CircularArrayQueue<>(3);
         
-        System.out.println(queue);
-        System.out.println("\trear: " + queue.rear);
-        System.out.println("\tfront: " + queue.front);
-        System.out.println("\tsize: " + queue.size());
+        queue.print();
         
         System.out.println("----Enqueue Pablo");
         queue.enqueue("Pablo");
         
-        System.out.println(queue);
-        System.out.println("\trear: " + queue.rear);
-        System.out.println("\tfront: " + queue.front);
-        System.out.println("\tsize: " + queue.size());
+        queue.print();
         
         System.out.println("----Enqueue Carlos");
         queue.enqueue("Carlos");
@@ -111,72 +131,85 @@ public class CircularArrayQueue<E> implements Queue<E> {
         
         System.out.println("----Enqueue null");
         try {
-        queue.enqueue(null);
+            queue.enqueue(null);
         }catch (IllegalArgumentException iae) {
             System.out.println("\t--" + iae);
         }
         
         System.out.println("----Enqueue Maria on full queue");
         try {
-        queue.enqueue("Maria");
+            queue.enqueue("Maria");
         }catch (IllegalStateException iee) {
             System.out.println("\t--" + iee);
         }
         
-        System.out.println(queue);
-        System.out.println("\trear: " + queue.rear);
-        System.out.println("\tfront: " + queue.front);
-        System.out.println("\tsize: " + queue.size());
+        queue.print();
         
         System.out.println("----Dequeue " + queue.dequeue());
         
-        System.out.println(queue);
-        System.out.println("\trear: " + queue.rear);
-        System.out.println("\tfront: " + queue.front);
-        System.out.println("\tsize: " + queue.size());
+        queue.print();
         
         System.out.println("----Enqueue Dani");
         queue.enqueue("Dani");
         
-        System.out.println(queue);
-        System.out.println("\trear: " + queue.rear);
-        System.out.println("\tfront: " + queue.front);
-        System.out.println("\tsize: " + queue.size());
+        queue.print();
         
         System.out.println("----Enqueue Eita on full queue");
         try {
-        queue.enqueue("Eita");
+            queue.enqueue("Eita");
         }catch (IllegalStateException iee) {
             System.out.println("\t--" + iee);
         }
         
         System.out.println("----Dequeue " + queue.dequeue());
         
-        System.out.println(queue);
-        System.out.println("\trear: " + queue.rear);
-        System.out.println("\tfront: " + queue.front);
-        System.out.println("\tsize: " + queue.size());
+        queue.print();
         
         System.out.println("----Dequeue " + queue.dequeue());
         
-        System.out.println(queue);
-        System.out.println("\trear: " + queue.rear);
-        System.out.println("\tfront: " + queue.front);
-        System.out.println("\tsize: " + queue.size());
+        queue.print();
         
-//        System.out.println("----Dequeue " + queue.dequeue());
-//        System.out.println("----Dequeue " + queue.dequeue());
-//        
-//        try {
-//            System.out.println("----Dequeue on empty queue");
-//            queue.dequeue();
-//        } catch (IllegalStateException ise) {
-//            System.out.println("\t--" + ise);
-//        }
-//        
-//        System.out.println(queue);
-//        System.out.println("rear: " + queue.rear);
-//        System.out.println("front: " + queue.front);
-//        System.out.println("size: " + queue.size());
+        System.out.println("----Dequeue " + queue.dequeue());
+        
+        queue.print();
+        
+        System.out.println("----Enqueue Alvaro");
+        queue.enqueue("Alvaro");
+        
+        queue.print();
+        
+        System.out.println("----Enqueue Carlos");
+        queue.enqueue("Carlos");
+        
+        queue.print();
+        
+        System.out.println("----Enqueue Pablo");
+        queue.enqueue("Pablo");
+        
+        queue.print();
+        
+        System.out.println("----Enqueue Eita on full queue");
+        try {
+            queue.enqueue("Eita");
+        }catch (IllegalStateException iee) {
+            System.out.println("\t--" + iee);
+        }
+        
+        System.out.println("----Dequeue " + queue.dequeue());
+        
+        queue.print();
+        
+        System.out.println("----Dequeue " + queue.dequeue());
+        
+        queue.print();
+        
+        System.out.println("----Enqueue Carlos");
+        queue.enqueue("Carlos");
+        
+        queue.print();
+        
+        System.out.println("----Dequeue " + queue.dequeue());
+        
+        queue.print();
     }
 }
