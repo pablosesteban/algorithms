@@ -45,7 +45,7 @@ public class MoveToFrontStrategy<E> implements SelfOrganizingList<E> {
     }
     
     @Override
-    public E search(E element) {
+    public E get(E element) {
         E searched = null;
         
         for(DoublyLinkedListNode n = first; n != null; n = n.next) {

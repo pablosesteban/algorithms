@@ -26,7 +26,7 @@ public interface SelfOrganizingList<E> {
      * @param element the element to search in the list
      * @return null if not exists, otherwise the element
      */
-    E search(E element);
+    E get(E element);
     
     /**
      * Check if the list is empty
