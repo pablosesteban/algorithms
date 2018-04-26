@@ -39,15 +39,11 @@ public class CircularArrayQueue<E> implements Queue<E> {
             throw new IllegalStateException("queue is full");
         }
         
-        if (rear == elements.length && front == elements.length) {
-            rear = front = 0;
-        }
-        
-        if (rear == elements.length && front != 0) {
-            rear = front-1;
-        }
-        
         elements[rear++] = element;
+        
+        if (rear == elements.length) {
+            rear = 0;
+        }
         
         size++;
     }
@@ -58,15 +54,15 @@ public class CircularArrayQueue<E> implements Queue<E> {
             throw new IllegalStateException("queue is empty");
         }
         
-        if (front == elements.length) {
-            front = 0;
-        }
-        
         E element = elements[front];
         
         elements[front] = null;
         
         front++;
+        
+        if (front == elements.length) {
+            front = 0;
+        }
         
         size--;
         
@@ -117,7 +113,12 @@ public class CircularArrayQueue<E> implements Queue<E> {
         
         public CircularArrayQueueIterator() {
             itFront = front;
-            itRear = rear;
+            
+            if (size() == elements.length) {
+                itRear = elements.length;
+            }else {
+                itRear = rear;
+            }
         }
         
         @Override
@@ -127,7 +128,13 @@ public class CircularArrayQueue<E> implements Queue<E> {
 
         @Override
         public E next() {
-            return (E) elements[itFront++];
+            E element = (E) elements[itFront++];
+            
+            if (size() != elements.length && itFront == elements.length) {
+                itFront = 0;
+            }
+            
+            return element;
         }
     }
     
@@ -146,48 +153,72 @@ public class CircularArrayQueue<E> implements Queue<E> {
 //        System.out.println("----Enqueue Pablo");
 //        queue.enqueue("Pablo");
 //        queue.print();
+//        System.out.println("----FIFO iteration order");
+//        for (String element : queue) {
+//            System.out.println("\t--"+ element);
+//        }
+//        
 //        System.out.println("----Enqueue Carlos");
 //        queue.enqueue("Carlos");
 //        queue.print();
+//        System.out.println("----FIFO iteration order");
+//        for (String element : queue) {
+//            System.out.println("\t--"+ element);
+//        }
+//        
 //        System.out.println("----Enqueue Alvaro");
 //        queue.enqueue("Alvaro");
 //        queue.print();
-//        
 //        System.out.println("----FIFO iteration order");
 //        for (String element : queue) {
 //            System.out.println("\t--"+ element);
 //        }
 //        
 //        System.out.println("\n--------------------------------\n");
+        
+        // dequeue to be empty
+//        System.out.println("----Dequeue " + queue.dequeue());
+//        queue.print();
+//        System.out.println("----FIFO iteration order");
+//        for (String element : queue) {
+//            System.out.println("\t--"+ element);
+//        }
 //        
-//        // dequeue to be empty
 //        System.out.println("----Dequeue " + queue.dequeue());
 //        queue.print();
-//        System.out.println("----Dequeue " + queue.dequeue());
-//        queue.print();
-//        System.out.println("----Dequeue " + queue.dequeue());
-//        queue.print();
+//        System.out.println("----FIFO iteration order");
+//        for (String element : queue) {
+//            System.out.println("\t--"+ element);
+//        }
 //        
+//        System.out.println("----Dequeue " + queue.dequeue());
+//        queue.print();
 //        System.out.println("----FIFO iteration order");
 //        for (String element : queue) {
 //            System.out.println("\t--"+ element);
 //        }
 //        
 //        System.out.println("\n--------------------------------\n");
-//        
-//        // alternate enqueue and dequeue
+        
+        // alternate enqueue and dequeue
 //        for (int i = 0; i < 12; i++) {
 //            System.out.println("----Enqueue Pablo");
 //            queue.enqueue("Pablo");
 //            queue.print();
 //            
-//            System.out.println("----Dequeue " + queue.dequeue());
+//            System.out.println("----FIFO iteration order");
+//            for (String element : queue) {
+//                System.out.println("\t--"+ element);
+//            }
+//            
+//            System.out.println("----Dequeue ");
+//            System.out.println("\t--" + queue.dequeue());
 //            queue.print();
-//        }
-//        
-//        System.out.println("----FIFO iteration order");
-//        for (String element : queue) {
-//            System.out.println("\t--"+ element);
+//            
+//            System.out.println("----FIFO iteration order");
+//            for (String element : queue) {
+//                System.out.println("\t--"+ element);
+//            }
 //        }
 //        
 //        System.out.println("\n--------------------------------\n");
@@ -198,6 +229,11 @@ public class CircularArrayQueue<E> implements Queue<E> {
                 System.out.println("----Enqueue Pablo");
                 queue.enqueue("Pablo");
                 queue.print();
+                
+                System.out.println("----FIFO iteration order");
+                for (String element : queue) {
+                    System.out.println("\t--"+ element);
+                }
             } catch (IllegalStateException ise) {
                 System.out.println("\t--" + ise);
             }
@@ -206,21 +242,27 @@ public class CircularArrayQueue<E> implements Queue<E> {
                 System.out.println("----Enqueue Carlos");
                 queue.enqueue("Carlos");
                 queue.print();
+                
+                System.out.println("----FIFO iteration order");
+                for (String element : queue) {
+                    System.out.println("\t--"+ element);
+                }
             } catch (IllegalStateException ise) {
                 System.out.println("\t--" + ise);
             }
             
             try {
-                System.out.println("----Dequeue " + queue.dequeue());
+                System.out.println("----Dequeue ");
+                System.out.println("\t--" + queue.dequeue());
                 queue.print();
+                
+                System.out.println("----FIFO iteration order");
+                for (String element : queue) {
+                    System.out.println("\t--"+ element);
+                }
             } catch (IllegalStateException ise) {
                 System.out.println("\t--" + ise);
             }
-        }
-        
-        System.out.println("----FIFO iteration order");
-        for (String element : queue) {
-            System.out.println("\t--"+ element);
         }
         
         System.out.println("\n--------------------------------\n");
@@ -236,14 +278,16 @@ public class CircularArrayQueue<E> implements Queue<E> {
 //            }
 //            
 //            try {
-//                System.out.println("----Dequeue " + queue.dequeue());
+//                System.out.println("----Dequeue ");
+//                System.out.println("\t--" + queue.dequeue());
 //                queue.print();
 //            } catch (IllegalStateException ise) {
 //                System.out.println("\t--" + ise);
 //            }
 //            
 //            try {
-//                System.out.println("----Dequeue " + queue.dequeue());
+//                System.out.println("----Dequeue ");
+//                System.out.println("\t--" + queue.dequeue());
 //                queue.print();
 //            } catch (IllegalStateException ise) {
 //                System.out.println("\t--" + ise);
