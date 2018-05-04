@@ -64,11 +64,16 @@ public class Algorithms {
     }
     
     public static void main(String[] args) {
+        double prev = timeTrial(125);
+        
         // Print time for problem size N.
         for (int N = 250; true; N += N) {
             double time = timeTrial(N);
             
-            StdOut.printf("%7d %5.1f\n", N, time);
+            StdOut.printf("%7d %5.1f", N, time);
+            StdOut.printf("%5.1f\n", time/prev);
+            
+            prev = time;
         }
     }
 }
