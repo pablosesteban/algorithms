@@ -10,7 +10,7 @@ package algorithms.adt;
  * the worst case is O(n), by moving more frequently accessed items towards the
  * head of the list.
  *
- * @param <E>
+ * @param <E> type of elements stored in the list
  */
 public interface SelfOrganizingList<E> {
     /**
