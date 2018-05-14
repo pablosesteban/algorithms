@@ -1,0 +1,70 @@
+/**
+ * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
+ */
+package algorithms.adt.task.impl;
+
+import algorithms.adt.Graph;
+import algorithms.adt.impl.UndirectedGraph;
+import algorithms.adt.task.GraphSearch;
+import java.util.Arrays;
+
+public class DepthFirstSearch implements GraphSearch {
+    private boolean[] marked;
+    private int count;
+    
+    public DepthFirstSearch(Graph g, int source) {
+        marked = new boolean[g.getVertices()];
+        
+        dfs(g, source);
+    }
+    
+    @Override
+    public boolean marked(int v) {
+        return marked[v];
+    }
+
+    @Override
+    public int count() {
+        return count;
+    }
+
+    private void dfs(Graph g, int v) {
+        marked[v] = true;
+        
+        count++;
+        
+        for (int w : g.getAdjacentVertices(v)) {
+            if (!marked(w)) {
+                dfs(g, w);
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "DepthFirstSearch{" + "marked: " + Arrays.toString(marked) + ", count: " + count + '}';
+    }
+    
+    public static void main(String[] args) {
+        Graph g = new UndirectedGraph(13);
+        
+        g.addEdge(0, 5);
+        g.addEdge(4, 3);
+        g.addEdge(0, 1);
+        g.addEdge(9, 12);
+        g.addEdge(6, 4);
+        g.addEdge(5, 4);
+        g.addEdge(0, 2);
+        g.addEdge(11, 12);
+        g.addEdge(9, 10);
+        g.addEdge(0, 6);
+        g.addEdge(7, 8);
+        g.addEdge(9, 11);
+        g.addEdge(5, 3);
+        
+        System.out.println(g);
+        
+        DepthFirstSearch dfs = new DepthFirstSearch(g, 5);
+        System.out.println(dfs);
+    }
+}
