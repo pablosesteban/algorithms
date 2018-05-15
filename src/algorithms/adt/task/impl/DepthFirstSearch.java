@@ -8,10 +8,31 @@ import algorithms.adt.impl.UndirectedGraph;
 import algorithms.adt.task.GraphSearch;
 import java.util.Arrays;
 
+/**
+ * A fundamental recursive implementation of GraphSearch API that follows the
+ * graph’s edges to find the vertices connected to the source vertex provided to
+ * the constructor.
+ * It maintains an array of boolean values to mark all of the vertices that are 
+ * connected to the source.
+ * Depth First Search (DFS) approach to search a graph follows paths from the
+ * source vertex to other vertices in the graph, marking each vertex encountered
+ * by invoking a recursive method that visits vertices and mark them as having
+ * been visited and visit (recursively) all the vertices that are adjacent to it
+ * and that have not yet been marked.
+ * DFS marks all the vertices connected to a given source in time proportional
+ * to the sum of their degrees because marking ensures that each vertex is
+ * visited once (taking time proportional to its degree to check marks).
+ */
 public class DepthFirstSearch implements GraphSearch {
     private boolean[] marked;
     private int count;
     
+    /**
+     * Find the vertices in the graph that are connected to the source vertex
+     * 
+     * @param g the graph
+     * @param source a vertex in the graph
+     */
     public DepthFirstSearch(Graph g, int source) {
         marked = new boolean[g.getVertices()];
         
@@ -66,5 +87,7 @@ public class DepthFirstSearch implements GraphSearch {
         
         DepthFirstSearch dfs = new DepthFirstSearch(g, 5);
         System.out.println(dfs);
+        
+        System.out.println("Is a connected graph? " + (dfs.count() == g.getVertices()));
     }
 }
