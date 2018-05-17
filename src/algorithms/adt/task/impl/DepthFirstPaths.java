@@ -20,6 +20,8 @@ import java.util.Arrays;
  * vertices connected to it.
  * The implementation doesn't care about the path and choose it based on the
  * order of the adjacency list of each vertex if there are more than one.
+ * DFS provides a way to search a path from a given source vertex to any marked
+ * vertex in time proportional its length.
  */
 public class DepthFirstPaths implements GraphPaths {
     private boolean[] marked;
@@ -100,7 +102,7 @@ public class DepthFirstPaths implements GraphPaths {
         
         System.out.println(g);
         
-        DepthFirstPaths dfp = new DepthFirstPaths(g, 3);
+        DepthFirstPaths dfp = new DepthFirstPaths(g, 5);
         System.out.println(dfp);
         
         System.out.println("hasPathTo 2: " + dfp.hasPathTo(2));
