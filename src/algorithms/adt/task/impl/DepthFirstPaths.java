@@ -12,16 +12,16 @@ import java.util.Arrays;
 
 /**
  * A DFS-based implementation that extends the DFS by adding an array of integer
- * values (edgeTo) that gives a way to find a path back to source vertex provided to the
+ * values that gives a way to find a path back to source vertex provided to the
  * constructor for every vertex connected to it in the graph. It remembers a
- * path from each vertex to the source, such that edgeTo[w] = v means that v-w
- * was the edge used to access w for the first time. The array is a parent-link
- * representation of a tree rooted at source vertex that contains all the
- * vertices connected to it.
+ * path from each vertex to the source, such that integer[w] = v means that v-w
+ * was the edge used to access w for the first time.
  * The implementation doesn't care about the path and choose it based on the
  * order of the adjacency list of each vertex if there are more than one.
  * DFS provides a way to search a path from a given source vertex to any marked
- * vertex in time proportional its length.
+ * vertex in time proportional its length, as the array of integer values is a
+ * parent-link representation of a tree rooted at source vertex that contains
+ * all the vertices connected to it.
  */
 public class DepthFirstPaths implements GraphPaths {
     private boolean[] marked;
