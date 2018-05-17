@@ -9,9 +9,8 @@ import algorithms.adt.task.GraphSearch;
 import java.util.Arrays;
 
 /**
- * A fundamental recursive implementation of GraphSearch API that follows the
- * graph’s edges to find the vertices connected to the source vertex provided to
- * the constructor.
+ * A fundamental recursive implementation that follows the graph’s edges to find
+ * the vertices connected to the source vertex provided to the constructor.
  * It maintains an array of boolean values to mark all of the vertices that are 
  * connected to the source.
  * Depth First Search (DFS) approach to search a graph follows paths from the
@@ -34,7 +33,7 @@ public class DepthFirstSearch implements GraphSearch {
      * @param source a vertex in the graph
      */
     public DepthFirstSearch(Graph g, int source) {
-        marked = new boolean[g.getVertices()];
+        marked = new boolean[g.size()];
         
         dfs(g, source);
     }
@@ -85,9 +84,9 @@ public class DepthFirstSearch implements GraphSearch {
         
         System.out.println(g);
         
-        DepthFirstSearch dfs = new DepthFirstSearch(g, 5);
+        DepthFirstSearch dfs = new DepthFirstSearch(g, 0);
         System.out.println(dfs);
         
-        System.out.println("Is a connected graph? " + (dfs.count() == g.getVertices()));
+        System.out.println("Is a connected graph? " + (dfs.count() == g.size()));
     }
 }

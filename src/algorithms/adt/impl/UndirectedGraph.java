@@ -62,7 +62,7 @@ public class UndirectedGraph implements Graph {
     }
 
     @Override
-    public int getVertices() {
+    public int size() {
         return vertices.length;
     }
 

@@ -34,5 +34,5 @@ public interface Graph {
      * 
      * @return the number of vertices in the graph
      */
-    int getVertices();
+    int size();
 }
