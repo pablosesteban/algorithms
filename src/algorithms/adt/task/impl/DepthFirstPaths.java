@@ -16,8 +16,9 @@ import java.util.Arrays;
  * constructor for every vertex connected to it in the graph. It remembers a
  * path from each vertex to the source, such that integer[w] = v means that v-w
  * was the edge used to access w for the first time.
- * The implementation doesn't care about the path and choose it based on the
- * order of the adjacency list of each vertex if there are more than one.
+ * The implementation choose the path based on the order of the adjacency list
+ * of each vertex if there are more than one, i.e. depend not just on the graph,
+ * but also on the representation and the nature of the recursion.
  * DFS provides a way to search a path from a given source vertex to any marked
  * vertex in time proportional its length, as the array of integer values is a
  * parent-link representation of a tree rooted at source vertex that contains
