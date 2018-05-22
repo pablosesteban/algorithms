@@ -5,22 +5,23 @@ package algorithms.adt.task;
 
 /**
  * An interface to find vertices in the graph connected to a source vertex.
- * Decouples the implementation from the graph representation, so that, clients
- * can create objects of this type to perform the task.
+ * It finds paths from source vertex to other vertices in the graph.
  */
 public interface GraphSearch {
     /**
-     * Checks if vertex v is connected to a vertex source
+     * Check if there is a path from source vertex to v vertex
      * 
      * @param v a vertex in the graph
-     * @return true if, and only if, v vertex is connected to vertex source
+     * @return true if, and only if, there is a path from source vertex to v
+     * vertex
      */
-    boolean marked(int v);
+    boolean hasPathTo(int v);
     
     /**
-     * Counts how many vertices are connected to vertex source.
+     * Search a path from source vertex to v vertex
      * 
-     * @return the vertices connected to vertex source
+     * @param v a vertex in the graph
+     * @return a path from source vertex to v vertex, otherwise null
      */
-    int count();
+    Iterable<Integer> pathTo(int v);
 }

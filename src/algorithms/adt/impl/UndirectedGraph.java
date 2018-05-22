@@ -68,29 +68,44 @@ public class UndirectedGraph implements Graph {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder verticesSb = new StringBuilder();
         
-        sb.append("{\n");
+        verticesSb.append("{\n");
         
         for (int i = 0; i < vertices.length; i++) {
-            sb.append("\t");
-            sb.append(i);
-            sb.append(": ");
+            verticesSb.append("\t");
+            verticesSb.append(i);
+            verticesSb.append(": ");
             
+            int lastIndex = vertices[i].size() - 1;
+            int count = 0;
             for (Integer vertex : vertices[i]) {
-                sb.append(vertex);
-                sb.append(", ");
-            }
-            
-            int lastComma = sb.lastIndexOf(", ");
-            if (lastComma != -1) {
-                sb.replace(lastComma, lastComma+1, "\n");
+                verticesSb.append(vertex);
+                
+                if (count == lastIndex) {
+                    verticesSb.append("\n");
+                }else {
+                    verticesSb.append(", ");
+                }
+                
+                count++;
             }
         }
         
-        sb.append("}");
+        verticesSb.append("}");
         
-        return "UndirectedGraph{\n" + "numberOfVertices: " + vertices.length + ",\nnumberOfEdges: " + numberOfEdges + ",\nvertices: " + sb + '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" {");
+        sb.append("\nnumberOfVertices: ");
+        sb.append(vertices.length );
+        sb.append(",\nnumberOfEdges: ");
+        sb.append(numberOfEdges);
+        sb.append(",\nvertices: ");
+        sb.append(verticesSb);
+        sb.append("\n}");
+        
+        return sb.toString();
     }
     
     public static void main(String[] args) {
