@@ -1,19 +1,17 @@
  /**
   * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
   */
-package algorithms.adt.task.impl;
+package algorithms.adt.impl;
 
 import algorithms.adt.Graph;
 import algorithms.adt.Stack;
-import algorithms.adt.impl.LinkedStack;
-import algorithms.adt.impl.UndirectedGraph;
-import algorithms.adt.task.GraphSearch;
+import algorithms.adt.GraphSearch;
 import java.util.Arrays;
 
 /**
  * Depth First Search (DFS) is a fundamental recursive implementation that
  * follows the graph’s edges to find all the vertices connected to a source
- * vertex.
+ * vertex giving from each one a path to source.
  * This approach to search a graph follows paths from the source vertex to other
  * vertices in the graph, marking each vertex encountered by invoking a
  * recursive method that visits vertices and mark them as having been visited
@@ -29,13 +27,16 @@ import java.util.Arrays;
  * It remembers a path from each vertex to the source, such that integer[w] = v
  * means that v-w was the edge used to access w for the first time.
  * The implementation choose the path based on the order of the adjacency list
- * of each vertex, i.e. depend not just on the graph, but also on the
- * representation and the nature of the recursion (a pushdown stack that is
- * managed by the system to support the recursive search method).
+ * of each vertex. The path depend not just on the graph, but also on the
+ * representation and the nature of the recursion (a pushdown stack (LIFO) that
+ * is managed by the system to support the recursive search method), such that,
+ * it choose of the edges yet to be explored, the one that was most recently
+ * encountered (explores the vertices farthest from the source vertex first).
  * Provides a way to search a path from a given source vertex to any marked
  * vertex in time proportional its length, as the array of integer values is a
  * parent-link representation of a tree rooted at source vertex that contains
- * all the vertices connected to it.
+ * all the vertices connected to it, defining the paths (not the shortest) from
+ * source to every vertex that is connected to it.
  */
 public class DepthFirstSearch implements GraphSearch {
     private boolean[] marked;
@@ -58,13 +59,13 @@ public class DepthFirstSearch implements GraphSearch {
     }
     
     @Override
-    public boolean hasPathTo(int v) {
+    public boolean isConnected(int v) {
         return marked[v];
     }
     
     @Override
     public Iterable<Integer> pathTo(int v) {
-        if (!hasPathTo(v)) {
+        if (!isConnected(v)) {
             return null;
         }
         
@@ -78,6 +79,7 @@ public class DepthFirstSearch implements GraphSearch {
         return path;
     }
     
+    // the stack is implicitly managed by the recursion
     private void dfs(Graph g, int v) {
         marked[v] = true;
         
@@ -129,16 +131,16 @@ public class DepthFirstSearch implements GraphSearch {
         DepthFirstSearch dfs = new DepthFirstSearch(g, 5);
         System.out.println(dfs);
         
-        System.out.println("hasPathTo 2: " + dfs.hasPathTo(2));
+        System.out.println("hasPathTo 2: " + dfs.isConnected(2));
         System.out.println("pathTo 2: " + dfs.pathTo(2));
         
-        System.out.println("hasPathTo 4: " + dfs.hasPathTo(4));
+        System.out.println("hasPathTo 4: " + dfs.isConnected(4));
         System.out.println("pathTo 4: " + dfs.pathTo(4));
         
-        System.out.println("hasPathTo 3: " + dfs.hasPathTo(3));
+        System.out.println("hasPathTo 3: " + dfs.isConnected(3));
         System.out.println("pathTo 3: " + dfs.pathTo(3));
         
-        System.out.println("hasPathTo 9: " + dfs.hasPathTo(9));
+        System.out.println("hasPathTo 9: " + dfs.isConnected(9));
         System.out.println("pathTo 9: " + dfs.pathTo(9));
     }
 }

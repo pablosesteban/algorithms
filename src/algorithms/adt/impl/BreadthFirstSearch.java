@@ -1,19 +1,27 @@
 /**
  * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
  */
-package algorithms.adt.task.impl;
+package algorithms.adt.impl;
 
 import algorithms.adt.Graph;
 import algorithms.adt.Queue;
 import algorithms.adt.Stack;
-import algorithms.adt.impl.LinkedQueue;
-import algorithms.adt.impl.LinkedStack;
-import algorithms.adt.impl.UndirectedGraph;
-import algorithms.adt.task.GraphSearch;
+import algorithms.adt.GraphSearch;
 import java.util.Arrays;
 
 /**
- * Breadth First Search (BFS) is a
+ * Breadth First Search (BFS) is a non-recursive implementation that follows the
+ * graph’s edges to find all the vertices connected to a source vertex giving
+ * from each one the shortest path to source.
+ * It uses a Queue (FIFO), such that, it choose of the edges yet to be explored,
+ * the one that was least recently encountered (explores the vertices closest
+ * from the source vertex first) to find paths in a graph with the fewest number
+ * of edges from the source to each connected vertex.
+ * Provides a way to search a path from a given source vertex to any marked
+ * vertex in time proportional its length, as the array of integer values is a
+ * parent-link representation of a tree rooted at source vertex that contains
+ * all the vertices connected to it, defining the shortest paths from source to
+ * every vertex that is connected to it.
  */
 public class BreadthFirstSearch implements GraphSearch {
     private boolean[] marked;
@@ -36,13 +44,13 @@ public class BreadthFirstSearch implements GraphSearch {
     }
     
     @Override
-    public boolean hasPathTo(int v) {
+    public boolean isConnected(int v) {
         return marked[v];
     }
 
     @Override
     public Iterable<Integer> pathTo(int v) {
-        if (!hasPathTo(v)) {
+        if (!isConnected(v)) {
             return null;
         }
         
@@ -56,6 +64,7 @@ public class BreadthFirstSearch implements GraphSearch {
         return path;
     }
     
+    // the queue is explicitly managed by the code
     private void bfs(Graph g, int source) {
         marked[source] = true;
         
@@ -116,16 +125,16 @@ public class BreadthFirstSearch implements GraphSearch {
         BreadthFirstSearch bfp = new BreadthFirstSearch(g, 5);
         System.out.println(bfp);
         
-        System.out.println("hasPathTo 2: " + bfp.hasPathTo(2));
+        System.out.println("hasPathTo 2: " + bfp.isConnected(2));
         System.out.println("pathTo 2: " + bfp.pathTo(2));
         
-        System.out.println("hasPathTo 4: " + bfp.hasPathTo(4));
+        System.out.println("hasPathTo 4: " + bfp.isConnected(4));
         System.out.println("pathTo 4: " + bfp.pathTo(4));
         
-        System.out.println("hasPathTo 3: " + bfp.hasPathTo(3));
+        System.out.println("hasPathTo 3: " + bfp.isConnected(3));
         System.out.println("pathTo 3: " + bfp.pathTo(3));
         
-        System.out.println("hasPathTo 9: " + bfp.hasPathTo(9));
+        System.out.println("hasPathTo 9: " + bfp.isConnected(9));
         System.out.println("pathTo 9: " + bfp.pathTo(9));
     }
 }

@@ -1,10 +1,11 @@
  /**
   * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
   */
-package algorithms.adt.task;
+package algorithms.adt;
 
 /**
- * An interface to find vertices in the graph connected to a source vertex.
+ * An interface to find vertices in the graph connected to a source vertex and a
+ * path from each one to it.
  * It finds paths from source vertex to other vertices in the graph.
  */
 public interface GraphSearch {
@@ -15,7 +16,7 @@ public interface GraphSearch {
      * @return true if, and only if, there is a path from source vertex to v
      * vertex
      */
-    boolean hasPathTo(int v);
+    boolean isConnected(int v);
     
     /**
      * Search a path from source vertex to v vertex
