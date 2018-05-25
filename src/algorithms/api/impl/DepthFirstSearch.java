@@ -1,11 +1,13 @@
  /**
   * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
   */
-package algorithms.adt.impl;
+package algorithms.api.impl;
 
 import algorithms.adt.Graph;
 import algorithms.adt.Stack;
-import algorithms.adt.GraphSearch;
+import algorithms.adt.impl.LinkedStack;
+import algorithms.adt.impl.UndirectedGraph;
+import algorithms.api.GraphSearch;
 import java.util.Arrays;
 
 /**

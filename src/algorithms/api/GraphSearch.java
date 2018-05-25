@@ -1,10 +1,10 @@
  /**
   * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
   */
-package algorithms.adt;
+package algorithms.api;
 
 /**
- * An interface to find vertices in the graph connected to a source vertex and a
+ * API to find vertices in the graph connected to a source vertex and a
  * path from each one to it.
  * It finds paths from source vertex to other vertices in the graph.
  */
@@ -27,7 +27,7 @@ public interface GraphSearch {
     Iterable<Integer> pathTo(int v);
     
     /**
-     * Counts how many vertices are connected to the source vertex
+     * Returns the number of vertices connected to the source vertex
      * 
      * @return the number of vertices connected to the source vertex
      */
