@@ -13,6 +13,17 @@ import java.util.Arrays;
  * Breadth First Search (BFS) is a non-recursive implementation that follows the
  * graph’s edges to find all the vertices connected to a source vertex giving
  * from each one the shortest path to source.
+ * This approach to search a graph follows paths from the source vertex to other
+ * vertices in the graph, marking each vertex encountered by maintaining a queue
+ * with all vertices to visit, which have not yet been marked, and mark them as
+ * having been visited and removing them from the queue.
+ * Marks all the vertices connected to a given source in time proportional to
+ * the sum of their degrees because marking ensures that each vertex is visited
+ * once (taking time proportional to its degree to check marks).
+ * It maintains an array of boolean values to mark all of the vertices that are
+ * connected to the source and another array of integer values that gives a way
+ * to find a path back to source vertex provided to the constructor for every
+ * vertex connected to it in the graph.
  * It uses a Queue (FIFO), such that, it choose of the edges yet to be explored,
  * the one that was least recently encountered (explores the vertices closest
  * from the source vertex first) to find paths in a graph with the fewest number
@@ -22,6 +33,9 @@ import java.util.Arrays;
  * parent-link representation of a tree rooted at source vertex that contains
  * all the vertices connected to it, defining the shortest paths from source to
  * every vertex that is connected to it.
+ * BFS completely covers the area close to the starting point, moving farther
+ * away only when everything nearby has been examined, so BFS paths are short
+ * and direct.
  */
 public class BreadthFirstSearch implements GraphSearch {
     private boolean[] marked;

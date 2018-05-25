@@ -9,9 +9,9 @@ import algorithms.adt.GraphSearch;
 import java.util.Arrays;
 
 /**
- * Depth First Search (DFS) is a fundamental recursive implementation that
- * follows the graph’s edges to find all the vertices connected to a source
- * vertex giving from each one a path to source.
+ * Depth First Search (DFS) is a recursive implementation that follows the
+ * graph’s edges to find all the vertices connected to a source vertex giving
+ * from each one a path to source.
  * This approach to search a graph follows paths from the source vertex to other
  * vertices in the graph, marking each vertex encountered by invoking a
  * recursive method that visits vertices and mark them as having been visited
@@ -37,6 +37,9 @@ import java.util.Arrays;
  * parent-link representation of a tree rooted at source vertex that contains
  * all the vertices connected to it, defining the paths (not the shortest) from
  * source to every vertex that is connected to it.
+ * DFS explores the graph by looking for new vertices far away from the start
+ * point, taking closer vertices only when dead ends are encountered, so DFS
+ * paths tend to be long and winding.
  */
 public class DepthFirstSearch implements GraphSearch {
     private boolean[] marked;
