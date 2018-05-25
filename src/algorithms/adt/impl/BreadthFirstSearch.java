@@ -41,6 +41,7 @@ public class BreadthFirstSearch implements GraphSearch {
     private boolean[] marked;
     private int[] edgeTo;
     private int source;
+    private int count;
 
     /**
      * Computes the shortest paths from source vertex to each vertex connected
@@ -77,10 +78,17 @@ public class BreadthFirstSearch implements GraphSearch {
         
         return path;
     }
+
+    @Override
+    public int getCount() {
+        return count;
+    }
     
     // the queue is explicitly managed by the code
     private void bfs(Graph g, int source) {
         marked[source] = true;
+        
+        count++;
         
         Queue<Integer> queue = new LinkedQueue<>();
         queue.enqueue(source);
@@ -95,6 +103,8 @@ public class BreadthFirstSearch implements GraphSearch {
                     queue.enqueue(adjacentVertex);
                 
                     edgeTo[adjacentVertex] = v;
+                    
+                    count++;
                 }
             }
         }
@@ -138,6 +148,8 @@ public class BreadthFirstSearch implements GraphSearch {
         
         BreadthFirstSearch bfp = new BreadthFirstSearch(g, 5);
         System.out.println(bfp);
+        
+        System.out.println("Number of connected vertices: " + bfp.getCount());
         
         System.out.println("hasPathTo 2: " + bfp.isConnected(2));
         System.out.println("pathTo 2: " + bfp.pathTo(2));

@@ -25,4 +25,11 @@ public interface GraphSearch {
      * @return a path from source vertex to v vertex, otherwise null
      */
     Iterable<Integer> pathTo(int v);
+    
+    /**
+     * Counts how many vertices are connected to the source vertex
+     * 
+     * @return the number of vertices connected to the source vertex
+     */
+    int getCount();
 }

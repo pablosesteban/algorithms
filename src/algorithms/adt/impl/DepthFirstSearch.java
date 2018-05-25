@@ -45,6 +45,7 @@ public class DepthFirstSearch implements GraphSearch {
     private boolean[] marked;
     private int[] edgeTo;
     private int source;
+    private int count;
     
     /**
      * Computes the paths from source vertex to each vertex connected to it in
@@ -81,6 +82,11 @@ public class DepthFirstSearch implements GraphSearch {
         
         return path;
     }
+
+    @Override
+    public int getCount() {
+        return count;
+    }
     
     // the stack is implicitly managed by the recursion
     private void dfs(Graph g, int v) {
@@ -93,6 +99,8 @@ public class DepthFirstSearch implements GraphSearch {
                 dfs(g, w);
             }
         }
+        
+        count++;
     }
     
     @Override
@@ -133,6 +141,8 @@ public class DepthFirstSearch implements GraphSearch {
         
         DepthFirstSearch dfs = new DepthFirstSearch(g, 5);
         System.out.println(dfs);
+        
+        System.out.println("Number of connected vertices: " + dfs.getCount());
         
         System.out.println("hasPathTo 2: " + dfs.isConnected(2));
         System.out.println("pathTo 2: " + dfs.pathTo(2));
