@@ -1,8 +1,4 @@
-# Ant specific
-dist/
-build/
-
-# General swap/backup files
+# General
 *.so
 *.log
 *.out
@@ -25,24 +21,25 @@ build/
 *.sar
 *.class
 
+# Ant
+dist/
+build/
+
 # Maven
 target/
 
-# Eclipse project files
+# Eclipse
 .settings/
 .classpath
 .project
 
-# NetBeans specific
+# NetBeans
 nbproject/
-build/
 nbbuild/
-dist/
 nbdist/
+build/
+dist/
 nbactions.xml
 nb-configuration.xml
 build.xml
 manifest.mf
-
-# OS
-.DS_Store
