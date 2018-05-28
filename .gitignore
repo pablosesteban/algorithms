@@ -1,19 +1,8 @@
-#gitignore for netbeans projects
-
-#ant specific
+# Ant specific
 dist/
 build/
 
-#netbeans specific
-core
-nbproject/*
-!nbproject/project.properties
-!nbproject/project.xml
-
-#java specific
-*.class
-
-#general swap/backup files
+# General swap/backup files
 *.so
 *.log
 *.out
@@ -21,3 +10,37 @@ nbproject/*
 *.swp
 *.DS_Store
 *.lock
+
+# Binaries
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+*.war
+*.ear
+*.sar
+*.class
+
+# Maven
+target/
+
+# Eclipse project files
+.settings/
+.classpath
+.project
+
+# NetBeans specific
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+# OS
+.DS_Store
