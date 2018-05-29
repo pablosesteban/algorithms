@@ -73,7 +73,7 @@ public class UndirectedGraph implements Graph {
         verticesSb.append("{\n");
         
         for (int i = 0; i < vertices.length; i++) {
-            verticesSb.append("\t");
+            verticesSb.append("  ");
             verticesSb.append(i);
             verticesSb.append(": ");
             
@@ -92,16 +92,16 @@ public class UndirectedGraph implements Graph {
             }
         }
         
-        verticesSb.append("}");
+        verticesSb.append(" }");
         
         StringBuilder sb = new StringBuilder();
         sb.append(getClass().getSimpleName());
         sb.append(" {");
-        sb.append("\nnumberOfVertices: ");
+        sb.append("\n numberOfVertices: ");
         sb.append(vertices.length );
-        sb.append(",\nnumberOfEdges: ");
+        sb.append(",\n numberOfEdges: ");
         sb.append(numberOfEdges);
-        sb.append(",\nvertices: ");
+        sb.append(",\n vertices: ");
         sb.append(verticesSb);
         sb.append("\n}");
         

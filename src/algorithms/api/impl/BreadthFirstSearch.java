@@ -119,11 +119,11 @@ public class BreadthFirstSearch implements GraphSearch {
         
         sb.append(getClass().getSimpleName());
         sb.append(" {");
-        sb.append("\nsource: ");
+        sb.append("\n source: ");
         sb.append(source);
-        sb.append(",\nmarked: ");
+        sb.append(",\n marked: ");
         sb.append(Arrays.toString(marked));
-        sb.append(",\nedgeTo: ");
+        sb.append(",\n edgeTo: ");
         sb.append(Arrays.toString(edgeTo));
         sb.append("\n}");
         

@@ -4,7 +4,7 @@
 package algorithms.api;
 
 /**
- * API to find all the connected components in a Graph.
+ * API to find all connected components in a Graph.
  */
 public interface GraphConnectedComponents {
     /**
