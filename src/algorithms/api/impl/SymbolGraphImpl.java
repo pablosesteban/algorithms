@@ -14,6 +14,8 @@ import java.util.TreeMap;
  * An implementation that uses two passes through the data to build the internal
  * data structures, primarily because the number of vertices is needed to build
  * the graph.
+ * The implementation pre-process the data in order to provide log(n) time cost
+ * guarantee queries.
  */
 public class SymbolGraphImpl implements SymbolGraph {
     // direct index: given a name, returns its index
