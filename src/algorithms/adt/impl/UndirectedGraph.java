@@ -72,18 +72,23 @@ public class UndirectedGraph implements Graph {
         
         verticesSb.append("{\n");
         
+        int vertexLastIndex = vertices.length - 1;
         for (int i = 0; i < vertices.length; i++) {
-            verticesSb.append("  ");
             verticesSb.append(i);
             verticesSb.append(": ");
             
-            int lastIndex = vertices[i].size() - 1;
+            int verticesLastIndex = vertices[i].size() - 1;
             int count = 0;
+            verticesSb.append("[");
             for (Integer vertex : vertices[i]) {
                 verticesSb.append(vertex);
                 
-                if (count == lastIndex) {
-                    verticesSb.append("\n");
+                if (count == verticesLastIndex) {
+                    if (i == vertexLastIndex) {
+                        verticesSb.append("]\n");
+                    }else {
+                        verticesSb.append("],\n");
+                    }
                 }else {
                     verticesSb.append(", ");
                 }
@@ -92,16 +97,16 @@ public class UndirectedGraph implements Graph {
             }
         }
         
-        verticesSb.append(" }");
+        verticesSb.append("}");
         
         StringBuilder sb = new StringBuilder();
         sb.append(getClass().getSimpleName());
         sb.append(" {");
-        sb.append("\n numberOfVertices: ");
+        sb.append("\nnumberOfVertices: ");
         sb.append(vertices.length );
-        sb.append(",\n numberOfEdges: ");
+        sb.append(",\nnumberOfEdges: ");
         sb.append(numberOfEdges);
-        sb.append(",\n vertices: ");
+        sb.append(",\nvertices: ");
         sb.append(verticesSb);
         sb.append("\n}");
         

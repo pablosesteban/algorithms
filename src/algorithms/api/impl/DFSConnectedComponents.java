@@ -57,7 +57,7 @@ public class DFSConnectedComponents implements GraphConnectedComponents {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + " {\n " + "marked: " + Arrays.toString(marked) + ",\n connectedTo: " + Arrays.toString(connectedTo) + ",\n count: " + count + "\n}";
+        return getClass().getSimpleName() + " {" + "\nmarked: " + Arrays.toString(marked) + ",\nconnectedTo: " + Arrays.toString(connectedTo) + ",\ncount: " + count + "\n}";
     }
     
     private void dfs(Graph g, int v) {
