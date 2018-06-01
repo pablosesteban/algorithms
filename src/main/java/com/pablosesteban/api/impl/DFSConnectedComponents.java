@@ -24,6 +24,8 @@ public class DFSConnectedComponents implements GraphConnectedComponents {
      * Finds an unmarked vertex and uses the recursive DFS to mark and identify 
      * all the vertices connected to it, continuing until all vertices have been
      * marked and identified.
+     * Preprocess the graph building the data structures that can efficiently
+     * support client operations.
      * 
      * @param g the Graph
      */

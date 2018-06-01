@@ -9,7 +9,7 @@ package com.pablosesteban.adt;
  * pair of vertices. When there is an edge connecting two vertices, we say that
  * the vertices are adjacent to one another and that the edge is incident to 
  * both vertices. The degree of a vertex is the number of edges incident to it.
- * A subgraph is a subset of a graph’s edges and associated vertices that
+ * A subgraph is a subset of a graph edges and associated vertices that
  * constitutes a graph.
  */
 public interface Graph {

@@ -12,8 +12,8 @@ import com.pablosesteban.adt.Graph;
  * not dense, where we maintain a vertex-indexed array of linked-lists of the
  * vertices adjacent to each vertex.
  * This implementation has a constraint: vertex names must be integer indices.
- * To add an edge connecting v and w, we add w to v’s adjacency list and v to
- * w’s adjacency list, so that, each edge appears twice in the data structure.
+ * To add an edge connecting v and w, we add w to v adjacency list and v to
+ * w adjacency list, so that, each edge appears twice in the data structure.
  * Parallel edges and self-loops are allowed.
  * The implementation achieves the following performance characteristics:<br>
  * <ul>
