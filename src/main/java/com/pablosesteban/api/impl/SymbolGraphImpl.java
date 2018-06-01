@@ -102,8 +102,8 @@ public class SymbolGraphImpl implements SymbolGraph {
     }
     
     public static void main(String[] args) {
-        SymbolGraph symbolGraph = new SymbolGraphImpl("data/routes.txt", " ");
-//        SymbolGraph symbolGraph = new SymbolGraphImpl("data/movies.txt", "/");
+        SymbolGraph symbolGraph = new SymbolGraphImpl("routes.txt", " ");
+//        SymbolGraph symbolGraph = new SymbolGraphImpl("movies.txt", "/");
         
         System.out.println(symbolGraph);
         
