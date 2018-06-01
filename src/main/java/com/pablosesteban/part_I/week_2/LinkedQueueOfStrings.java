@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main.java.com.pablosesteban.part_I.week_2;
+package com.pablosesteban.part_I.week_2;
 
-import main.java.com.pablosesteban.adt.Queue;
+import com.pablosesteban.adt.Queue;
 import java.util.Iterator;
 
 /**

@@ -1,7 +1,7 @@
 /**
  * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
  */
-package main;
+package com.pablosesteban;
 
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;

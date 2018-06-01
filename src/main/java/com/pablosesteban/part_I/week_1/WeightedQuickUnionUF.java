@@ -10,7 +10,7 @@
  *
  ******************************************************************************/
 
-package main.java.com.pablosesteban.part_I.week_1;
+package com.pablosesteban.part_I.week_1;
 
 /**
  *  The {@code WeightedQuickUnionUF} class represents a <em>union–find data type</em>

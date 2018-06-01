@@ -1,11 +1,11 @@
 /**
  * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
  */
-package main.java.com.pablosesteban.api.impl;
+package com.pablosesteban.api.impl;
 
-import main.java.com.pablosesteban.adt.Graph;
-import main.java.com.pablosesteban.adt.impl.UndirectedGraph;
-import main.java.com.pablosesteban.api.GraphConnectedComponents;
+import com.pablosesteban.adt.Graph;
+import com.pablosesteban.adt.impl.UndirectedGraph;
+import com.pablosesteban.api.GraphConnectedComponents;
 import java.util.Arrays;
 
 /**
@@ -71,6 +71,7 @@ public class DFSConnectedComponents implements GraphConnectedComponents {
             }
         }
     }
+    
     
     public static void main(String[] args) {
         Graph g = new UndirectedGraph(13);

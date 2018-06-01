@@ -1,6 +1,6 @@
-package main.java.com.pablosesteban.part_I.week_2;
+package com.pablosesteban.part_I.week_2;
 
-import main.java.com.pablosesteban.adt.Stack;
+import com.pablosesteban.adt.Stack;
 import java.util.Arrays;
 import java.util.Iterator;
 

@@ -1,7 +1,7 @@
 /**
  * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
  */
-package main.java.com.pablosesteban.adt.impl;
+package com.pablosesteban.adt.impl;
 
 /**
  * A recursive data structure that might hold any kind of data, in addition to

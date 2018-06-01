@@ -1,11 +1,11 @@
 /**
  * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
  */
-package main.java.com.pablosesteban.api.impl;
+package com.pablosesteban.api.impl;
 
-import main.java.com.pablosesteban.adt.Graph;
-import main.java.com.pablosesteban.adt.impl.UndirectedGraph;
-import main.java.com.pablosesteban.api.SymbolGraph;
+import com.pablosesteban.adt.Graph;
+import com.pablosesteban.adt.impl.UndirectedGraph;
+import com.pablosesteban.api.SymbolGraph;
 import edu.princeton.cs.algs4.In;
 import java.util.Arrays;
 import java.util.TreeMap;

@@ -1,7 +1,7 @@
  /**
   * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
   */
-package main.java.com.pablosesteban.api;
+package com.pablosesteban.api;
 
 /**
  * API to find vertices in the graph connected to a source vertex and a

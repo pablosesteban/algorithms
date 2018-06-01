@@ -1,9 +1,9 @@
 /**
  * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
  */
-package main.java.com.pablosesteban.adt.impl;
+package com.pablosesteban.adt.impl;
 
-import main.java.com.pablosesteban.adt.SelfOrganizingList;
+import com.pablosesteban.adt.SelfOrganizingList;
 
 /**
  * Implementation of a self-organizing list based on the move to front strategy

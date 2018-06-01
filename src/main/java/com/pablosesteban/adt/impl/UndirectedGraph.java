@@ -1,10 +1,10 @@
 /**
  * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
  */
-package main.java.com.pablosesteban.adt.impl;
+package com.pablosesteban.adt.impl;
 
-import main.java.com.pablosesteban.adt.Bag;
-import main.java.com.pablosesteban.adt.Graph;
+import com.pablosesteban.adt.Bag;
+import com.pablosesteban.adt.Graph;
 
 /**
  * A Graph implementation based on an array of adjacency lists data structure.

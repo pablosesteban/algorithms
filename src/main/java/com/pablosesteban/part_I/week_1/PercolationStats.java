@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package main.java.com.pablosesteban.part_I.week_1;
+package com.pablosesteban.part_I.week_1;
 
 import edu.princeton.cs.algs4.StdRandom;
 

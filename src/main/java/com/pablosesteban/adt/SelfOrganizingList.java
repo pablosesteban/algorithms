@@ -1,7 +1,7 @@
  /**
   * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
   */
-package main.java.com.pablosesteban.adt;
+package com.pablosesteban.adt;
 
 /**
  * A self-organizing list is a list that reorders its elements based on some

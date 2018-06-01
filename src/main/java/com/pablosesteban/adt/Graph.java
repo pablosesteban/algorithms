@@ -1,7 +1,7 @@
  /**
   * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
   */
-package main.java.com.pablosesteban.adt;
+package com.pablosesteban.adt;
 
 /**
  * An Abstract Data Type (ADT) which defines the fundamental graph operations.

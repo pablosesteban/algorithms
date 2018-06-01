@@ -1,7 +1,7 @@
  /**
   * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
   */
-package main.java.com.pablosesteban.adt;
+package com.pablosesteban.adt;
 
 /**
  * An Abstract Data Type (ADT) for a collection of elements that is based on a

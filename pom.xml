@@ -9,13 +9,24 @@
 
   <name>algorithms</name>
   <description>Algorithms and data structures from Algorithhms 4th Edition by Robert Sedgewick and Kevin Wayne</description>
-	
+  
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+  
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.8.2</version>
       <scope>test</scope>
+    </dependency>
+    <!-- https://algs4.cs.princeton.edu/code/algs4.jar -->
+    <dependency>
+      <groupId>com.pablosesteban</groupId>
+      <artifactId>algs4</artifactId>
+      <version>1.0</version>
     </dependency>
   </dependencies>
 </project>

@@ -1,9 +1,9 @@
 /**
  * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
  */
-package main.java.com.pablosesteban.api;
+package com.pablosesteban.api;
 
-import main.java.com.pablosesteban.adt.Graph;
+import com.pablosesteban.adt.Graph;
 
 /**
  * API for processing graphs defined using strings, not integer indices, to

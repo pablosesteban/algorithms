@@ -1,9 +1,9 @@
 /**
  * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
  */
-package main.java.com.pablosesteban.adt.impl;
+package com.pablosesteban.adt.impl;
 
-import main.java.com.pablosesteban.adt.Queue;
+import com.pablosesteban.adt.Queue;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
