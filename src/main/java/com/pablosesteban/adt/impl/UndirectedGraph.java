@@ -11,9 +11,13 @@ import com.pablosesteban.adt.Graph;
  * This data structure is the standard graph representation for graphs that are
  * not dense, where we maintain a vertex-indexed array of linked-lists of the
  * vertices adjacent to each vertex.
+ * Each vertex is reachable from itself.
  * This implementation has a constraint: vertex names must be integer indices.
  * To add an edge connecting v and w, we add w to v adjacency list and v to
- * w adjacency list, so that, each edge appears twice in the data structure.
+ * w adjacency list, so that, each edge appears twice in the data structure as
+ * there is no direction in edges, they are two-way.
+ * The fact that w is reachable from v in a digraph indicates that also v is
+ * reachable from w.
  * Parallel edges and self-loops are allowed.
  * The implementation achieves the following performance characteristics:<br>
  * <ul>
@@ -34,10 +38,10 @@ public class UndirectedGraph implements Graph {
     /**
      * Create a graph with no edges
      * 
-     * @param vertices the number of vertices in the graph
+     * @param numberOfVertices the number of vertices in the graph
      */
-    public UndirectedGraph(int vertices) {
-        this.vertices = new Bag[vertices];
+    public UndirectedGraph(int numberOfVertices) {
+        this.vertices = new Bag[numberOfVertices];
     }
     
     @Override
@@ -67,6 +71,11 @@ public class UndirectedGraph implements Graph {
     }
 
     @Override
+	public Graph reverse() {
+		throw new UnsupportedOperationException("Operation not supported for undirected graphs");
+	}
+
+	@Override
     public String toString() {
         StringBuilder verticesSb = new StringBuilder();
         

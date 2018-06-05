@@ -3,12 +3,16 @@
  */
 package com.pablosesteban.api.impl;
 
-import com.pablosesteban.adt.Graph;
-import com.pablosesteban.adt.impl.UndirectedGraph;
-import com.pablosesteban.api.SymbolGraph;
-import edu.princeton.cs.algs4.In;
 import java.util.Arrays;
 import java.util.TreeMap;
+
+import com.pablosesteban.adt.Graph;
+import com.pablosesteban.adt.Graph.Type;
+import com.pablosesteban.adt.impl.DirectedGraph;
+import com.pablosesteban.adt.impl.UndirectedGraph;
+import com.pablosesteban.api.SymbolGraph;
+
+import edu.princeton.cs.algs4.In;
 
 /**
  * An implementation that uses two passes through the data to build the internal
@@ -33,7 +37,7 @@ public class SymbolGraphImpl implements SymbolGraph {
      * vertices named on the line
      * @param delimiter a specified delimiter to separate vertex names
      */
-    public SymbolGraphImpl(String filename, String delimiter) {
+    public SymbolGraphImpl(String filename, String delimiter, Type graphType) {
         In input = new In(filename);
         
         // building symbol table (direct index) data structure
@@ -56,7 +60,16 @@ public class SymbolGraphImpl implements SymbolGraph {
         
         // building the graph data structure
         input = new In(filename);
-        graph = new UndirectedGraph(symbolTable.size());
+        switch (graphType) {
+        	case DIRECTED:
+        		graph = new DirectedGraph(symbolTable.size());
+        		break;
+        	case UNDIRECTED:
+        		graph = new UndirectedGraph(symbolTable.size());
+        		break;
+        	default:
+        		throw new IllegalArgumentException("Supported types: " + Type.UNDIRECTED + " or " + Type.DIRECTED);
+        }
         while(input.hasNextLine()) {
             String[] vertices = input.readLine().split(delimiter);
             
@@ -102,8 +115,8 @@ public class SymbolGraphImpl implements SymbolGraph {
     }
     
     public static void main(String[] args) {
-        SymbolGraph symbolGraph = new SymbolGraphImpl("routes.txt", " ");
-//        SymbolGraph symbolGraph = new SymbolGraphImpl("movies.txt", "/");
+        SymbolGraph symbolGraph = new SymbolGraphImpl("routes.txt", " ", Type.UNDIRECTED);
+//        SymbolGraph symbolGraph = new SymbolGraphImpl("movies.txt", "/", Type.UNDIRECTED);
         
         System.out.println(symbolGraph);
         

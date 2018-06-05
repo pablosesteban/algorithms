@@ -13,6 +13,11 @@ package com.pablosesteban.adt;
  * constitutes a graph.
  */
 public interface Graph {
+	enum Type {
+		UNDIRECTED,
+		DIRECTED;
+	}
+	
     /**
      * Add an edge between two vertices
      * 
@@ -22,7 +27,9 @@ public interface Graph {
     void addEdge(int v, int w);
     
     /**
-     * Get all adjacent vertices. The order of iteration is not specified
+     * Get all adjacent vertices. The order of iteration is not specified.
+     * In directed graphs it gives just vertices connected by edges that point
+     * from each vertex.
      * 
      * @param v a vertex of the graph
      * @return all adjacent vertices
@@ -35,4 +42,13 @@ public interface Graph {
      * @return the number of vertices in the graph
      */
     int size();
+    
+    /**
+     * Gets a copy of the directed graph, with all edges reversed.
+     * Is sometimes needed in directed graph processing because it allows to
+     * find the edges that point to each vertex.
+     * 
+     * @return the reverse of a directed graph
+     */
+    Graph reverse();
 }
