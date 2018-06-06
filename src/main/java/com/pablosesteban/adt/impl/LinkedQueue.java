@@ -28,17 +28,17 @@ import java.util.Iterator;
  */
 public class LinkedQueue<E> implements Queue<E> {
     // head of the queue, i.e. link to least recently added node
-    private LinkedListNode first;
+    private LinkedListNode<E> first;
     // end of the queue, i.e. link to most recently added node
-    private LinkedListNode last;
+    private LinkedListNode<E> last;
     private int size;
     private int numberOfOperations;
     
     @Override
     public void enqueue(E item) {
-        LinkedListNode oldLast = last;
+        LinkedListNode<E> oldLast = last;
         
-        last = new LinkedListNode();
+        last = new LinkedListNode<>();
         last.value = item;
         
         if (size() == 0) {
@@ -81,7 +81,7 @@ public class LinkedQueue<E> implements Queue<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return new LinkedQueueIterator<>();
+        return new LinkedQueueIterator();
     }
     
     @Override
@@ -109,8 +109,8 @@ public class LinkedQueue<E> implements Queue<E> {
      * 
      * @param <E> the data stored in the linked list
      */
-    private class LinkedQueueIterator<E> implements Iterator<E> {
-        private LinkedListNode currentNode;
+    private class LinkedQueueIterator implements Iterator<E> {
+        private LinkedListNode<E> currentNode;
         private final int currentNumberOfOperations;
         
         LinkedQueueIterator() {

@@ -22,8 +22,8 @@ package com.pablosesteban.adt.impl;
  */
 class DoublyLinkedListNode<E> {
     E value;
-    DoublyLinkedListNode next;
-    DoublyLinkedListNode previous;
+    DoublyLinkedListNode<E> next;
+    DoublyLinkedListNode<E> previous;
 
     @Override
     public String toString() {

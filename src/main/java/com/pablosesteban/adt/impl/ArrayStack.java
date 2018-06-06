@@ -117,10 +117,10 @@ public class ArrayStack<E> implements Stack<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return new ArrayStackIterator<>();
+        return new ArrayStackIterator();
     }
     
-    private class ArrayStackIterator<E> implements Iterator<E> {
+    private class ArrayStackIterator implements Iterator<E> {
         private int pointer = size()-1;
         
         @Override
@@ -159,7 +159,7 @@ public class ArrayStack<E> implements Stack<E> {
     }
     
     public static void main(String[] args) {
-        ArrayStack<String> stack = new ArrayStack(5);
+        ArrayStack<String> stack = new ArrayStack<>(5);
         
         System.out.println("----Push Pablo");
         stack.push("Pablo");

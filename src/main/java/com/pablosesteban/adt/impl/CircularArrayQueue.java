@@ -81,7 +81,7 @@ public class CircularArrayQueue<E> implements Queue<E> {
     
     @Override
     public Iterator<E> iterator() {
-        return new CircularArrayQueueIterator<>();
+        return new CircularArrayQueueIterator();
     }
     
     @Override
@@ -107,7 +107,7 @@ public class CircularArrayQueue<E> implements Queue<E> {
         return sb.toString();
     }
     
-    private class CircularArrayQueueIterator<E> implements Iterator<E> {
+    private class CircularArrayQueueIterator implements Iterator<E> {
         private int itFront;
         private int itRear;
         private int itSize;

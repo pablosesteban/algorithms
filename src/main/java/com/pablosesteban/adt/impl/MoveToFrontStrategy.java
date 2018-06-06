@@ -22,7 +22,7 @@ import com.pablosesteban.adt.SelfOrganizingList;
  * @param <E> the data to structure the doubly-linked list
  */
 public class MoveToFrontStrategy<E> implements SelfOrganizingList<E> {
-    private DoublyLinkedListNode first;
+    private DoublyLinkedListNode<E> first;
     private int size;
     
     @Override
@@ -33,7 +33,7 @@ public class MoveToFrontStrategy<E> implements SelfOrganizingList<E> {
             return;
         }
         
-        for(DoublyLinkedListNode n = first; n != null; n = n.next) {
+        for(DoublyLinkedListNode<E> n = first; n != null; n = n.next) {
             if (n.value.equals(element)) {
                 remove(n);
                 
@@ -48,7 +48,7 @@ public class MoveToFrontStrategy<E> implements SelfOrganizingList<E> {
     public E get(E element) {
         E searched = null;
         
-        for(DoublyLinkedListNode n = first; n != null; n = n.next) {
+        for(DoublyLinkedListNode<E> n = first; n != null; n = n.next) {
             if (n.value.equals(element)) {
                 return (E) n.value;
             }
@@ -86,9 +86,9 @@ public class MoveToFrontStrategy<E> implements SelfOrganizingList<E> {
     }
     
     private void addFirst(E element) {
-        DoublyLinkedListNode oldFirst = first;
+        DoublyLinkedListNode<E> oldFirst = first;
         
-        first = new DoublyLinkedListNode();
+        first = new DoublyLinkedListNode<>();
         first.value = element;
         
         if (size() != 0) {
@@ -99,7 +99,7 @@ public class MoveToFrontStrategy<E> implements SelfOrganizingList<E> {
         size++;
     }
     
-    private void remove(DoublyLinkedListNode n) {
+    private void remove(DoublyLinkedListNode<E> n) {
         // check if n is the first node
         if (n.previous == null) {
             first = n.next;

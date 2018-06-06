@@ -28,17 +28,17 @@ import java.util.Iterator;
  */
 public class LinkedDeque<E> implements Deque<E> {
     // head of the queue, i.e. link to least recently added at the beginning node
-    private DoublyLinkedListNode first;
+    private DoublyLinkedListNode<E> first;
     // end of the queue, i.e. link to most recently added at the end node
-    private DoublyLinkedListNode last;
+    private DoublyLinkedListNode<E> last;
     private int size;
     private int numberOfOperations;
 
     @Override
     public void addFirst(E element) {
-        DoublyLinkedListNode oldFirst = first;
+        DoublyLinkedListNode<E> oldFirst = first;
         
-        first = new DoublyLinkedListNode();
+        first = new DoublyLinkedListNode<>();
         first.value = element;
         
         if (size() == 0) {
@@ -56,9 +56,9 @@ public class LinkedDeque<E> implements Deque<E> {
 
     @Override
     public void addLast(E element) {
-        DoublyLinkedListNode oldLast = last;
+        DoublyLinkedListNode<E> oldLast = last;
         
-        last = new DoublyLinkedListNode();
+        last = new DoublyLinkedListNode<>();
         last.value = element;
         
         if (size() == 0) {
@@ -128,7 +128,7 @@ public class LinkedDeque<E> implements Deque<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return new LinkedQueueIterator<>();
+        return new LinkedQueueIterator();
     }
     
     @Override
@@ -156,8 +156,8 @@ public class LinkedDeque<E> implements Deque<E> {
      * 
      * @param <E> the data stored in the linked list
      */
-    private class LinkedQueueIterator<E> implements Iterator<E> {
-        private DoublyLinkedListNode currentNode;
+    private class LinkedQueueIterator implements Iterator<E> {
+        private DoublyLinkedListNode<E> currentNode;
         private final int currentNumberOfOperations;
         
         LinkedQueueIterator() {

@@ -22,7 +22,7 @@ package com.pablosesteban.adt.impl;
  */
 class LinkedListNode<E> {
     E value;
-    LinkedListNode next;
+    LinkedListNode<E> next;
     
     @Override
     public String toString() {

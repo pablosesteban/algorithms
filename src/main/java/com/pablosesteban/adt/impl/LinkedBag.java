@@ -27,15 +27,15 @@ import java.util.Iterator;
  * @param <E> the data to structure the linked list
  */
 public class LinkedBag<E> implements Bag<E> {
-    private LinkedListNode first;
+    private LinkedListNode<E> first;
     private int size;
     private int numberOfOperations;
 
     @Override
     public void add(E element) {
-        LinkedListNode oldFirst = first;
+        LinkedListNode<E> oldFirst = first;
         
-        first = new LinkedListNode();
+        first = new LinkedListNode<>();
         first.value = element;
         first.next = oldFirst;
         
@@ -56,7 +56,7 @@ public class LinkedBag<E> implements Bag<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return new LinkedBagIterator<>();
+        return new LinkedBagIterator();
     }
 
     @Override
@@ -84,8 +84,8 @@ public class LinkedBag<E> implements Bag<E> {
      * 
      * @param <E> the data stored in the linked list
      */
-    private class LinkedBagIterator<E> implements Iterator<E> {
-        private LinkedListNode currentNode;
+    private class LinkedBagIterator implements Iterator<E> {
+        private LinkedListNode<E> currentNode;
         private final int currentNumberOfOperations;
         
         LinkedBagIterator() {

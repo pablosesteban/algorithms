@@ -13,11 +13,14 @@ package com.pablosesteban.adt;
  * constitutes a graph.
  */
 public interface Graph {
-	enum Type {
-		UNDIRECTED,
-		DIRECTED;
-	}
-	
+    /**
+     * Types of graphs.
+     */
+    enum Type {
+        UNDIRECTED,
+        DIRECTED;
+    }
+    
     /**
      * Add an edge between two vertices
      * 

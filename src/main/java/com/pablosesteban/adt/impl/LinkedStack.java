@@ -28,15 +28,15 @@ import java.util.Iterator;
  */
 public class LinkedStack<E> implements Stack<E> {
     // top of the stack, i.e. link to most recently added node
-    private LinkedListNode first;
+    private LinkedListNode<E> first;
     private int size;
     private int numberOfOperations;
     
     @Override
     public void push(E item) {
-        LinkedListNode oldFirst = first;
+        LinkedListNode<E> oldFirst = first;
         
-        first = new LinkedListNode();
+        first = new LinkedListNode<>();
         first.value = item;
         first.next = oldFirst;
         
@@ -75,7 +75,7 @@ public class LinkedStack<E> implements Stack<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return new LinkedStackIterator<>();
+        return new LinkedStackIterator();
     }
 
     @Override
@@ -103,8 +103,8 @@ public class LinkedStack<E> implements Stack<E> {
      * 
      * @param <E> the data stored in the linked list
      */
-    private class LinkedStackIterator<E> implements Iterator<E> {
-        private LinkedListNode currentNode;
+    private class LinkedStackIterator implements Iterator<E> {
+        private LinkedListNode<E> currentNode;
         private final int currentNumberOfOperations;
         
         LinkedStackIterator() {
