@@ -6,7 +6,7 @@ package com.pablosesteban.api;
 /**
  * API to find vertices in the graph connected to a source vertex and a
  * path from each one to it.
- * It finds paths from source vertex to other vertices in the graph.
+ * Finds paths from source vertex to other vertices in the graph.
  */
 public interface GraphSearch {
     /**

@@ -4,7 +4,7 @@
 package com.pablosesteban.api;
 
 /**
- * API to find all connected components in a Graph.
+ * API to find connected components in a graph.
  */
 public interface GraphConnectedComponents {
     /**
