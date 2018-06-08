@@ -8,10 +8,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.pablosesteban.adt.Graph;
-import com.pablosesteban.adt.Queue;
 import com.pablosesteban.adt.Stack;
 import com.pablosesteban.adt.impl.DirectedGraph;
-import com.pablosesteban.adt.impl.LinkedQueue;
+import com.pablosesteban.adt.impl.LinkedStack;
 import com.pablosesteban.api.GraphCycles;
 
 /**
@@ -26,7 +25,7 @@ public class DFSCycles implements GraphCycles {
 	private int[] edgeTo;
 	private Graph g;
 	private List<Stack<Integer>> cycles;
-	private Queue<Integer> currentCycle;
+	private Stack<Integer> currentConnectedComponent;
 
 	public DFSCycles(Graph g) {
 		marked = new boolean[g.size()];
@@ -36,7 +35,7 @@ public class DFSCycles implements GraphCycles {
 
 		for (int v = 0; v < g.size(); v++) {
 			if (!marked[v]) {
-				currentCycle = new LinkedQueue<>();
+				currentConnectedComponent = new LinkedStack<>();
 				
 				dfs(g, v, v);
 			}
@@ -80,7 +79,7 @@ public class DFSCycles implements GraphCycles {
 	private void dfs(Graph g, int current, int source) {
 		marked[current] = true;
 		
-		currentCycle.enqueue(current);
+		currentConnectedComponent.push(current);
 
 		if (g.getAdjacentVertices(current) != null) {
 			for (Integer adjacentVertex : g.getAdjacentVertices(current)) {
@@ -88,9 +87,6 @@ public class DFSCycles implements GraphCycles {
 					edgeTo[adjacentVertex] = current;
 
 					dfs(g, adjacentVertex, source);
-				}else if (adjacentVertex == source) {
-					currentCycle.enqueue(source);
-					System.out.println("Cycle: " + currentCycle);
 				}
 			}
 		}
