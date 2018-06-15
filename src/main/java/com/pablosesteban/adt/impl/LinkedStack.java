@@ -89,7 +89,7 @@ public class LinkedStack<E> implements Stack<E> {
         StringBuilder sb = new StringBuilder();
         
         sb.append(className);
-        sb.append("{elements: {");
+        sb.append(" {elements: {");
         sb.append(first.toString());
         sb.append("}}");
         

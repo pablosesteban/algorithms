@@ -17,8 +17,18 @@ public interface Graph {
      * Types of graphs.
      */
     enum Type {
-        UNDIRECTED,
-        DIRECTED;
+        UNDIRECTED("A graph is a set of vertices and a collection of edges which connect a pair of vertices"),
+        DIRECTED("A digraph is a set of vertices and a collection of directed edges which connects an ordered pair of vertices");
+    	
+    	private String description;
+    	
+    	private Type(String description) {
+    		this.description = description;
+    	}
+    	
+    	public String getDescription() {
+    		return description;
+    	}
     }
     
     /**

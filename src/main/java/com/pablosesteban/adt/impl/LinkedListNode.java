@@ -26,6 +26,6 @@ class LinkedListNode<E> {
     
     @Override
     public String toString() {
-        return getClass().getSimpleName() + '{' + "value: " + value + ", next: " + next + '}';
+        return getClass().getSimpleName() + " {" + "value: " + value + ", next: " + next + '}';
     }
 }

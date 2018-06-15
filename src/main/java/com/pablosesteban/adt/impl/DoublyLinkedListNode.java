@@ -27,6 +27,6 @@ class DoublyLinkedListNode<E> {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + '{' + "value:" + value + ", next:" + next + ", previous:" + (previous == null ? null : previous.value) + '}';
+        return getClass().getSimpleName() + " {" + "value:" + value + ", next:" + next + ", previous:" + (previous == null ? null : previous.value) + '}';
     }
 }
