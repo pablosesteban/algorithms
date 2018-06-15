@@ -13,9 +13,6 @@ import com.pablosesteban.adt.impl.LinkedQueue;
 import com.pablosesteban.adt.impl.LinkedStack;
 import com.pablosesteban.api.DigraphOrder;
 
-import edu.princeton.cs.algs4.Digraph;
-import edu.princeton.cs.algs4.Topological;
-
 /**
  * A DFS implementation based on the idea that DFS visits each vertex exactly once.
  * We save the current visited vertex in a data structure and then iterate through
