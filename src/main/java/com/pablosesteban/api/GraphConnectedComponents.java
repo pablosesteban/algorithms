@@ -4,9 +4,9 @@
 package com.pablosesteban.api;
 
 /**
- * API to find connected components in an undirected graph.
+ * API to find connected components in a graph.
  */
-public interface UndirectedGraphConnectedComponents {
+public interface GraphConnectedComponents {
     /**
      * Determines if the two given vertices are connected
      * 

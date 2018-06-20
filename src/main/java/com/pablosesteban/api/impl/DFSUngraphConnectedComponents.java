@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import com.pablosesteban.adt.Graph;
 import com.pablosesteban.adt.impl.UndirectedGraph;
-import com.pablosesteban.api.UndirectedGraphConnectedComponents;
+import com.pablosesteban.api.GraphConnectedComponents;
 
 /**
  * A DFS implementation that maintains a vertex-indexed array connectedTo[] that
@@ -16,7 +16,7 @@ import com.pablosesteban.api.UndirectedGraphConnectedComponents;
  * proportional to the sum of the number of vertices and edges providing because
  * of that a constant-time guarantee connectivity queries in the graph.
  */
-public class DFSConnectedComponents implements UndirectedGraphConnectedComponents {
+public class DFSUngraphConnectedComponents implements GraphConnectedComponents {
     private boolean[] marked;
     private int[] connectedTo;
     private int count;
@@ -30,7 +30,7 @@ public class DFSConnectedComponents implements UndirectedGraphConnectedComponent
      * 
      * @param ug the undirected graph
      */
-    public DFSConnectedComponents(UndirectedGraph ug) {
+    public DFSUngraphConnectedComponents(UndirectedGraph ug) {
         marked = new boolean[ug.size()];
         connectedTo = new int[ug.size()];
         
@@ -96,7 +96,7 @@ public class DFSConnectedComponents implements UndirectedGraphConnectedComponent
         
         System.out.println(ug);
         
-        UndirectedGraphConnectedComponents ugcc = new DFSConnectedComponents(ug);
+        GraphConnectedComponents ugcc = new DFSUngraphConnectedComponents(ug);
         System.out.println(ugcc);
     }
 }
