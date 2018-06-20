@@ -16,7 +16,7 @@ import com.pablosesteban.api.GraphConnectedComponents;
  * proportional to the sum of the number of vertices and edges providing because
  * of that a constant-time guarantee connectivity queries in the graph.
  */
-public class DFSUngraphConnectedComponents implements GraphConnectedComponents {
+public class UngraphConnectedComponents implements GraphConnectedComponents {
     private boolean[] marked;
     private int[] connectedTo;
     private int count;
@@ -30,7 +30,7 @@ public class DFSUngraphConnectedComponents implements GraphConnectedComponents {
      * 
      * @param ug the undirected graph
      */
-    public DFSUngraphConnectedComponents(UndirectedGraph ug) {
+    public UngraphConnectedComponents(UndirectedGraph ug) {
         marked = new boolean[ug.size()];
         connectedTo = new int[ug.size()];
         
@@ -96,7 +96,7 @@ public class DFSUngraphConnectedComponents implements GraphConnectedComponents {
         
         System.out.println(ug);
         
-        GraphConnectedComponents ugcc = new DFSUngraphConnectedComponents(ug);
+        GraphConnectedComponents ugcc = new UngraphConnectedComponents(ug);
         System.out.println(ugcc);
     }
 }
