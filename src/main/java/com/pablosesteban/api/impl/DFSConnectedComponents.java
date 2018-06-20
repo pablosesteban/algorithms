@@ -3,19 +3,20 @@
  */
 package com.pablosesteban.api.impl;
 
+import java.util.Arrays;
+
 import com.pablosesteban.adt.Graph;
 import com.pablosesteban.adt.impl.UndirectedGraph;
-import com.pablosesteban.api.GraphConnectedComponents;
-import java.util.Arrays;
+import com.pablosesteban.api.UndirectedGraphConnectedComponents;
 
 /**
  * A DFS implementation that maintains a vertex-indexed array connectedTo[] that
  * associates the same integer value to every vertex in each component.
- * The implementation pre-process the Graph using DFS and waste time and space
+ * The implementation pre-process the graph using DFS and waste time and space
  * proportional to the sum of the number of vertices and edges providing because
- * of that a constant-time guarantee connectivity queries in the Graph.
+ * of that a constant-time guarantee connectivity queries in the graph.
  */
-public class DFSConnectedComponents implements GraphConnectedComponents {
+public class DFSConnectedComponents implements UndirectedGraphConnectedComponents {
     private boolean[] marked;
     private int[] connectedTo;
     private int count;
@@ -27,15 +28,15 @@ public class DFSConnectedComponents implements GraphConnectedComponents {
      * Preprocess the graph building the data structures that can efficiently
      * support client operations.
      * 
-     * @param g the Graph
+     * @param ug the undirected graph
      */
-    public DFSConnectedComponents(Graph g) {
-        marked = new boolean[g.size()];
-        connectedTo = new int[g.size()];
+    public DFSConnectedComponents(UndirectedGraph ug) {
+        marked = new boolean[ug.size()];
+        connectedTo = new int[ug.size()];
         
-        for (int i = 0; i < g.size(); i++) {
+        for (int i = 0; i < ug.size(); i++) {
             if (!marked[i]) {
-                dfs(g, i);
+                dfs(ug, i);
                 
                 count++;
             }
@@ -67,34 +68,35 @@ public class DFSConnectedComponents implements GraphConnectedComponents {
         
         connectedTo[v] = count;
         
-        for (Integer adjacentVertex : g.getAdjacentVertices(v)) {
-            if (!marked[adjacentVertex]) {
-                dfs(g, adjacentVertex);
-            }
+        if (g.getAdjacentVertices(v) != null) {
+        	for (Integer adjacentVertex : g.getAdjacentVertices(v)) {
+        		if (!marked[adjacentVertex]) {
+        			dfs(g, adjacentVertex);
+        		}
+        	}
         }
     }
     
-    
     public static void main(String[] args) {
-        Graph g = new UndirectedGraph(13);
+    	UndirectedGraph ug = new UndirectedGraph(13);
         
-        g.addEdge(0, 5);
-        g.addEdge(4, 3);
-        g.addEdge(0, 1);
-        g.addEdge(9, 12);
-        g.addEdge(6, 4);
-        g.addEdge(5, 4);
-        g.addEdge(0, 2);
-        g.addEdge(11, 12);
-        g.addEdge(9, 10);
-        g.addEdge(0, 6);
-        g.addEdge(7, 8);
-        g.addEdge(9, 11);
-        g.addEdge(5, 3);
+        ug.addEdge(0, 5);
+        ug.addEdge(4, 3);
+        ug.addEdge(0, 1);
+        ug.addEdge(9, 12);
+        ug.addEdge(6, 4);
+        ug.addEdge(5, 4);
+        ug.addEdge(0, 2);
+        ug.addEdge(11, 12);
+        ug.addEdge(9, 10);
+        ug.addEdge(0, 6);
+        ug.addEdge(7, 8);
+        ug.addEdge(9, 11);
+        ug.addEdge(5, 3);
         
-        System.out.println(g);
+        System.out.println(ug);
         
-        GraphConnectedComponents gcc = new DFSConnectedComponents(g);
-        System.out.println(gcc);
+        UndirectedGraphConnectedComponents ugcc = new DFSConnectedComponents(ug);
+        System.out.println(ugcc);
     }
 }

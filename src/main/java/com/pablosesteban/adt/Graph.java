@@ -14,11 +14,21 @@ package com.pablosesteban.adt;
  */
 public interface Graph {
     /**
-     * Types of graphs.
+     * Types of graphs:<br>
+     * <ul>
+     * <li>UNDIRECTED: A set of vertices and a collection of edges which connect
+     * a pair of vertices. A vertex w is connected to a vertex v if exists a
+     * path that contains both of them. The fact that w is connected to v indicates
+     * that v is connected to w as well.</li>
+     * <li>DIRECTED: A set of vertices and a collection of directed edges which
+     * connects an ordered pair of vertices. A vertex w is reachable from a vertex
+     * v if there is a directed path from v to w. The fact that w is reachable
+     * from v in a indicates nothing about whether v is reachable from w.</li>
+     * </ul>
      */
     enum Type {
-        UNDIRECTED("A graph is a set of vertices and a collection of edges which connect a pair of vertices"),
-        DIRECTED("A digraph is a set of vertices and a collection of directed edges which connects an ordered pair of vertices");
+        UNDIRECTED("A set of vertices and a collection of edges which connect a pair of vertices"),
+        DIRECTED("A set of vertices and a collection of directed edges which connects an ordered pair of vertices");
     	
     	private String description;
     	
