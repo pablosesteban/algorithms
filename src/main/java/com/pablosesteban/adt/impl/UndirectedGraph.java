@@ -71,7 +71,7 @@ public class UndirectedGraph implements Graph {
     }
 
     @Override
-	public Graph reverse() {
+	public DirectedGraph reverse() {
 		throw new UnsupportedOperationException("Operation not supported for undirected graphs");
 	}
 

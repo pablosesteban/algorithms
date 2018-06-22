@@ -22,7 +22,7 @@ import com.pablosesteban.adt.Graph;
  * This implementation has a constraint: vertex names must be integer indices.
  * Parallel edges and self-loops are allowed.
  */
-public class DirectedGraph implements Graph{
+public class DirectedGraph implements Graph {
 	private Bag<Integer>[] vertices;
 	private int numberOfEdges;
 	
@@ -57,7 +57,7 @@ public class DirectedGraph implements Graph{
 	}
 
 	@Override
-	public Graph reverse() {
+	public DirectedGraph reverse() {
 		DirectedGraph dg = new DirectedGraph(vertices.length);
 		
 		for (int i = 0; i < vertices.length; i++) {

@@ -5,6 +5,10 @@ package com.pablosesteban.api;
 
 /**
  * API to find connected components in a graph.
+ * Connected components are maximal subsets of vertices that are strongly connected
+ * to one another, with each vertex in exactly one subset.
+ * A graph with V vertices has between 1 (all vertices connected) and V (no vertex
+ * connected) connected components.
  */
 public interface GraphConnectedComponents {
     /**

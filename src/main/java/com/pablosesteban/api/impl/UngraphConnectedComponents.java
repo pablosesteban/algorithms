@@ -14,7 +14,9 @@ import com.pablosesteban.api.GraphConnectedComponents;
  * associates the same integer value to every vertex in each component.
  * The implementation pre-process the graph using DFS and waste time and space
  * proportional to the sum of the number of vertices and edges providing because
- * of that a constant-time guarantee connectivity queries in the graph.
+ * of that a constant-time guarantee connectivity operations in the graph.
+ * In an undirected graph, two vertices v and w are connected if there is a path
+ * connecting them and we can use that path to get from v to w or to get from w to v.
  */
 public class UngraphConnectedComponents implements GraphConnectedComponents {
     private boolean[] marked;

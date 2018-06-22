@@ -3,6 +3,8 @@
   */
 package com.pablosesteban.adt;
 
+import com.pablosesteban.adt.impl.DirectedGraph;
+
 /**
  * An Abstract Data Type (ADT) which defines the fundamental graph operations.
  * A graph is a set of vertices and a collection of edges that each connect a
@@ -73,5 +75,5 @@ public interface Graph {
      * 
      * @return the reverse of a directed graph
      */
-    Graph reverse();
+    DirectedGraph reverse();
 }
