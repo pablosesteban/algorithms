@@ -16,8 +16,8 @@ import com.pablosesteban.adt.Graph;
  * To add an edge connecting v and w, we add w to v adjacency list and v to
  * w adjacency list, so that, each edge appears twice in the data structure as
  * there is no direction in edges, they are two-way.
- * The fact that w is reachable from v in a digraph indicates that also v is
- * reachable from w.
+ * The fact that w is reachable from v in a undirected graph indicates that also
+ * v is reachable from w.
  * Parallel edges and self-loops are allowed.
  * The implementation achieves the following performance characteristics:<br>
  * <ul>

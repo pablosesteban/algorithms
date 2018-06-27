@@ -12,19 +12,24 @@ import com.pablosesteban.api.GraphConnectedComponents;
 /**
  * A DFS implementation that maintains a vertex-indexed array connectedTo[] that
  * associates the same integer value to every vertex in each component.
+ * In a digraph, a vertex w is reachable from a vertex v if there is a directed
+ * path from v to w, but there may or may not be a directed path back to v from w.
+ * Two vertices v and w are strongly connected if they are mutually reachable, i.e.
+ * if and only if there exists a directed cycle that contains them both, i.e. if
+ * there is a directed path from v to w and a different one directed path from w to v.
  * The implementation is based on the Kosaraju’s algorithm:
  * <ul>
  * <li>Given a digraph, compute the reverse postorder of its reverse</li>
  * <li>Run standard DFS on the digraph, but consider the unmarked vertices in the
- * orderjust computed instead of the standard numerical order</li>
- * <li>All vertices reached on a call to the recursive dfs() are in the same
- * connected component</li>
- * Kosaraju’s algorithm uses pre-processing time and space proportional to the number
- * of vertices plus the number of edges to support constant-time guarantee
- * connectivity operations in the graph.
- * In a digraph, a vertex w is reachable from a vertex v if there is a directed
- * path from v to w, but there may or may not be a directed path back to v from w.
+ * order just computed instead of the standard numerical order</li>
  * </ul>
+ * In the Kosaraju’s algorithm, all vertices reached on a call to the recursive DFS
+ * are in the same connected component and are strongly connected.
+ * Kosaraju’s algorithm uses pre-processing time and space proportional to the number
+ * of vertices (V) plus the number of edges (E) to support constant-time guarantee
+ * connectivity operations in the graph. Each of these three steps takes time
+ * proportional to V+E and the reverse copy of the digraph uses space proportional
+ * V+E.
  */
 public class DigraphConnectedComponents implements GraphConnectedComponents {
 	private boolean[] marked;
