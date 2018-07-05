@@ -56,7 +56,7 @@ public interface WeightedGraph {
 	Iterable<Edge> getIncidentEdges(int v);
 	
 	/**
-	 * Get all of the graph’s edges
+	 * Get all of the graph’s edges (ignoring any self-loops)
 	 * 
 	 * @return all edges in the graph
 	 */

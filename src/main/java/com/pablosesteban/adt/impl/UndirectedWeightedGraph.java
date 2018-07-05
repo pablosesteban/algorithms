@@ -138,6 +138,7 @@ public class UndirectedWeightedGraph implements WeightedGraph {
         
         System.out.println(uwg);
         
+        System.out.println("Edges:");
         int count = 0;
         for (Edge e : uwg.getEdges()) {
         	System.out.println(e);
