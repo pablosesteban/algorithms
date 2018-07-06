@@ -48,7 +48,7 @@ public interface WeightedGraph {
 	void addEdge(Edge e);
 	
 	/**
-	 * Get edges incident to a vertex
+	 * Get edges incident to a vertex. The order of iteration is not specified.
 	 * 
 	 * @param v a vertex in the graph
 	 * @return all edges incident

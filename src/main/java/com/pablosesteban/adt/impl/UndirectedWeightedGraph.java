@@ -1,5 +1,9 @@
 package com.pablosesteban.adt.impl;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 import com.pablosesteban.adt.Bag;
 import com.pablosesteban.adt.WeightedGraph;
 
@@ -12,8 +16,8 @@ import com.pablosesteban.adt.WeightedGraph;
  * Each vertex is reachable from itself.
  * This implementation has a constraint: vertex names must be integer indices.
  * To add an edge connecting v and w, we add the edge to v and w adjacency
- * lists, so that, each edge appears twice in the data structure as there is no
- * direction in edges, they are two-way.
+ * lists, so that, each edge appears twice (two edge objects in both directions)
+ * in the data structure as there is no direction in edges, they are two-way.
  * The fact that w is reachable from v in a undirected graph indicates that also
  * v is reachable from w.
  * Parallel edges and self-loops are allowed.
@@ -26,7 +30,31 @@ public class UndirectedWeightedGraph implements WeightedGraph {
 	private Bag<Edge>[] vertices;
     private int numberOfEdges;
     
+    /**
+     * Reads a graph from file
+     * 
+     * @param filename file to read the graph
+     * @throws IOException if file does not exists
+     */
+    public UndirectedWeightedGraph(String filename) throws IOException {
+    	BufferedReader br = new BufferedReader(new FileReader(getClass().getClassLoader().getResource(filename).getFile()));
+    	
+    	String numberOfVertices = br.readLine();
+    	String numberOfEdges = br.readLine();
+    	
+    	vertices = new Bag[Integer.parseInt(numberOfVertices)];
+    	
+    	String line = null;
+    	while ((line = br.readLine()) != null) {
+    		String[] edge = line.split(" ");
+    		
+    		addEdge(new Edge(Integer.parseInt(edge[0]), Integer.parseInt(edge[1]), Double.parseDouble(edge[2])));
+    	}
+    }
     
+	/**
+	 * Creates an empty graph with this number of vertices
+	 */
 	public UndirectedWeightedGraph(int numberOfVertices) {
 		vertices = new Bag[numberOfVertices];
 	}
@@ -119,22 +147,8 @@ public class UndirectedWeightedGraph implements WeightedGraph {
         return sb.toString();
     }
 
-	public static void main(String[] args) {
-		UndirectedWeightedGraph uwg = new UndirectedWeightedGraph(13);
-        
-		uwg.addEdge(new Edge(0, 5, 0));
-		uwg.addEdge(new Edge(4, 3, 0));
-		uwg.addEdge(new Edge(0, 1, 0));
-		uwg.addEdge(new Edge(9, 12, 0));
-        uwg.addEdge(new Edge(6, 4, 0));
-        uwg.addEdge(new Edge(5, 4, 0));
-        uwg.addEdge(new Edge(0, 2, 0));
-        uwg.addEdge(new Edge(11, 12, 0));
-        uwg.addEdge(new Edge(9, 10, 0));
-        uwg.addEdge(new Edge(0, 6, 0));
-        uwg.addEdge(new Edge(7, 8, 0));
-        uwg.addEdge(new Edge(9, 11, 0));
-        uwg.addEdge(new Edge(5, 3, 0));
+	public static void main(String[] args) throws IOException {
+		UndirectedWeightedGraph uwg = new UndirectedWeightedGraph("weighted_graph_tiny.txt");
         
         System.out.println(uwg);
         
