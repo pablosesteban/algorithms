@@ -37,18 +37,18 @@ public class UndirectedWeightedGraph implements WeightedGraph {
      * @throws IOException if file does not exists
      */
     public UndirectedWeightedGraph(String filename) throws IOException {
-    	BufferedReader br = new BufferedReader(new FileReader(getClass().getClassLoader().getResource(filename).getFile()));
-    	
-    	String numberOfVertices = br.readLine();
-    	String numberOfEdges = br.readLine();
-    	
-    	vertices = new Bag[Integer.parseInt(numberOfVertices)];
-    	
-    	String line = null;
-    	while ((line = br.readLine()) != null) {
-    		String[] edge = line.split(" ");
-    		
-    		addEdge(new Edge(Integer.parseInt(edge[0]), Integer.parseInt(edge[1]), Double.parseDouble(edge[2])));
+    	try(BufferedReader br = new BufferedReader(new FileReader(getClass().getClassLoader().getResource(filename).getFile()))) {
+    		String numberOfVertices = br.readLine();
+        	String numberOfEdges = br.readLine();
+        	
+        	vertices = new Bag[Integer.parseInt(numberOfVertices)];
+        	
+        	String line = null;
+        	while ((line = br.readLine()) != null) {
+        		String[] edge = line.split(" ");
+        		
+        		addEdge(new Edge(Integer.parseInt(edge[0]), Integer.parseInt(edge[1]), Double.parseDouble(edge[2])));
+        	}
     	}
     }
     
