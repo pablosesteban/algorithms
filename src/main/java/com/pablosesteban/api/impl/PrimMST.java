@@ -13,18 +13,24 @@ import com.pablosesteban.api.WeightedGraphMinimumSpanningTree;
 import edu.princeton.cs.algs4.MinPQ;
 
 /**
- * A MST implementation based on the Prim's Algorithm.
+ * A MST implementation based on the Prim's Algorithm and assuming that the weighted graph is connected.
  * Consists on attaching a new edge to a single growing tree starting with any vertex as a single-vertex
  * tree, then add number of vertices - 1 edges to it, always taking next vertex the minimum weighted edge
- * that connects a vertex on the tree to a vertex not yet on the tree (a crossing edge).
+ * that connects a vertex on the tree to a vertex not yet on the tree (crossing edge).
+ * An ineligible edge connects two tree vertices.
  * The algorithm is backed by three data structures:<ul>
  * <li>A vertex-indexed boolean array, where each entry is true if the vertex is currently on the tree.</li>
  * <li>A queue to collect MST edges.</li>
- * <li>A priority queue that compares edges by weight.</li></ul>
+ * <li>A priority queue, that compares edges by weight, to store crossing edges (perhaps also some
+ * ineligible ones.)</li></ul>
  * The algorithm take an edge from the priority queue and, if it is not ineligible, add it to the tree and
  * updates the set of crossing edges with adjacent vertices of the vertex that this edge leads to.
+ * Any edge connecting the vertex just added to a tree vertex that is already on the priority queue now becomes
+ * ineligible.
+ * The implementation uses space proportional to twice the number of edges (E) and time proportional to E logE,
+ * in the worst case, to compute the MST.
  */
-public class PrimMST implements WeightedGraphMinimumSpanningTree{
+public class PrimMST implements WeightedGraphMinimumSpanningTree {
 	private boolean[] marked;
 	private Queue<Edge> edges;
 	private MinPQ<Edge> crossingEdges;
