@@ -20,17 +20,17 @@ import edu.princeton.cs.algs4.IndexMinPQ;
  * An ineligible edge connects two tree vertices.
  * The algorithm is backed by these data structures:<ul>
  * <li>A vertex-indexed boolean array, where each entry is true if the vertex is currently on the tree.</li>
- * <li>An indexed priority queue, that compares edges by weight, to store only crossing edges.</li></ul>
- * <li>A vertex-indexed array of edges (edgeTo) and a vertex-indexed double array (weightTo) where if
+ * <li>A vertex-indexed priority queue that store the edge's lowest weight for each non-tree vertex which
+ * connects it to the tree.</li></ul>
+ * <li>A vertex-indexed array of edges (edgeTo) and a vertex-indexed double array (weightTo) where if a
  * vertex v is not on the tree but has at least one edge connecting it to the tree, then edgeTo[v] is the
  * shortest edge connecting v to the tree, and weightTo[v] is the weight of that edge. All such vertices
- * v are maintained on the indexed priority queue, as an index v associated with the weight of edgeTo[v].</li>
- * The algorithm maintains on the indexed priority queue just one edge for each non-tree vertex w, i.e.
+ * v are maintained on the vertex-indexed priority queue, as an index v associated with the weight of edgeTo[v].</li>
+ * The algorithm maintains on the vertex-indexed priority queue just one edge for each non-tree vertex w, i.e.
  * the shortest edge that connects it to the tree. Any longer edge connecting w to the tree will become
- * ineligible at some point, so there is no need to keep it on the indexed priority queue.
- * 
- * The implementation uses space proportional to twice the number of edges (E) and time proportional to E logE,
- * in the worst case, to compute the MST.
+ * ineligible at some point, so there is no need to keep it on the vertex-indexed priority queue.
+ * The implementation uses space proportional to twice the number of edges (E) plus extra space proportional
+ * to number of vertices (V) and time proportional to E log V, in the worst case, to compute the MST.
  */
 public class PrimMST implements WeightedGraphMinimumSpanningTree {
 	private boolean[] marked;
@@ -85,15 +85,16 @@ public class PrimMST implements WeightedGraphMinimumSpanningTree {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + " {\nmarked: " + Arrays.toString(marked) + ",\nedges: " + getEdges() + ",\nweight: " + weight + ",\ncrossingEdges: " + crossingEdges + "\n}";
+		return getClass().getSimpleName() + " {\nmarked: " + Arrays.toString(marked) + ",\nedgeTo: " + Arrays.toString(edgeTo) +  ",\nweightTo: " + Arrays.toString(weightTo) + ",\nedges: " + getEdges() + ",\nweight: " + weight + ",\ncrossingEdges: " + crossingEdges + "\n}";
 	}
 
 	/**
-	 * For a vertex v from the indexed priority queue, checks each edge v-w on its adjacency list.
+	 * For a vertex v from the vertex-indexed priority queue, marks it and checks each edge v-w on
+	 * its adjacency list.
 	 * If w is marked, the edge is ineligible.
-	 * If it is not on the priority queue or its weight is lower than the current best-known edgeTo[w],
-	 * the code updates the data structures to establish v-w as the best-known way to connect v to the
-	 * tree.
+	 * If w is not on the vertex-indexed priority queue or its weight is lower than the current best-known
+	 * edgeTo[w], the code updates the data structures to establish v-w as the best-known way to connect v
+	 * to the tree.
 	 * 
 	 * @param wg a weighted graph
 	 * @param v a vertex
@@ -123,7 +124,8 @@ public class PrimMST implements WeightedGraphMinimumSpanningTree {
 
 	public static void main(String[] args) throws IOException {
 		UndirectedWeightedGraph uwg = new UndirectedWeightedGraph("weighted_graph_tiny.txt");
-
+		System.out.println(uwg);
+		
 		PrimMST mst = new PrimMST(uwg);
 		System.out.println(mst);
 
