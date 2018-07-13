@@ -34,7 +34,7 @@ import edu.princeton.cs.algs4.IndexMinPQ;
  */
 public class PrimMST implements WeightedGraphMinimumSpanningTree {
 	private boolean[] marked;
-	private Queue<Edge> edges;
+	private Queue<Edge> mst;
 	private IndexMinPQ<Double> crossingEdges;
 	private Edge[] edgeTo;
 	private double[] weightTo;
@@ -50,7 +50,7 @@ public class PrimMST implements WeightedGraphMinimumSpanningTree {
 		crossingEdges = new IndexMinPQ<>(wg.size());
 		edgeTo = new Edge[wg.size()];
 		weightTo = new double[wg.size()];
-		edges = new LinkedQueue<>();
+		mst = new LinkedQueue<>();
 
 		for (int i = 0; i < weightTo.length; i++) {
 			weightTo[i] = Double.POSITIVE_INFINITY;
@@ -68,14 +68,14 @@ public class PrimMST implements WeightedGraphMinimumSpanningTree {
 
 			if (e != null) {
 				weight += e.getWeight();
-				edges.enqueue(e);
+				mst.enqueue(e);
 			}
 		}
 	}
 
 	@Override
 	public Iterable<Edge> getEdges() {
-		return edges;
+		return mst;
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class PrimMST implements WeightedGraphMinimumSpanningTree {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + " {\nmarked: " + Arrays.toString(marked) + ",\nedgeTo: " + Arrays.toString(edgeTo) +  ",\nweightTo: " + Arrays.toString(weightTo) + ",\nedges: " + getEdges() + ",\nweight: " + weight + ",\ncrossingEdges: " + crossingEdges + "\n}";
+		return getClass().getSimpleName() + " {\nmarked: " + Arrays.toString(marked) + ",\nedgeTo: " + Arrays.toString(edgeTo) +  ",\nweightTo: " + Arrays.toString(weightTo) + ",\nmst: " + mst + ",\nweight: " + weight + "\n}";
 	}
 
 	/**
@@ -126,8 +126,8 @@ public class PrimMST implements WeightedGraphMinimumSpanningTree {
 		UndirectedWeightedGraph uwg = new UndirectedWeightedGraph("weighted_graph_tiny.txt");
 		System.out.println(uwg);
 		
-		PrimMST mst = new PrimMST(uwg);
-		System.out.println(mst);
+		PrimMST primMST = new PrimMST(uwg);
+		System.out.println(primMST);
 
 		IndexMinPQ<String> impq = new IndexMinPQ<>(10);
 	}
