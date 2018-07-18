@@ -9,11 +9,12 @@ import com.pablosesteban.adt.WeightedGraph;
 import com.pablosesteban.adt.impl.Edge;
 import com.pablosesteban.adt.impl.LinkedQueue;
 import com.pablosesteban.adt.impl.UndirectedWeightedGraph;
-import com.pablosesteban.api.WeightedGraphMinimumSpanningTree;
+import com.pablosesteban.api.WeightedUngraphMinimumSpanningTree;
 
 import edu.princeton.cs.algs4.IndexMinPQ;
 
-public class KruskalMST implements WeightedGraphMinimumSpanningTree {
+public class KruskalMST implements WeightedUngraphMinimumSpanningTree {
+	private boolean[] marked;
 	private double[] weightTo;
 	private Edge[] edgeTo;
 	private IndexMinPQ<Double> edges;
@@ -21,6 +22,7 @@ public class KruskalMST implements WeightedGraphMinimumSpanningTree {
 	private Queue<Edge> mst;
 	
 	public KruskalMST(WeightedGraph wg) {
+		marked = new boolean[wg.size()];
 		weightTo = new double[wg.size()];
 		edgeTo = new Edge[wg.size()];
 		edges = new IndexMinPQ<>(wg.size());
@@ -60,10 +62,12 @@ public class KruskalMST implements WeightedGraphMinimumSpanningTree {
 	}
 
 	private void addNextEdge(WeightedGraph wg, int v) {
+		marked[v] = true;
+		
 		for (Edge e : wg.getIncidentEdges(v) ) {
 			int toVertex = e.getTo();
 			
-			if (toVertex < v && weightTo[v] != Double.POSITIVE_INFINITY) {
+			if (marked[toVertex]) {
 				continue;
 			}
 			

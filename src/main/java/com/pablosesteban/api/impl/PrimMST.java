@@ -8,12 +8,12 @@ import com.pablosesteban.adt.WeightedGraph;
 import com.pablosesteban.adt.impl.Edge;
 import com.pablosesteban.adt.impl.LinkedQueue;
 import com.pablosesteban.adt.impl.UndirectedWeightedGraph;
-import com.pablosesteban.api.WeightedGraphMinimumSpanningTree;
+import com.pablosesteban.api.WeightedUngraphMinimumSpanningTree;
 
 import edu.princeton.cs.algs4.IndexMinPQ;
 
 /**
- * A MST implementation based on the Prim's Algorithm and assuming that the weighted graph is connected.
+ * A MST implementation based on the Prim's Algorithm and assuming that the undirected weighted graph is connected.
  * Consists on attaching a new edge to a single growing tree starting with any vertex as a single-vertex
  * tree, then add number of vertices - 1 edges to it, always taking next vertex the minimum weighted edge
  * that connects a vertex on the tree to a vertex not yet on the tree (crossing edge).
@@ -32,7 +32,7 @@ import edu.princeton.cs.algs4.IndexMinPQ;
  * The implementation uses space proportional to twice the number of edges (E) plus extra space proportional
  * to number of vertices (V) and time proportional to E log V, in the worst case, to compute the MST.
  */
-public class PrimMST implements WeightedGraphMinimumSpanningTree {
+public class PrimMST implements WeightedUngraphMinimumSpanningTree {
 	private boolean[] marked;
 	private Queue<Edge> mst;
 	private IndexMinPQ<Double> crossingEdges;
@@ -41,15 +41,15 @@ public class PrimMST implements WeightedGraphMinimumSpanningTree {
 	private double weight;
 
 	/**
-	 * Computes the MST for this weighted graph
+	 * Computes the MST for this undirected weighted graph
 	 * 
-	 * @param wg a weighted graph
+	 * @param uwg a weighted graph
 	 */
-	public PrimMST(WeightedGraph wg) {
-		marked = new boolean[wg.size()];
-		crossingEdges = new IndexMinPQ<>(wg.size());
-		edgeTo = new Edge[wg.size()];
-		weightTo = new double[wg.size()];
+	public PrimMST(UndirectedWeightedGraph uwg) {
+		marked = new boolean[uwg.size()];
+		crossingEdges = new IndexMinPQ<>(uwg.size());
+		edgeTo = new Edge[uwg.size()];
+		weightTo = new double[uwg.size()];
 		mst = new LinkedQueue<>();
 
 		for (int i = 0; i < weightTo.length; i++) {
@@ -60,7 +60,7 @@ public class PrimMST implements WeightedGraphMinimumSpanningTree {
 		crossingEdges.insert(0, 0.0);
 
 		while (!crossingEdges.isEmpty() ) {
-			addCrossingEdges(wg, crossingEdges.delMin());
+			addCrossingEdges(uwg, crossingEdges.delMin());
 		}
 
 		for (int i = 0; i < edgeTo.length; i++) {

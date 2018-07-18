@@ -3,13 +3,15 @@ package com.pablosesteban.api;
 import com.pablosesteban.adt.impl.Edge;
 
 /**
- * API to find the Minimum Spanning Tree (MST) of a weighted graph.
+ * API to find the Minimum Spanning Tree (MST) of an undirected weighted graph.
  * A Spanning Tree of a graph is a connected subgraph with no cycles that includes
  * all the vertices. A MST of a weighted graph is a spanning tree whose weight
  * (the sum of the weights of its edges) is no larger than the weight of any other
  * spanning tree.
+ * Algorithms working on directed weighted graphs are a more difficult graph-processing
+ * problem known as the Minimum Cost Arborescence (MCA) problem.
  */
-public interface WeightedGraphMinimumSpanningTree {
+public interface WeightedUngraphMinimumSpanningTree {
 	/**
 	 * Get all of the MST edges
 	 * 
