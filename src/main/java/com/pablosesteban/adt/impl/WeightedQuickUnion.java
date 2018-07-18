@@ -15,7 +15,7 @@ import com.pablosesteban.adt.UnionFind;
  * The worst-case order of growth of the cost of all operations is log N, i.e. each operation does at most
  * a constant number of array accesses for each node on the path from a node to a root in the forest.
  */
-public class WeigthedQuickUnion implements UnionFind {
+public class WeightedQuickUnion implements UnionFind {
 	private int[] vertices;
 	private int[] sizes;
 	/**
@@ -24,11 +24,11 @@ public class WeigthedQuickUnion implements UnionFind {
 	private int count;
 	
 	/**
-	 * Initially, we start with numberOfVertices connected components, each vertex in its own connecte component
+	 * Initially, we start with numberOfVertices connected components, each vertex in its own connected component
 	 * 
 	 * @param numberOfVertices the number of vertices
 	 */
-	public WeigthedQuickUnion(int numberOfVertices) {
+	public WeightedQuickUnion(int numberOfVertices) {
 		vertices = new int[numberOfVertices];
 		sizes = new int[numberOfVertices];
 		count = numberOfVertices;
@@ -102,7 +102,7 @@ public class WeigthedQuickUnion implements UnionFind {
 	}
 
 	public static void main(String[] args) {
-		WeigthedQuickUnion uf = new WeigthedQuickUnion(8);
+		WeightedQuickUnion uf = new WeightedQuickUnion(8);
 		
 		uf.union(0, 4);
 		uf.union(0, 6);

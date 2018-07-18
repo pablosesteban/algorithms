@@ -17,6 +17,8 @@ import edu.princeton.cs.algs4.IndexMinPQ;
  * Consists on attaching a new edge to a single growing tree starting with any vertex as a single-vertex
  * tree, then add number of vertices - 1 edges to it, always taking next vertex the minimum weighted edge
  * that connects a vertex on the tree to a vertex not yet on the tree (crossing edge).
+ * The algorithm builds the MST one edge at a time, finding a new edge to attach to a single growing tree at each
+ * step.
  * An ineligible edge connects two tree vertices.
  * The algorithm is backed by these data structures:<ul>
  * <li>A vertex-indexed boolean array, where each entry is true if the vertex is currently on the tree.</li>
@@ -85,7 +87,7 @@ public class PrimMST implements WeightedUngraphMinimumSpanningTree {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + " {\nmarked: " + Arrays.toString(marked) + ",\nedgeTo: " + Arrays.toString(edgeTo) +  ",\nweightTo: " + Arrays.toString(weightTo) + ",\nmst: " + mst + ",\nweight: " + weight + "\n}";
+		return getClass().getSimpleName() + " {\nmst: " + mst + ",\nweight: " + weight + "\n}";
 	}
 
 	/**
