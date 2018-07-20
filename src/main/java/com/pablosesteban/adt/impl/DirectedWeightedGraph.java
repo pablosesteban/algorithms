@@ -8,16 +8,16 @@ import com.pablosesteban.adt.Bag;
 import com.pablosesteban.adt.WeightedGraph;
 
 /**
- * A Weighted Undirected Graph implementation based on an array of adjacency
+ * A Weighted Directed Graph implementation based on an array of adjacency
  * lists data structure.
  * This data structure is the standard graph representation for graphs that are
  * not dense, where we maintain a vertex-indexed array of linked-lists of the
  * edges adjacent to each vertex.
  * Each vertex is reachable from itself.
  * This implementation has a constraint: vertex names must be integer indices.
- * To add an edge connecting v and w, we add the edge to v and w adjacency
- * lists, so that, each edge appears twice (two edge objects in both directions)
- * in the data structure as there is no direction in edges, they are two-way.
+ * To add an edge connecting v and w, we add the edge only to v adjacency list,
+ * so that, each edge appears only once in the data structure as there is a
+ * direction in edges, they are one-way.
  * The fact that w is reachable from v in a undirected graph indicates that also
  * v is reachable from w.
  * Parallel edges and self-loops are allowed.
@@ -26,7 +26,7 @@ import com.pablosesteban.adt.WeightedGraph;
  * lists built by graph, so that, many different arrays of adjacency lists can
  * represent the same graph.
  */
-public class UndirectedWeightedGraph implements WeightedGraph {
+public class DirectedWeightedGraph implements WeightedGraph {
 	private Bag<Edge>[] vertices;
     private int numberOfEdges;
     
@@ -36,7 +36,7 @@ public class UndirectedWeightedGraph implements WeightedGraph {
      * @param filename file to read the graph
      * @throws IOException if file does not exists
      */
-    public UndirectedWeightedGraph(String filename) throws IOException {
+    public DirectedWeightedGraph(String filename) throws IOException {
     	try(BufferedReader br = new BufferedReader(new FileReader(getClass().getClassLoader().getResource(filename).getFile()))) {
     		String numberOfVertices = br.readLine();
         	String numberOfEdges = br.readLine();
@@ -55,22 +55,19 @@ public class UndirectedWeightedGraph implements WeightedGraph {
 	/**
 	 * Creates an empty graph with this number of vertices
 	 */
-	public UndirectedWeightedGraph(int numberOfVertices) {
+    public DirectedWeightedGraph(int numberOfVertices, int source) {
 		vertices = new Bag[numberOfVertices];
 	}
-
+    
 	@Override
 	public void addEdge(Edge e) {
-		if (vertices[e.getFrom()] == null) {
-			vertices[e.getFrom()] = new LinkedBag<>();
+		int from = e.getFrom();
+		
+		if (vertices[from] == null) {
+			vertices[from] = new LinkedBag<>();
 		}
 		
-		if (vertices[e.getTo()] == null) {
-			vertices[e.getTo()] = new LinkedBag<>();
-		}
-		
-		vertices[e.getFrom()].add(e);
-		vertices[e.getTo()].add(new Edge(e.getTo(), e.getFrom(), e.getWeight()));
+		vertices[from].add(e);
 		
 		numberOfEdges++;
 	}
@@ -85,8 +82,8 @@ public class UndirectedWeightedGraph implements WeightedGraph {
 		Bag<Edge> edges = new LinkedBag<>();
 		
 		for (int v = 0; v < vertices.length; v++) {
-			for (Edge edge : vertices[v]) {
-				if (edge.getTo() > v) {
+			if (vertices[v] != null) {
+				for (Edge edge : vertices[v]) {
 					edges.add(edge);
 				}
 			}
@@ -111,23 +108,31 @@ public class UndirectedWeightedGraph implements WeightedGraph {
             verticesSb.append(i);
             verticesSb.append(": ");
             
-            int verticesLastIndex = vertices[i].size() - 1;
-            int count = 0;
-            verticesSb.append("[");
-            for (Edge vertex : vertices[i]) {
-                verticesSb.append(vertex);
-                
-                if (count == verticesLastIndex) {
-                    if (i == vertexLastIndex) {
-                        verticesSb.append("]\n");
-                    }else {
-                        verticesSb.append("],\n");
-                    }
-                }else {
-                    verticesSb.append(", ");
-                }
-                
-                count++;
+            if (vertices[i] != null) {
+            	int verticesLastIndex = vertices[i].size() - 1;
+            	int count = 0;
+            	verticesSb.append("[");
+            	for (Edge vertex : vertices[i]) {
+            		verticesSb.append(vertex);
+
+            		if (count == verticesLastIndex) {
+            			if (i == vertexLastIndex) {
+            				verticesSb.append("]\n");
+            			}else {
+            				verticesSb.append("],\n");
+            			}
+            		}else {
+            			verticesSb.append(", ");
+            		}
+
+            		count++;
+            	}
+            }else {
+            	if (i == vertexLastIndex) {
+    				verticesSb.append("[]\n");
+    			}else {
+    				verticesSb.append("[],\n");
+    			}
             }
         }
         
@@ -146,15 +151,15 @@ public class UndirectedWeightedGraph implements WeightedGraph {
         
         return sb.toString();
     }
-
+	
 	public static void main(String[] args) throws IOException {
-		UndirectedWeightedGraph uwg = new UndirectedWeightedGraph("weighted_graph_tiny.txt");
+		DirectedWeightedGraph dwg = new DirectedWeightedGraph("weighted_digraph_tiny.txt");
         
-        System.out.println(uwg);
+        System.out.println(dwg);
         
         System.out.println("Edges:");
         int count = 0;
-        for (Edge e : uwg.getEdges()) {
+        for (Edge e : dwg.getEdges()) {
         	System.out.println(e);
         	count++;
         }
