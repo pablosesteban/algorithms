@@ -18,7 +18,7 @@ import com.pablosesteban.api.GraphConnectedComponents;
  * In an undirected graph, two vertices v and w are connected if there is a path
  * connecting them and we can use that path to get from v to w or to get from w to v.
  */
-public class UngraphConnectedComponents implements GraphConnectedComponents {
+public class UngraphCC implements GraphConnectedComponents {
     private boolean[] marked;
     private int[] connectedTo;
     private int count;
@@ -32,7 +32,7 @@ public class UngraphConnectedComponents implements GraphConnectedComponents {
      * 
      * @param ug the undirected graph
      */
-    public UngraphConnectedComponents(UndirectedGraph ug) {
+    public UngraphCC(UndirectedGraph ug) {
         marked = new boolean[ug.size()];
         connectedTo = new int[ug.size()];
         
@@ -98,7 +98,7 @@ public class UngraphConnectedComponents implements GraphConnectedComponents {
         
         System.out.println(ug);
         
-        GraphConnectedComponents ugcc = new UngraphConnectedComponents(ug);
+        GraphConnectedComponents ugcc = new UngraphCC(ug);
         System.out.println(ugcc);
     }
 }

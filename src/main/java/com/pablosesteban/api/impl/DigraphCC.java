@@ -31,12 +31,12 @@ import com.pablosesteban.api.GraphConnectedComponents;
  * proportional to V+E and the reverse copy of the digraph uses space proportional
  * V+E.
  */
-public class DigraphConnectedComponents implements GraphConnectedComponents {
+public class DigraphCC implements GraphConnectedComponents {
 	private boolean[] marked;
     private int[] connectedTo;
     private int count;
 	
-	public DigraphConnectedComponents(DirectedGraph dg) {
+	public DigraphCC(DirectedGraph dg) {
 		marked = new boolean[dg.size()];
 		connectedTo = new int[dg.size()];
 		
@@ -112,7 +112,7 @@ public class DigraphConnectedComponents implements GraphConnectedComponents {
         
         System.out.println(dg);
         
-        GraphConnectedComponents gugcc = new DigraphConnectedComponents(dg);
+        GraphConnectedComponents gugcc = new DigraphCC(dg);
         System.out.println(gugcc);
     }
 }
