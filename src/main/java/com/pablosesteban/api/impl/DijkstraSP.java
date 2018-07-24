@@ -36,11 +36,15 @@ import edu.princeton.cs.algs4.IndexMinPQ;
  * since weightTo[w] can only decrease (any relaxation can only decrease a distTo[] value) and distTo[v] never changes
  * (because edge weights are nonnegative and we choose the lowest distTo[] value at each step, no subsequent relaxation
  * can set any distTo[] entry to a lower value than distTo[v]).
+ * The algorithm grows the SPT by adding an edge at a time, always choosing the edge from a tree vertex to a non-tree vertex
+ * whose destination w is closest to source.
+ * The implementation uses extra space proportional to V and time proportional to E log V, in the worst case, to compute
+ * the SPT rooted at a given source in an edge-weighted digraph with E edges and V vertices.
  */
 public class DijkstraSP implements WeightedDigraphShortestPaths {
 	private double[] weightTo;
 	private Edge[] edgeTo;
-	private IndexMinPQ<Double> pq;
+	private IndexMinPQ<Double> crossingEdges;
 	
 	/**
 	 * Builds the SPT and computes shortest paths distances by initializing weightTo[source] to 0 and
@@ -54,7 +58,7 @@ public class DijkstraSP implements WeightedDigraphShortestPaths {
 	public DijkstraSP(DirectedWeightedGraph dwg, int source) {
 		weightTo = new double[dwg.size()];
 		edgeTo = new Edge[dwg.size()];
-		pq = new IndexMinPQ<>(dwg.size());
+		crossingEdges = new IndexMinPQ<>(dwg.size());
 		
 		for (int v = 0; v < weightTo.length; v++) {
 			weightTo[v] = Double.POSITIVE_INFINITY;
@@ -62,9 +66,9 @@ public class DijkstraSP implements WeightedDigraphShortestPaths {
 		
 		weightTo[source] = 0.0;
 		
-		pq.insert(source, 0.0);
-		while(!pq.isEmpty()) {
-			relaxVertex(dwg, pq.delMin());
+		crossingEdges.insert(source, 0.0);
+		while(!crossingEdges.isEmpty()) {
+			relaxVertex(dwg, crossingEdges.delMin());
 		}
 	}
 	
@@ -122,10 +126,10 @@ public class DijkstraSP implements WeightedDigraphShortestPaths {
 					
 					edgeTo[e.getTo()] = e;
 					
-					if (pq.contains(e.getTo())) {
-						pq.changeKey(e.getTo(), newWeight);
+					if (crossingEdges.contains(e.getTo())) {
+						crossingEdges.changeKey(e.getTo(), newWeight);
 					}else {
-						pq.insert(e.getTo(), newWeight);
+						crossingEdges.insert(e.getTo(), newWeight);
 					}
 				}
 			}
