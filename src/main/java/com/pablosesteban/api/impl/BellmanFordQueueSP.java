@@ -1,0 +1,120 @@
+package com.pablosesteban.api.impl;
+
+import java.io.IOException;
+import java.util.Arrays;
+
+import com.pablosesteban.adt.Queue;
+import com.pablosesteban.adt.Stack;
+import com.pablosesteban.adt.impl.DirectedWeightedGraph;
+import com.pablosesteban.adt.impl.Edge;
+import com.pablosesteban.adt.impl.LinkedQueue;
+import com.pablosesteban.adt.impl.LinkedStack;
+import com.pablosesteban.api.WeightedDigraphShortestPaths;
+
+/**
+ * A Shortest Paths implementation based on a Queue based Bellman-Ford's algorithm.
+ * Solves the single source shortest paths problem from a given source vertex s for
+ * any edge-weighted digraph with v vertices and no negative cycles reachable from s.
+ */
+public class BellmanFordQueueSP implements WeightedDigraphShortestPaths {
+	private double[] weightTo;
+	private Edge[] edgeTo;
+	private Queue<Integer> queue;
+	private boolean[] onQueue;
+	
+	public BellmanFordQueueSP(DirectedWeightedGraph dwg, int source) {
+		weightTo = new double[dwg.size()];
+		edgeTo = new Edge[dwg.size()];
+		onQueue = new boolean[dwg.size()];
+		queue = new LinkedQueue<>();
+		
+		for (int v = 0; v < weightTo.length; v++) {
+			weightTo[v] = Double.POSITIVE_INFINITY;
+		}
+		
+		weightTo[source] = 0.0;
+		
+		queue.enqueue(source);
+		while (!queue.isEmpty()) {
+			Integer vertex = queue.dequeue();
+			
+			onQueue[vertex] = true;
+			
+			relaxEdges(dwg, vertex);
+		}
+	}
+	
+	@Override
+	public double weightTo(int v) {
+		return weightTo[v];
+	}
+
+	@Override
+	public boolean hasPathTo(int v) {
+		return weightTo[v] != Double.POSITIVE_INFINITY;
+	}
+
+	@Override
+	public Iterable<Edge> pathTo(int v) {
+		if (!hasPathTo(v)) {
+			return null;
+		}
+		
+		Stack<Edge> path = new LinkedStack<>();
+		
+		Edge e = edgeTo[v];
+		while (e != null) {
+			path.push(e);
+			
+			e = edgeTo[e.getFrom()];
+		}
+		
+		return path;
+	}
+	
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " {\nweightTo: " + Arrays.toString(weightTo) + ",\nedgeTo: " + Arrays.toString(edgeTo) + "\n}";
+	}
+
+	/**
+	 * To relax an edge v->w means to test whether the best known way from source to w is to go from source to v,
+	 * then take the edge from v to w, and, if so, update our data structures to indicate that to be the case.
+	 * Two possible outcomes of an vertex relaxation operation:
+	 * <li>The edge is ineligible and no changes are made on the data structures.</li>
+	 * <li>The edge v->w leads to a shorter path to w and we update the data structures (which might render some
+	 * other edges ineligible and might create some new eligible edges).</li>
+	 * 
+	 * @param dwg a weighted digraph
+	 * @param v a vertex in the graph
+	 */
+	private void relaxEdges(DirectedWeightedGraph dwg, int v) {
+		if (dwg.getIncidentEdges(v) != null) {
+			for (Edge e : dwg.getIncidentEdges(v)) {
+				double newWeight = e.getWeight() + weightTo[e.getFrom()];
+				
+				if (newWeight < weightTo[e.getTo()]) {
+					weightTo[e.getTo()] = newWeight;
+					
+					edgeTo[e.getTo()] = e;
+					
+					if (!onQueue[e.getTo()]) {
+						queue.enqueue(e.getTo());
+						
+						onQueue[e.getTo()] = true;
+					}
+				}
+			}
+		}
+	}
+	
+	public static void main(String[] args) throws IOException {
+		DirectedWeightedGraph dwg = new DirectedWeightedGraph("weighted_digraph_tiny.txt");
+		
+		BellmanFordQueueSP bfq = new BellmanFordQueueSP(dwg, 1);
+		System.out.println(bfq);
+		
+		System.out.println("pathTo 5: " + bfq.pathTo(5));
+		System.out.println("pathTo 6: " + bfq.pathTo(6));
+	}
+}

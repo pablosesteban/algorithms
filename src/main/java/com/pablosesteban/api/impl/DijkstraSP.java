@@ -68,7 +68,7 @@ public class DijkstraSP implements WeightedDigraphShortestPaths {
 		
 		crossingEdges.insert(source, 0.0);
 		while(!crossingEdges.isEmpty()) {
-			relaxVertex(dwg, crossingEdges.delMin());
+			relaxEdges(dwg, crossingEdges.delMin());
 		}
 	}
 	
@@ -116,7 +116,7 @@ public class DijkstraSP implements WeightedDigraphShortestPaths {
 	 * @param dwg a weighted digraph
 	 * @param v a vertex in the graph
 	 */
-	private void relaxVertex(DirectedWeightedGraph dwg, int v) {
+	private void relaxEdges(DirectedWeightedGraph dwg, int v) {
 		if (dwg.getIncidentEdges(v) != null) {
 			for (Edge e : dwg.getIncidentEdges(v)) {
 				double newWeight = e.getWeight() + weightTo[e.getFrom()];
