@@ -14,7 +14,17 @@ import com.pablosesteban.api.WeightedDigraphShortestPaths;
 /**
  * A Shortest Paths implementation based on a Queue based Bellman-Ford's algorithm.
  * Solves the single source shortest paths problem from a given source vertex s for
- * any edge-weighted digraph with v vertices and no negative cycles reachable from s.
+ * any edge-weighted digraph with v vertices and NO NEGATIVE CYCLES reachable from
+ * s, or finds a negative cycle reachable from s.
+ * Takes time proportional to number of edges (E) * number of vertices (V) and extra
+ * space proportional to V, in the worst case (the algorithm mimics the general
+ * algorithm and relaxes all E edges in each of V passes).
+ * If there is no negative cycle reachable from s, the algorithm terminates after
+ * relaxations corresponding to the (V–1)st pass (since all shortest paths have fewer
+ * than V–1 edges).
+ * If there does exist a negative cycle reachable from s, the queue never empties, so
+ * the algorithm for negative cycles in the subset of digraph edges in edgeTo[] and
+ * terminates if it finds one.
  */
 public class BellmanFordQueueSP implements WeightedDigraphShortestPaths {
 	private double[] weightTo;
@@ -25,7 +35,9 @@ public class BellmanFordQueueSP implements WeightedDigraphShortestPaths {
 	public BellmanFordQueueSP(DirectedWeightedGraph dwg, int source) {
 		weightTo = new double[dwg.size()];
 		edgeTo = new Edge[dwg.size()];
+		// a vertex-indexed boolean array that indicates which vertices are on the queue, to avoid duplicates
 		onQueue = new boolean[dwg.size()];
+		// a queue of vertices to be relaxed
 		queue = new LinkedQueue<>();
 		
 		for (int v = 0; v < weightTo.length; v++) {
@@ -93,6 +105,7 @@ public class BellmanFordQueueSP implements WeightedDigraphShortestPaths {
 			for (Edge e : dwg.getIncidentEdges(v)) {
 				double newWeight = e.getWeight() + weightTo[e.getFrom()];
 				
+				// every vertex whose edgeTo[] and weightTo[] values change in some pass is processed in the next pass
 				if (newWeight < weightTo[e.getTo()]) {
 					weightTo[e.getTo()] = newWeight;
 					
