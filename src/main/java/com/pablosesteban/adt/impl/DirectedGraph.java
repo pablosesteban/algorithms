@@ -1,6 +1,6 @@
- /**
-  * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
-  */
+/**
+ * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
+ */
 package com.pablosesteban.adt.impl;
 
 import com.pablosesteban.adt.Bag;

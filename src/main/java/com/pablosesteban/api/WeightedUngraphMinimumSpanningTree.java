@@ -1,3 +1,6 @@
+/**
+ * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
+ */
 package com.pablosesteban.api;
 
 import com.pablosesteban.adt.impl.Edge;

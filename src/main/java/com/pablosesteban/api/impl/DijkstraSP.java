@@ -1,3 +1,6 @@
+/**
+ * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
+ */
 package com.pablosesteban.api.impl;
 
 import java.io.IOException;

@@ -1,3 +1,6 @@
+/**
+ * @author Pablo Santamarta Esteban <pablosesteban@gmail.com>
+ */
 package com.pablosesteban.adt.impl;
 
 import java.util.Arrays;
