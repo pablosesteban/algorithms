@@ -17,14 +17,14 @@ import com.pablosesteban.api.WeightedDigraphShortestPaths;
  * any edge-weighted digraph with v vertices and NO NEGATIVE CYCLES reachable from
  * s, or finds a negative cycle reachable from s.
  * Takes time proportional to number of edges (E) * number of vertices (V) and extra
- * space proportional to V, in the worst case (the algorithm mimics the general
- * algorithm and relaxes all E edges in each of V passes).
+ * space proportional to V in the worst case, i.e the algorithm mimics the general
+ * algorithm and relaxes all E edges in each of V passes.
  * If there is no negative cycle reachable from s, the algorithm terminates after
  * relaxations corresponding to the (V–1)st pass (since all shortest paths have fewer
  * than V–1 edges).
  * If there does exist a negative cycle reachable from s, the queue never empties, so
- * the algorithm for negative cycles in the subset of digraph edges in edgeTo[] and
- * terminates if it finds one.
+ * the algorithm never ends. If the queue is non empty after the Vth pass through all
+ * the edges the subgraph of edges in our edgeTo[] array must contain a negative cycle.
  */
 public class BellmanFordQueueSP implements WeightedDigraphShortestPaths {
 	private double[] weightTo;
@@ -129,5 +129,21 @@ public class BellmanFordQueueSP implements WeightedDigraphShortestPaths {
 		
 		System.out.println("pathTo 5: " + bfq.pathTo(5));
 		System.out.println("pathTo 6: " + bfq.pathTo(6));
+		
+		DirectedWeightedGraph dwgNegativeEdges = new DirectedWeightedGraph("weighted_digraph_tiny_negative_edges.txt");
+		
+		BellmanFordQueueSP bfq2 = new BellmanFordQueueSP(dwgNegativeEdges, 0);
+		System.out.println(bfq2);
+		
+		System.out.println("pathTo 5: " + bfq2.pathTo(5));
+		System.out.println("pathTo 6: " + bfq2.pathTo(6));
+		
+		DirectedWeightedGraph dwgNegativeCycle = new DirectedWeightedGraph("weighted_digraph_tiny_negative_cycle.txt");
+		
+		BellmanFordQueueSP bfq3 = new BellmanFordQueueSP(dwgNegativeCycle, 0);
+		System.out.println(bfq3);
+		
+		System.out.println("pathTo 5: " + bfq3.pathTo(5));
+		System.out.println("pathTo 6: " + bfq3.pathTo(6));
 	}
 }
