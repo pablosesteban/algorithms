@@ -78,12 +78,46 @@ public class SortUtils {
 	 * An extension of insertion sort that gains speed by allowing exchanges of array entries
 	 * that are far apart, to produce partially sorted arrays that can be efficiently sorted,
 	 * eventually by insertion sort.
+	 * The idea is to rearrange the array to give it the property that taking every hth entry
+	 * (starting anywhere) yields a sorted subsequence, such an array is said to be h-sorted
+	 * (h independent sorted subsequences interleaved together).
+	 * h is called the INCREMENT SEQUENCE
+	 * By h-sorting for some large values of h, we can move items in the array long distances
+	 * and thus make it easier to h-sort for smaller values of h. Using such a procedure for
+	 * any sequence of values of h that ends in 1 will produce a sorted array, i.e. h-sort the
+	 * array and decrease h through a sequence of increments starting at an increment as large
+	 * as a constant fraction of the array length and ending at 1.
+	 * Because the subsequences are independent, when h-sorting the array, we insert each item
+	 * among the previous items in its h-subsequence by exchanging it with those that have larger
+	 * keys (moving them each one position to the right in the subsequence, like insertion sort).
+	 * This implementation gains efficiency by making a tradeoff between size and partial order in
+	 * the subsequences, i.e. at the beginning, the subsequences are short; later in the sort, the
+	 * subsequences are partially sorted and in both cases, insertion sort is the method of choice.
+	 * Is useful even for large arrays, particularly by contrast with selection sort and insertion
+	 * sort and also performs well on arrays that are in arbitrary order (not necessarily random).
 	 * 
 	 * @param arr array to be sorted
 	 * @return the array sorted
 	 */
 	public static Comparable[] shellSort(Comparable[] arr) {
+		int h = 1;
 		
+		// calculating h as large as a constant fraction of the array length
+		while(h < arr.length/3) {
+			h = 3 * arr.length + 1;
+		}
+		
+		while (h >= 1) {
+			for (int pos = h; pos < arr.length; pos++) {
+				for (int pointer = pos; pointer >= h; pointer -= h) {
+					if (less(arr[pointer], arr[pointer - h])) {
+						exchange(arr, pointer, pointer - h);
+					}
+				}
+			}
+
+			h = h/3;
+		}
 		
 		return arr;
 	}
@@ -105,7 +139,7 @@ public class SortUtils {
 		
 		System.out.println("Unsorted: " + Arrays.toString(unsorted));
 		
-		Comparable[] sorted = SortUtils.insertionSort(unsorted);
+		Comparable[] sorted = SortUtils.shellSort(unsorted);
 		
 		System.out.println("Sorted: " + Arrays.toString(sorted));
 	}
