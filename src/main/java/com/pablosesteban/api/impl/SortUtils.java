@@ -5,7 +5,9 @@ package com.pablosesteban.api.impl;
 
 import java.util.Arrays;
 
-public class SortUtils {
+public final class SortUtils {
+	private SortUtils() {}
+	
 	/**
 	 * Finds the smallest item in the array and exchange it with the first entry
 	 * (itself if the first entry is already the smallest), then, find the next
@@ -95,6 +97,11 @@ public class SortUtils {
 	 * subsequences are partially sorted and in both cases, insertion sort is the method of choice.
 	 * Is useful even for large arrays, particularly by contrast with selection sort and insertion
 	 * sort and also performs well on arrays that are in arbitrary order (not necessarily random).
+	 * The most important thing is the knowledge that the running time of this algorithm is not
+	 * necessarily quadratic, the worst-case number of compares is proportional to N^3/2.
+	 * Experienced programmers sometimes choose this implementation because it has acceptable
+	 * running time even for moderately large arrays, requires a small amount of code and it uses
+	 * no extra space.
 	 * 
 	 * @param arr array to be sorted
 	 * @return the array sorted
