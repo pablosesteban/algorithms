@@ -76,7 +76,6 @@ public class MergeSort<T extends Comparable<T>> implements Sort<T> {
 	 * The final subarray is of size sz only when the array size is an even multiple of sz, otherwise it is
 	 * less than sz.
 	 * 
-	 * 
 	 * @param arr array to be sorted
 	 */
 	private void mergeSort(T[] arr) {

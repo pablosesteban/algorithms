@@ -129,7 +129,7 @@ public final class SortUtils {
 		return arr;
 	}
 	
-	private static void exchange(Comparable[] arr, int i, int j) {
+	public static void exchange(Comparable[] arr, int i, int j) {
 		Comparable v = arr[i];
 		
 		arr[i] = arr[j];
@@ -137,7 +137,7 @@ public final class SortUtils {
 		arr[j] = v;
 	}
 	
-	private static boolean less(Comparable v, Comparable w) {
+	public static boolean less(Comparable v, Comparable w) {
 		return v.compareTo(w) < 0;
 	}
 	
