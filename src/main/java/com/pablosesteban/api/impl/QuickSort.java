@@ -36,12 +36,33 @@ import edu.princeton.cs.algs4.StdRandom;
  * @param <T> type of elements in the array
  */
 public class QuickSort<T extends Comparable<T>> implements Sort<T> {
+	public enum Type {
+		STANDARD,
+		THREE_WAY;
+	}
+	
+	private static int CUTOFF_LENGTH_INSERTION_SORT = 7;
+	private Type type;
+	
+	public QuickSort(Type type) {
+		this.type = type;
+	}
+	
 	@Override
 	public void sort(T[] arr) {
 		// randomized algorithm
 		StdRandom.shuffle(arr);
 		
-		quickSort(arr, 0, arr.length - 1);
+		switch(type) {
+			case STANDARD:
+				quickSort(arr, 0, arr.length - 1);
+				
+				break;
+			case THREE_WAY:
+				quickSortThreeWay(arr, 0, arr.length - 1);
+			default:
+				throw new IllegalArgumentException();
+		}
 	}
 
 	/**
@@ -55,7 +76,10 @@ public class QuickSort<T extends Comparable<T>> implements Sort<T> {
 	 * @param hi highest index in the array
 	 */
 	private void quickSort(Comparable<T>[] arr, int lo, int hi) {
-		if (hi <= lo) {
+		// use insertion sort for small sub-arrays (faster than quicksort)
+		if (hi <= lo + CUTOFF_LENGTH_INSERTION_SORT) {
+			SortUtils.insertionSort(arr);
+			
 			return;
 		}
 		
@@ -64,6 +88,43 @@ public class QuickSort<T extends Comparable<T>> implements Sort<T> {
 		quickSort(arr, lo, partitioningItemIndex - 1);
 		
 		quickSort(arr, partitioningItemIndex + 1, hi);
+	}
+	
+	/**
+	 * 
+	 * 
+	 * param arr array to be sorted
+	 * @param lo lowest index in the array
+	 * @param hi highest index in the array
+	 */
+	private void quickSortThreeWay(Comparable<T>[] arr, int lo, int hi) {
+		if (hi <= lo) {
+			return;
+		}
+		
+		int leftIndex = lo, middleIndex = lo + 1, rightIndex = hi;
+		
+		Comparable<T> partitionItem = arr[lo];
+		
+		while (middleIndex <= rightIndex) {
+			int compareTo = arr[middleIndex].compareTo((T) partitionItem);
+			
+			if (compareTo == 0) {
+				middleIndex++;
+			}else if (compareTo > 0) {
+				SortUtils.exchange(arr, middleIndex, rightIndex);
+				
+				rightIndex--;
+			}else {
+				SortUtils.exchange(arr, leftIndex, middleIndex);
+				
+				leftIndex++;
+				middleIndex++;
+			}
+		}
+		
+		quickSort(arr, lo, leftIndex - 1);
+		quickSort(arr, rightIndex + 1, hi);
 	}
 	
 	/**
@@ -121,7 +182,7 @@ public class QuickSort<T extends Comparable<T>> implements Sort<T> {
 
 		System.out.println("Unsorted: " + Arrays.toString(arr));
 
-		QuickSort<String> quickSort = new QuickSort<>();
+		QuickSort<String> quickSort = new QuickSort<>(Type.STANDARD);
 		
 		quickSort.sort(arr);
 		

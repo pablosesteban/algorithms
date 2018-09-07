@@ -43,7 +43,7 @@ public class MergeSort<T extends Comparable<T>> implements Sort<T> {
 		BOTTOM_UP;
 	}
 	
-	private static int CUTOFF_LENGTH_INSERTION_SORT = 15;
+	private static int CUTOFF_LENGTH_INSERTION_SORT = 7;
 	
 	// auxiliary array for merges
 	private T[] elements;
@@ -97,7 +97,7 @@ public class MergeSort<T extends Comparable<T>> implements Sort<T> {
 	 * @param hi highest index in the array
 	 */
 	private void mergeSort(T[] arr, int lo, int hi) {
-		// use insertion sort for small sub-arrays (faster than merge sort)
+		// use insertion sort for small sub-arrays (faster than mergesort)
 		if (hi <= lo + CUTOFF_LENGTH_INSERTION_SORT - 1) {
 			SortUtils.insertionSort(arr);
 			
