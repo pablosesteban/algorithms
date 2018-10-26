@@ -81,7 +81,7 @@ public class MaxPQ<E extends Comparable<E>> implements PriorityQueue<E> {
 				j = i*2+1;
 			}
 
-			if (!less(i, j)) {
+			if (binaryHeap[j] == null || !less(i, j)) {
 				break;
 			}
 
@@ -196,30 +196,54 @@ public class MaxPQ<E extends Comparable<E>> implements PriorityQueue<E> {
 		MaxPQ<String> pq = new MaxPQ<>(3);
 		System.out.println(pq);
 		
+		System.out.println("insert M: ");
 		pq.insert("M");
 		System.out.println(pq);
+		System.out.println("insert A: ");
 		pq.insert("A");
 		System.out.println(pq);
+		System.out.println("insert F: ");
 		pq.insert("F");
 		System.out.println(pq);
+		System.out.println("insert V: ");
 		pq.insert("V");
 		System.out.println(pq);
+		System.out.println("insert B: ");
 		pq.insert("B");
 		System.out.println(pq);
+		System.out.println("insert P: ");
 		pq.insert("P");
 		System.out.println(pq);
+		System.out.println("insert C: ");
 		pq.insert("C");
 		System.out.println(pq);
 		
-		pq.poll();
+		System.out.println("poll: " + pq.poll());
 		System.out.println(pq);
-		pq.poll();
+		System.out.println("poll: " + pq.poll());
 		System.out.println(pq);
-		pq.poll();
+		System.out.println("poll: " + pq.poll());
 		System.out.println(pq);
-		pq.poll();
+		System.out.println("poll: " + pq.poll());
 		System.out.println(pq);
-		pq.poll();
+		System.out.println("poll: " + pq.poll());
+		System.out.println(pq);
+		System.out.println("poll: " + pq.poll());
+		System.out.println(pq);
+		System.out.println("poll: " + pq.poll());
+		System.out.println(pq);
+		
+		System.out.println("insert M: ");
+		pq.insert("M");
+		System.out.println(pq);
+		System.out.println("insert A: ");
+		pq.insert("A");
+		System.out.println(pq);
+		
+		System.out.println("poll: " + pq.poll());
+		System.out.println(pq);
+		System.out.println("insert C: ");
+		pq.insert("C");
 		System.out.println(pq);
 	}
 }
