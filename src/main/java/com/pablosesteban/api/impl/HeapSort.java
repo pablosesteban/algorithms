@@ -15,6 +15,10 @@ import com.pablosesteban.api.Sort;
  * It uses fewer than 2NlgN + 2N compares and half that many exchanges to sort N items: the 2N term
  * covers the cost of heap construction and the 2NlgN term follows from bounding the cost of each sink
  * operation during the sortdown by 2lgN.
+ * It is rarely used in typical applications on modern systems because it has poor cache performance,
+ * i.e. array entries are rarely compared with nearby array entries, so the number of cache misses is
+ * far higher than for Quicksort, Mergesort, and even Shellsort, where most compares are with nearby
+ * entries.
  */
 public final class HeapSort {
 	private HeapSort() {}
