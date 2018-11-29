@@ -72,30 +72,6 @@ public class LinkedListST<K extends Comparable<K>, V> implements SymbolTable<K, 
 		
 		return keys;
 	}
-	
-	@Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        
-        sb.append(getClass().getSimpleName());
-        sb.append(" {");
-        
-        Node<K, V> n = first;
-        while (n != null && n.next != null) {
-        	sb.append(n);
-        	sb.append(", ");
-        	
-        	n = n.next;
-        }
-        
-        if (n != null) {
-        	sb.append(n);
-        }
-        
-        sb.append("}");
-        
-        return sb.toString();
-    }
 
 	@Override
 	public K min() {
@@ -137,6 +113,45 @@ public class LinkedListST<K extends Comparable<K>, V> implements SymbolTable<K, 
 		throw new UnsupportedOperationException();
 	}
 	
+	@Override
+	public void delete(K key) {
+		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public void deleteMin() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void deleteMax() {
+		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append(getClass().getSimpleName());
+        sb.append(" {");
+        
+        Node<K, V> n = first;
+        while (n != null && n.next != null) {
+        	sb.append(n);
+        	sb.append(", ");
+        	
+        	n = n.next;
+        }
+        
+        if (n != null) {
+        	sb.append(n);
+        }
+        
+        sb.append("}");
+        
+        return sb.toString();
+    }
+
 	private class Node<K, V> {
 		private K key;
 		private V value;

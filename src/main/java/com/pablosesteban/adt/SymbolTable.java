@@ -44,9 +44,7 @@ public interface SymbolTable<K extends Comparable<K>, V> {
 	 * 
 	 * @param key the key
 	 */
-	default void delete(K key) {
-		put(key, null);
-	}
+	void delete(K key);
 	
 	/**
 	 * Checks if there is a value paired with key
@@ -133,16 +131,12 @@ public interface SymbolTable<K extends Comparable<K>, V> {
 	/**
 	 * Delete smallest key
 	 */
-	default void deleteMin() {
-		delete(min());
-	}
+	void deleteMin();
 	
 	/**
 	 * Delete largest key
 	 */
-	default void deleteMax() {
-		delete(max());
-	}
+	void deleteMax();
 	
 	/**
 	 * Gets the number of keys in between the given keys

@@ -17,8 +17,12 @@ import com.pablosesteban.adt.SymbolTable;
  * The heart of the implementation is the rank() method, which implements the binary search
  * algorithm.
  * Uses array resizing when both arrays are full.
- * This implementation is too slow to use with large arrays.
- *
+ * Despite its guaranteed logarithmic search, the implementation still does not enable us to
+ * solve huge problems, because the put method is too slow. Binary search reduces the number
+ * of compares, but not the running time, because its use does not change the fact that the
+ * number of array accesses required to build a symbol table in an ordered array is quadratic
+ * in the size of the array when keys are randomly ordered.
+ * 
  * @param <K> the key
  * @param <V> the value
  */
@@ -154,6 +158,8 @@ public class BinarySearchST<K extends Comparable<K>, V> implements SymbolTable<K
 	 * of keys in the table that are smaller than key.
 	 * If key is not in the table, rank also returns the number of keys in the table that are
 	 * smaller than key.
+	 * Binary search in an ordered array with N keys uses no more than lgN+1 compares for a
+	 * search (successful or unsuccessful), i.e. achieves a logarithmic-time guarantee.
 	 * 
 	 * @param key the key
 	 * @param lo low index of the sub-array
@@ -186,11 +192,6 @@ public class BinarySearchST<K extends Comparable<K>, V> implements SymbolTable<K
 	}
 
 	@Override
-	public int size(K lo, K hi) {
-		return rank(hi) - rank(lo);
-	}
-
-	@Override
 	public Iterable<K> keys(K lo, K hi) {
 		List<K> l = new ArrayList<>();
 		
@@ -199,6 +200,26 @@ public class BinarySearchST<K extends Comparable<K>, V> implements SymbolTable<K
 		}
 		
 		return l;
+	}
+
+	@Override
+	public int size(K lo, K hi) {
+		return rank(hi) - rank(lo);
+	}
+
+	@Override
+	public void delete(K key) {
+		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public void deleteMin() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void deleteMax() {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
