@@ -3,23 +3,22 @@
  */
 package com.pablosesteban;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
-
 public class Algorithms {
-    public static void main(String[] args) {
-        List<String> l = new ArrayList<>();
-        l.add("a");
-        l.add("b");
-        l.add("c");
-        
-        Stream<String> stream1 = l.stream();
-        
-        Stream<String> stream2 = stream1.map((e) -> {return e.toUpperCase();});
-        
-        for (String string : l) {
-			System.out.println(l);
-		}
+	public static void main(String[] args) {
+		System.out.println(X.y);
+		
+		System.out.println(X.s);
     }
+}
+
+class T {
+	static String s = "HELLO WORLD";
+}
+
+class X extends T {
+	static String y = "MUNDO";
+	
+	static {
+		System.out.print("HOLA ");
+	}
 }

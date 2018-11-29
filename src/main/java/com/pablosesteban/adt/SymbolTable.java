@@ -11,8 +11,8 @@ package com.pablosesteban.adt;
  * Adopt the following conventions in all of the implementations:
  * <ul>
  * <li>Only one value is associated with each key (no duplicate keys in a table).</li>
- * <li>When a client puts a key-value pair into a table already containing that key (and an
- * associated value), the new value replaces the old one.</li>
+ * <li>When a client puts a key-value pair into a table already containing that key and an
+ * associated value (not null), the new value replaces the old one.</li>
  * <li>Keys must not be null, using a null key results in an exception at runtime.</li>
  * <li>No key can be associated with the value null, get() should return null for keys not in
  * the table, effectively associating the value null with every key not in the table.</li>
