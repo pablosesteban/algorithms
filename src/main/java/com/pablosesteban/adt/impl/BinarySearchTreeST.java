@@ -19,65 +19,86 @@ import com.pablosesteban.adt.SymbolTable;
  * whose root is the referenced node.
  * A BST represents a set of keys and associated values and there are many different BSTs that
  * represent the same set.
+ * The running time of algorithms on BSTs depend on the shapes of the trees, which, in turn,
+ * depend on the order in which keys are inserted. In the best case, a tree with N nodes could be
+ * perfectly balanced, with ~ lgN nodes between the root and each null link (logarithmic time). In
+ * the worst case there could be N nodes on the search path (linear time).
+ * The balance in typical trees turns out to be much closer to the best case than the worst case.
+ * BSTs works in fact like Quicksort, i.e. the node at the root of the tree corresponds to the first
+ * partitioning item (no keys to the left are larger, and no keys to the right are smaller) and the
+ * subtrees are built recursively, corresponding to quicksort’s recursive sub-array sorts.
  *
  * @param <K> the key
  * @param <V> the value
  */
 public class BinarySearchTreeST<K extends Comparable<K>, V> implements SymbolTable<K, V> {
 	private Node<K, V> root;
-	private int size;
 
 	@Override
 	public void put(K key, V value) {
-		if (isEmpty()) {
-			root = new Node<>(key, value, 0);
-		}else {
-			put(key, value, root);
-		}
-		
-		size++;
+		root = put(key, value, root);
 	}
 	
-	private void put(K key, V value, Node<K, V> node) {
-		if (node == null  || node.key.compareTo(key) == 0) {
-			return;
+	/*
+	 * A recursive algorithm to search for a key in a BST follows immediately from the recursive structure.
+	 * Using logic similar to the recursive search: if the tree is empty, we return a new node containing
+	 * the key and value; if the search key is less than the key at current node, we set the left link to the
+	 * result of inserting the key into the left subtree; if the search key is greater than the key at current
+	 * node, we set the right link to the result of inserting the key into the right subtree; otherwise, the
+	 * key is equals to the key at current node, so the value is overridden.
+	 * The code maintains the invariant that no parts of the tree other than the subtree rooted at the current
+	 * node can have a node whose key is equal to the search key.
+	 */
+	private Node<K, V> put(K key, V value, Node<K, V> node) {
+		if (node == null) {
+			return new Node<>(key, value, 1);
 		}
 		
 		if (key.compareTo(node.key) < 0) {
-			put(key, value, node.left);
-			
-			if (node.left != null) {
-				node.left.value = value;
-			}else {
-				node.left = new Node<>(key, value, 0);
-			}
+			node.left = put(key, value, node.left);
+		}else if (key.compareTo(node.key) > 0) {
+			node.right = put(key, value, node.right);
 		}else {
-			put(key, value, node.right);
-			
-			if (node.right != null) {
-				node.right.value = value;
-			}else {
-				node.right = new Node<>(key, value, 0);
-			}
+			node.value = value;
 		}
+		
+		node.size = getNodeSize(node.left) + getNodeSize(node.right) + 1;
+		
+		return node;
+	}
+	
+	private int getNodeSize(Node<K, V> node) {
+		if (node == null) {
+			return 0;
+		}
+		
+		return node.size;
 	}
 
 	@Override
 	public V get(K key) {
-		Node<K, V> node = get(key,root);
-		
-		return node != null ? node.value : null;
+		return get(key, root);
 	}
 	
-	private Node<K, V> get(K key, Node<K, V> node) {
-		if (node == null || node.key.compareTo(key) == 0) {
-			return node;
+	/*
+	 * A recursive algorithm to search for a key in a BST follows immediately from the recursive structure.
+	 * Search recursively in the appropriate subtree, moving left if the search key is smaller, right if it
+	 * is larger. Just as the size of the interval in binary search shrinks by about half on each iteration,
+	 * the size of the subtree rooted at the current node shrinks when we go down the tree (by about half,
+	 * ideally, but at least by one). The procedure stops either when a node containing the search key is
+	 * found (search hit) or when the current subtree becomes empty (search miss).
+	 */
+	private V get(K key, Node<K, V> node) {
+		if (node == null) {
+			return null;
 		}
 		
 		if (key.compareTo(node.key) < 0) {
 			return get(key, node.left);
-		}else {
+		}else if (key.compareTo(node.key) > 0) {
 			return get(key, node.right);
+		}else {
+			return node.value;
 		}
 	}
 
@@ -89,7 +110,7 @@ public class BinarySearchTreeST<K extends Comparable<K>, V> implements SymbolTab
 
 	@Override
 	public int size() {
-		return size;
+		return getNodeSize(root);
 	}
 
 	@Override
@@ -167,6 +188,8 @@ public class BinarySearchTreeST<K extends Comparable<K>, V> implements SymbolTab
 		
 		toString(sb, root);
 		
+		sb.deleteCharAt(sb.lastIndexOf(","));
+		sb.deleteCharAt(sb.lastIndexOf(" "));
 		sb.append("}");
 		
 		return sb.toString();
@@ -190,8 +213,9 @@ public class BinarySearchTreeST<K extends Comparable<K>, V> implements SymbolTab
 	 * Each node contains a key, a value, a left link, a right link, and a node count.
 	 * The left link points to a BST for nodes with smaller keys, and the right link points
 	 * to a BST for nodes with larger keys.
-	 * The size gives the node count in the subtree rooted at the node. The invariant (size
-	 * of node x = size of node x.left + size of node x.righ + 1) holds for every node x in the tree.
+	 * The size gives the node count in the subtree rooted at the node. The invariant size
+	 * of node x = size of node x.left + size of node x.righ + 1, holds for every node x in
+	 * the tree.
 	 */
 	private class Node<K, V> {
 		private K key;
@@ -210,7 +234,7 @@ public class BinarySearchTreeST<K extends Comparable<K>, V> implements SymbolTab
 
 		@Override
 		public String toString() {
-			return key + ": " + value;
+			return key + ": " + value + "(" + size + ")";
 		}
 	}
 	
@@ -224,5 +248,21 @@ public class BinarySearchTreeST<K extends Comparable<K>, V> implements SymbolTab
 		}
 		
 		System.out.println(st);
+		System.out.println("size: " + st.size());
+		System.out.println("get Z: " + st.get("Z"));
+		System.out.println("get B: " + st.get("B"));
+		System.out.println("get A: " + st.get("A"));
+		System.out.println("get C: " + st.get("C"));
+		System.out.println("get P: " + st.get("P"));
+		System.out.println("keys: " + st.keys());
+		System.out.println("key of rank 4: " + st.select(4));
+		System.out.println("min key: " + st.min());
+		System.out.println("max key: " + st.max());
+		System.out.println("floor A: " + st.floor("A"));
+		System.out.println("floor G: " + st.floor("G"));
+		System.out.println("ceiling G: " + st.ceiling("G"));
+		System.out.println("ceiling X: " + st.ceiling("X"));
+		System.out.println("size between D and O: " + st.size("D", "O"));
+		System.out.println("keys between D and O: " + st.keys("D", "O"));
 	}
 }
