@@ -3,6 +3,11 @@
  */
 package com.pablosesteban.adt.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.text.AbstractDocument.LeafElement;
+
 import com.pablosesteban.adt.SymbolTable;
 
 /**
@@ -23,7 +28,9 @@ import com.pablosesteban.adt.SymbolTable;
  * depend on the order in which keys are inserted. In the best case, a tree with N nodes could be
  * perfectly balanced, with ~ lgN nodes between the root and each null link (logarithmic time). In
  * the worst case there could be N nodes on the search path (linear time).
- * The balance in typical trees turns out to be much closer to the best case than the worst case.
+ * The balance in typical trees turns out to be much closer to the best case than the worst case, so
+ * search hits, insertions and search misses in a BST built from N random keys require ~ 2lnN
+ * compares, on the average.
  * BSTs works in fact like Quicksort, i.e. the node at the root of the tree corresponds to the first
  * partitioning item (no keys to the left are larger, and no keys to the right are smaller) and the
  * subtrees are built recursively, corresponding to quicksort’s recursive sub-array sorts.
@@ -115,44 +122,103 @@ public class BinarySearchTreeST<K extends Comparable<K>, V> implements SymbolTab
 
 	@Override
 	public Iterable<K> keys() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		List<K> l = new ArrayList<>();
+		
+		keys(l, root);
+		
+		return l;
+	}
+	
+	private void keys(List<K> l, Node<K, V> node) {
+		if (node == null) {
+			return;
+		}
+		
+		l.add(node.key);
+		
+		if (node.left != null) {
+			keys(l, node.left);
+		}
+		
+		if (node.right != null) {
+			keys(l, node.right);
+		}
 	}
 
 	@Override
 	public K min() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		Node<K, V> node = root;
+		
+		while (node != null && node.left != null) {
+			node = node.left;
+		}
+		
+		return node != null ? node.key : null;
 	}
 
 	@Override
 	public K max() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		Node<K, V> node = root;
+		
+		while (node != null && node.right != null) {
+			node = node.right;
+		}
+		
+		return node != null ? node.key : null;
 	}
 
 	@Override
 	public K floor(K key) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		Node<K, V> node = root;
+
+		while (node != null && key.compareTo(node.key) < 0) {
+			node = node.left;
+		}
+		
+		return node != null ? node.key : null;
 	}
 
 	@Override
 	public K ceiling(K key) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		Node<K, V> node = root;
+		
+		while (node != null && key.compareTo(node.key) > 0) {
+			node = node.right;
+		}
+		
+		return node != null ? node.key : null;
 	}
 
 	@Override
 	public int rank(K key) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		Node<K, V> node = root;
+		
+		while (node != null && key.compareTo(node.key) < 0) {
+			node = node.left;
+		}
+		
+		return node.left.size;
 	}
 
 	@Override
 	public K select(int k) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		Node<K, V> node = root;
+		
+		while (node != null) {
+			if (node.left != null && node.left.size == k) {
+				break;
+			}else if (node.left != null && node.left.size > k) {
+				node = node.left;
+			}else {
+				if (node.right != null && node.right.size == k - node.right.size - 1) {
+					break;
+				}
+				
+				node = node.right;
+			}
+		}
+		
+		return node != null ? node.key : null;
 	}
 
 	@Override
@@ -255,13 +321,14 @@ public class BinarySearchTreeST<K extends Comparable<K>, V> implements SymbolTab
 		System.out.println("get C: " + st.get("C"));
 		System.out.println("get P: " + st.get("P"));
 		System.out.println("keys: " + st.keys());
-		System.out.println("key of rank 4: " + st.select(4));
 		System.out.println("min key: " + st.min());
 		System.out.println("max key: " + st.max());
 		System.out.println("floor A: " + st.floor("A"));
 		System.out.println("floor G: " + st.floor("G"));
 		System.out.println("ceiling G: " + st.ceiling("G"));
 		System.out.println("ceiling X: " + st.ceiling("X"));
+		System.out.println("rank of E: " + st.rank("E"));
+		System.out.println("key of rank 2: " + st.select(2));
 		System.out.println("size between D and O: " + st.size("D", "O"));
 		System.out.println("keys between D and O: " + st.keys("D", "O"));
 	}
