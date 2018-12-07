@@ -122,19 +122,19 @@ public interface SymbolTable<K extends Comparable<K>, V> {
 	/**
 	 * Gets the key of the given rank
 	 * 
-	 * @param k the rank
+	 * @param rank the rank
 	 * @return the key of the given rank
 	 */
-	K select(int k);
+	K select(int rank);
 	/* Methods for determining where a new key fits in the order */
 	
 	/**
-	 * Delete smallest key
+	 * Removes the key-value pair with the smallest key
 	 */
 	void deleteMin();
 	
 	/**
-	 * Delete largest key
+	 * Removes the key-value pair with the largest key
 	 */
 	void deleteMax();
 	

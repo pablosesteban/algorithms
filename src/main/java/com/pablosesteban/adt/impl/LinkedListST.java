@@ -99,7 +99,7 @@ public class LinkedListST<K extends Comparable<K>, V> implements SymbolTable<K, 
 	}
 
 	@Override
-	public K select(int k) {
+	public K select(int rank) {
 		throw new UnsupportedOperationException();
 	}
 

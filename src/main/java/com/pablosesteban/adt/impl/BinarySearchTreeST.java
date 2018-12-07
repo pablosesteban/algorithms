@@ -111,8 +111,58 @@ public class BinarySearchTreeST<K extends Comparable<K>, V> implements SymbolTab
 
 	@Override
 	public void delete(K key) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		root = delete(key, root);
+	}
+	
+	/*
+	 * Hibbard Deletion in BSTs.
+	 * Proceed in a similar manner as deleteMin and deleteMax to delete any node that has
+	 * one child or no children.
+	 * When there are a node with two links, delete the node by replacing it with its
+	 * successor. Its successor is the node with the smallest key in its right subtree.
+	 * While this method does the job, it has a flaw that might cause performance problems
+	 * in some practical situations. The choice of using the successor is arbitrary and
+	 * not symmetric. It is worthwhile to choose at random between the predecessor and the
+	 * successor.
+	 */
+	private Node<K, V> delete(K key, Node<K, V> node) {
+		if (node == null) {
+			return null;
+		}
+		
+		Node<K, V> successor = node;
+		
+		if (key.compareTo(node.key) < 0) {
+			node.left = delete(key, node.left);
+		}else if (key.compareTo(node.key) > 0){
+			node.right = delete(key, node.right);
+		}else {
+			if (node.left == null) {
+				return node.right;
+			}
+			
+			if (node.right == null) {
+				return node.left;
+			}
+			
+			successor = getMinNode(node.right);
+			
+			successor.right = deleteMin(node.right);
+			
+			successor.left = node.left;
+		}
+		
+		successor.size = getNodeSize(successor.left) + getNodeSize(successor.right) + 1;
+		
+		return successor;
+	}
+	
+	private Node<K, V> getMinNode(Node<K, V> node) {
+		while (node != null && node.left != null) {
+			node = node.left;
+		}
+		
+		return node;
 	}
 
 	@Override
@@ -193,44 +243,81 @@ public class BinarySearchTreeST<K extends Comparable<K>, V> implements SymbolTab
 	public int rank(K key) {
 		Node<K, V> node = root;
 		
-		while (node != null && key.compareTo(node.key) < 0) {
-			node = node.left;
+		while (node != null && key.compareTo(node.key) != 0) {
+			if  (key.compareTo(node.key) < 0) {
+				node = node.left;
+			}else {
+				return node.left.size + 1;
+			}
 		}
 		
 		return node.left.size;
 	}
 
 	@Override
-	public K select(int k) {
-		Node<K, V> node = root;
-		
-		while (node != null) {
-			if (node.left != null && node.left.size == k) {
-				break;
-			}else if (node.left != null && node.left.size > k) {
-				node = node.left;
-			}else {
-				if (node.right != null && node.right.size == k - node.right.size - 1) {
-					break;
-				}
-				
-				node = node.right;
-			}
+	public K select(int rank) {
+		return select(root, rank).key;
+	}
+	
+	/*
+	 * Select the key at rank k, i.e. at index k in the BST as if the keys were in a sorted array.
+	 * If the number of keys t in the left subtree is larger than k, we look recursively for the
+	 * key of rank k in the left subtree; if t is equal to k, we return the key at the root; and if
+	 * t is smaller than k, we look recursively for the key of rank k-t-1 in the right subtree.
+	 */
+	private Node<K, V> select(Node<K, V> node, int k) {
+		if (node == null) {
+			return null;
 		}
 		
-		return node != null ? node.key : null;
+		int leftNodeSize = getNodeSize(node.left);
+		
+		if (leftNodeSize > k) {
+			return select(node.left, k);
+		}else if (leftNodeSize < k) {
+			return select(node.right, k - leftNodeSize - 1);
+		}else {
+			return node;
+		}
 	}
 
 	@Override
 	public void deleteMin() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		root = deleteMin(root);
+	}
+	
+	/*
+	 * Go left until finding a node that has a null left link and then replace the link to that node by
+	 * its right link. Ater update the counts in all nodes in the path to the root.
+	 * The deleted node, with no link now pointing to it, is available for garbage collection.
+	 */
+	private Node<K, V> deleteMin(Node<K, V> node) {
+		if (node.left == null) {
+			return node.right;
+		}
+		
+		node.left = deleteMin(node.left);
+		
+		node.size = getNodeSize(node.left) + getNodeSize(node.right) + 1;
+		
+		return node;
 	}
 
 	@Override
 	public void deleteMax() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		root = deleteMax(root);
+	}
+	
+	private Node<K, V> deleteMax(Node<K, V> node) {
+		if (node.right == null) {
+			return node.left;
+		}
+		
+		node.right = deleteMax(node.right);
+		
+		node.size = getNodeSize(node.left) + getNodeSize(node.right) + 1;
+		
+		return node;
 	}
 
 	@Override
@@ -329,7 +416,22 @@ public class BinarySearchTreeST<K extends Comparable<K>, V> implements SymbolTab
 		System.out.println("ceiling X: " + st.ceiling("X"));
 		System.out.println("rank of E: " + st.rank("E"));
 		System.out.println("key of rank 2: " + st.select(2));
-		System.out.println("size between D and O: " + st.size("D", "O"));
-		System.out.println("keys between D and O: " + st.keys("D", "O"));
+		System.out.println("rank of S: " + st.rank("S"));
+		System.out.println("key of rank 8: " + st.select(8));
+		System.out.println("rank of H: " + st.rank("H"));
+		System.out.println("key of rank 3: " + st.select(3));
+		System.out.println("rank of X: " + st.rank("X"));
+		System.out.println("key of rank 9: " + st.select(9));
+		System.out.println("delete min key");
+		st.deleteMin();
+		System.out.println(st);
+		System.out.println("delete max key");
+		st.deleteMax();
+		System.out.println(st);
+		System.out.println("delete M");
+		st.delete("M");
+		System.out.println(st);
+//		System.out.println("size between D and O: " + st.size("D", "O"));
+//		System.out.println("keys between D and O: " + st.keys("D", "O"));
 	}
 }

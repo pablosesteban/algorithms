@@ -183,12 +183,12 @@ public class BinarySearchST<K extends Comparable<K>, V> implements SymbolTable<K
 	}
 
 	@Override
-	public K select(int k) {
-		if (k >= size || k < 0) {
-			throw new IllegalArgumentException(k + " is not a valid rank");
+	public K select(int rank) {
+		if (rank >= size || rank < 0) {
+			throw new IllegalArgumentException(rank + " is not a valid rank");
 		}
 		
-		return keys[k];
+		return keys[rank];
 	}
 
 	@Override
