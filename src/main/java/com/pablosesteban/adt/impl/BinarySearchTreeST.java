@@ -134,7 +134,7 @@ public class BinarySearchTreeST<K extends Comparable<K>, V> implements SymbolTab
 		
 		if (key.compareTo(node.key) < 0) {
 			node.left = delete(key, node.left);
-		}else if (key.compareTo(node.key) > 0){
+		}else if (key.compareTo(node.key) > 0) {
 			node.right = delete(key, node.right);
 		}else {
 			if (node.left == null) {
