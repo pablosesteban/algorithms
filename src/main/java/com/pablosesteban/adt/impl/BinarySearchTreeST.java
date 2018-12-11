@@ -118,7 +118,7 @@ public class BinarySearchTreeST<K extends Comparable<K>, V> implements SymbolTab
 	 * Hibbard Deletion in BSTs.
 	 * Proceed in a similar manner as deleteMin and deleteMax to delete any node that has
 	 * one child or no children.
-	 * When there are a node with two links, delete the node by replacing it with its
+	 * When there is a node with two links, delete the node by replacing it with its
 	 * successor. Its successor is the node with the smallest key in its right subtree.
 	 * While this method does the job, it has a flaw that might cause performance problems
 	 * in some practical situations. The choice of using the successor is arbitrary and
@@ -184,11 +184,11 @@ public class BinarySearchTreeST<K extends Comparable<K>, V> implements SymbolTab
 			return;
 		}
 		
-		l.add(node.key);
-		
 		if (node.left != null) {
 			keys(l, node.left);
 		}
+		
+		l.add(node.key);
 		
 		if (node.right != null) {
 			keys(l, node.right);
@@ -322,16 +322,48 @@ public class BinarySearchTreeST<K extends Comparable<K>, V> implements SymbolTab
 
 	@Override
 	public int size(K lo, K hi) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		List<K> l = new ArrayList<>();
+		
+		keys(lo, hi, root, l);
+		
+		return l.size();
 	}
 
 	@Override
 	public Iterable<K> keys(K lo, K hi) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		List<K> l = new ArrayList<>();
+		
+		keys(lo, hi, root, l);
+		
+		return l;
 	}
 	
+	/*
+	 * To get all the keys from the tree rooted at a given node that fall in a given range, recursively add all the keys
+	 * from the left subtree if any of them could fall in the range, then add the node at the root if it falls in the
+	 * range, then recursively add all the keys from the right subtree if any of them could fall in the range.
+	 */
+	private void keys(K lo, K hi, Node<K, V> node, List<K> l) {
+		if (node == null) {
+			return;
+		}
+		
+		int compareToLo = lo.compareTo(node.key);
+		int compareToHi = hi.compareTo(node.key);
+		
+		if (compareToLo < 0) {
+			keys(lo, hi, node.left, l);
+		}
+		
+		if (compareToLo <= 0 && compareToHi >= 0) {
+			l.add(node.key);
+		}
+
+		if (compareToHi > 0) {
+			keys(lo, hi, node.right, l);
+		}
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -348,15 +380,20 @@ public class BinarySearchTreeST<K extends Comparable<K>, V> implements SymbolTab
 		return sb.toString();
 	}
 	
+	/*
+	 * To print all the keys in a BST in order, print all the keys in the left subtree, which are less than
+	 * the key at the root by definition of BSTs, then print the key at the root, then print all the keys
+	 * in the right subtree, which are greater than the key at the root by definition of BSTs.
+	 */
 	private void toString(StringBuilder sb, Node<K, V> node) {
 		if (node == null) {
 			return;
 		}
 		
+		toString(sb, node.left);
+		
 		sb.append(node.toString());
 		sb.append(", ");
-		
-		toString(sb, node.left);
 		
 		toString(sb, node.right);
 	}
@@ -402,6 +439,8 @@ public class BinarySearchTreeST<K extends Comparable<K>, V> implements SymbolTab
 		
 		System.out.println(st);
 		System.out.println("size: " + st.size());
+		System.out.println("keys between D and O: " + st.keys("D", "O"));
+		System.out.println("size between D and O: " + st.size("D", "O"));
 		System.out.println("get Z: " + st.get("Z"));
 		System.out.println("get B: " + st.get("B"));
 		System.out.println("get A: " + st.get("A"));
@@ -431,7 +470,5 @@ public class BinarySearchTreeST<K extends Comparable<K>, V> implements SymbolTab
 		System.out.println("delete M");
 		st.delete("M");
 		System.out.println(st);
-//		System.out.println("size between D and O: " + st.size("D", "O"));
-//		System.out.println("keys between D and O: " + st.keys("D", "O"));
 	}
 }
