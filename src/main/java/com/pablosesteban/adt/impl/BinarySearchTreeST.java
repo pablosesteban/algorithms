@@ -29,7 +29,7 @@ import com.pablosesteban.adt.SymbolTable;
  * perfectly balanced, with ~ lgN nodes between the root and each null link (logarithmic time). In
  * the worst case there could be N nodes on the search path (linear time).
  * The balance in typical trees turns out to be much closer to the best case than the worst case, so
- * search hits, insertions and search misses in a BST built from N random keys require ~ 2lnN
+ * search hits, insertions and search misses in a BST built from N random keys require ~ lgN
  * compares, on the average.
  * BSTs works in fact like Quicksort, i.e. the node at the root of the tree corresponds to the first
  * partitioning item (no keys to the left are larger, and no keys to the right are smaller) and the
