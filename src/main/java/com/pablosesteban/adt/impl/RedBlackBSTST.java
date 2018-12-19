@@ -16,14 +16,73 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 	
 	@Override
 	public void put(K key, V value) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		root = put(root, key, value);
+		
+		root.color = Node.BLACK;
 	}
 
+	private Node<K, V> put(Node<K, V> node, K key, V value) {
+		if (node == null) {
+			return new Node<K, V>(key, value, 1, Node.RED);
+		}
+		
+		if (key.compareTo(node.key) < 0) {
+			node.left = put(node.left, key, value);
+		}else if (key.compareTo(node.key) > 0) {
+			node.right = put(node.right, key, value);
+		}else {
+			node.value = value;
+		}
+		
+		/*
+		 * Local transformations: provide near-perfect balance in the tree by maintaining a 1-1 correspondence with 2-3 trees,
+		 * on the way up the search path.
+		 */
+		if (isRed(node.right) && !isRed(node.left)) {
+			// rotates left any right-leaning 3-node (or a right-leaning red link at the bottom of a temporary 4-node)
+			node = rotateLeft(node);
+		}
+		
+		if (isRed(node.left) && isRed(node.left.left)) {
+			// rotates right the top link in a temporary 4-node with two left-leaning red links
+			node = rotateRight(node);
+		}
+		
+		if (isRed(node.right) && isRed(node.left)) {
+			// flips colors to pass a red link up the tree
+			flipColors(node);
+		}
+		
+		node.size = getNodeSize(node.left) + getNodeSize(node.right) + 1;
+		
+		return node;
+	}
+	
 	@Override
 	public V get(K key) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		return get(key, root);
+	}
+	
+	/*
+	 * A recursive algorithm to search for a key in a BST follows immediately from the recursive structure.
+	 * Search recursively in the appropriate subtree, moving left if the search key is smaller, right if it
+	 * is larger. Just as the size of the interval in binary search shrinks by about half on each iteration,
+	 * the size of the subtree rooted at the current node shrinks when we go down the tree (by about half,
+	 * ideally, but at least by one). The procedure stops either when a node containing the search key is
+	 * found (search hit) or when the current subtree becomes empty (search miss).
+	 */
+	private V get(K key, Node<K, V> node) {
+		if (node == null) {
+			return null;
+		}
+		
+		if (key.compareTo(node.key) < 0) {
+			return get(key, node.left);
+		}else if (key.compareTo(node.key) > 0) {
+			return get(key, node.right);
+		}else {
+			return node.value;
+		}
 	}
 
 	@Override
@@ -34,8 +93,7 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 
 	@Override
 	public int size() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		return getNodeSize(root);
 	}
 
 	@Override
@@ -104,6 +162,99 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 		throw new UnsupportedOperationException();
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(getClass().getSimpleName());
+		sb.append(" {");
+		
+		toString(sb, root);
+		
+		sb.deleteCharAt(sb.lastIndexOf(","));
+		sb.deleteCharAt(sb.lastIndexOf(" "));
+		sb.append("}");
+		
+		return sb.toString();
+	}
+
+	/*
+	 * To print all the keys in a BST in order, print all the keys in the left subtree, which are less than
+	 * the key at the root by definition of BSTs, then print the key at the root, then print all the keys
+	 * in the right subtree, which are greater than the key at the root by definition of BSTs.
+	 */
+	private void toString(StringBuilder sb, Node<K, V> node) {
+		if (node == null) {
+			return;
+		}
+		
+		toString(sb, node.left);
+		
+		sb.append(node.toString());
+		sb.append(", ");
+		
+		toString(sb, node.right);
+	}
+	
+	private Node<K, V> rotateLeft(Node<K, V> node) {
+		Node<K, V> nRight = node.right;
+		
+		// links of nodes
+		node.right = nRight.left;
+		nRight.left = node;
+		
+		// color of nodes
+		nRight.color = node.color;
+		node.color = Node.RED;
+		
+		// size of nodes
+		nRight.size = node.size;
+		node.size = getNodeSize(node.left) + getNodeSize(node.right) + 1;
+		
+		return nRight;
+	}
+	
+	private Node<K, V> rotateRight(Node<K, V> node) {
+		Node<K, V> nLeft = node.left;
+		
+		// links of nodes
+		node.left = nLeft.right;
+		nLeft.right = node;
+		
+		// color of nodes
+		nLeft.color = node.color;
+		node.color = Node.RED;
+		
+		// size of nodes
+		nLeft.size = node.size;
+		node.size = getNodeSize(node.left) + getNodeSize(node.right) + 1;
+		
+		return nLeft;
+	}
+	
+	private void flipColors(Node<K, V> node) {
+		node.right.color = Node.BLACK;
+		node.left.color = Node.BLACK;
+		
+		node.color = Node.RED;
+	}
+	
+	private int getNodeSize(Node<K, V> node) {
+		if (node == null) {
+			return 0;
+		}
+		
+		return node.size;
+	}
+	
+	private boolean isRed(Node<K, V> node) {
+		if (node == null) {
+			return false;
+		}
+		
+		return node.color;
+	}
+	
 	/*
 	 * A private nested class to define nodes in BSTs.
 	 * Each node contains a key, a value, a left link, a right link, and a node count.
@@ -139,7 +290,51 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 		
 		@Override
 		public String toString() {
-			return key + ": " + value + "(" + size + "-" + (color ? "RED" : "BLACK") + ")";
+			return key + ": " + value + "(" + size + "," + (color ? "RED" : "BLACK") + ")";
 		}
+	}
+	
+	public static void main(String[] args) {
+		SymbolTable<String, Integer> st = new RedBlackBSTST<>();
+		
+		String[] input = {"S", "E", "A", "R", "C", "H", "E", "X", "A", "M", "P", "L", "E"};
+		
+		for (int i = 0; i < input.length; i++) {
+			st.put(input[i], i);
+		}
+		
+		System.out.println(st);
+		System.out.println("size: " + st.size());
+//		System.out.println("keys between D and O: " + st.keys("D", "O"));
+//		System.out.println("size between D and O: " + st.size("D", "O"));
+		System.out.println("get Z: " + st.get("Z"));
+		System.out.println("get B: " + st.get("B"));
+		System.out.println("get A: " + st.get("A"));
+		System.out.println("get C: " + st.get("C"));
+		System.out.println("get P: " + st.get("P"));
+//		System.out.println("keys: " + st.keys());
+//		System.out.println("min key: " + st.min());
+//		System.out.println("max key: " + st.max());
+//		System.out.println("floor A: " + st.floor("A"));
+//		System.out.println("floor G: " + st.floor("G"));
+//		System.out.println("ceiling G: " + st.ceiling("G"));
+//		System.out.println("ceiling X: " + st.ceiling("X"));
+//		System.out.println("rank of E: " + st.rank("E"));
+//		System.out.println("key of rank 2: " + st.select(2));
+//		System.out.println("rank of S: " + st.rank("S"));
+//		System.out.println("key of rank 8: " + st.select(8));
+//		System.out.println("rank of H: " + st.rank("H"));
+//		System.out.println("key of rank 3: " + st.select(3));
+//		System.out.println("rank of X: " + st.rank("X"));
+//		System.out.println("key of rank 9: " + st.select(9));
+//		System.out.println("delete min key");
+//		st.deleteMin();
+//		System.out.println(st);
+//		System.out.println("delete max key");
+//		st.deleteMax();
+//		System.out.println(st);
+//		System.out.println("delete M");
+//		st.delete("M");
+//		System.out.println(st);
 	}
 }
