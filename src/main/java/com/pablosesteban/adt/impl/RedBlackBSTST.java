@@ -35,8 +35,8 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 		}
 		
 		/*
-		 * Local transformations: provide near-perfect balance in the tree by maintaining a 1-1 correspondence with 2-3 trees,
-		 * on the way up the search path.
+		 * Local transformations: provide near-perfect balance in the tree by maintaining a 1-1 correspondence 
+		 * with 2-3 trees, on the way up the search path.
 		 */
 		if (isRed(node.right) && !isRed(node.left)) {
 			// rotates left any right-leaning 3-node (or a right-leaning red link at the bottom of a temporary 4-node)
@@ -140,14 +140,101 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 
 	@Override
 	public void deleteMin() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		root = deleteMin(root);
+		
+		root.color = Node.BLACK;
 	}
 
+	private Node<K, V> deleteMin(Node<K, V> node) {
+		if (node.left == null) {
+			return null;
+		}
+		
+		// Adjust tree only when node.left and node.left.left are both BLACK, i.e. when the node is a 2-node
+		if (!isRed(node.left) && !isRed(node.left.left)) {
+			node = moveRedLeft(node);
+		}
+		
+		node.left = deleteMin(node.left);
+		
+		if (isRed(node.right)) {
+			node = rotateLeft(node);
+		}
+		
+		node.size = getNodeSize(node.left) + getNodeSize(node.right) + 1;
+		
+		return node;
+	}
+	
+	private Node<K, V> moveRedLeft(Node<K, V> node) {
+		node.color = Node.BLACK;
+		node.left.color = Node.RED;
+		
+		if (isRed(node.right.left)) {
+			// if its immediate sibling is not a 2-node, move a key from the sibling to the left child
+			node.right = rotateRight(node.right);
+			
+			node = rotateLeft(node);
+		}else {
+			/*
+			 * if its immediate sibling is a 2-node, then combine them with the smallest key in the parent
+			 * to make a 4-node, changing the parent from a 3-node to a 2-node or from a 4-node to a 3-node.
+			 */
+			node.right.color = Node.RED;
+		}
+		
+		return node;
+	}
+	
 	@Override
 	public void deleteMax() {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
+	}
+	
+	private Node<K, V> deleteMax(Node<K, V> node) {
+		if (node.right == null) {
+			if (isRed(node.left)) {
+				node.left.color = Node.BLACK;
+			}
+			
+			return node.left;
+		}
+		
+		if (isRed(node.left)) {
+			node = rotateRight(node);
+		}
+		
+		if (!isRed(node.right) &&!isRed(node.right.left)) {
+			node = moveRedRight(node);
+		}
+		
+		node.right = deleteMax(node.right);
+		
+		if (isRed(node.right)) {
+			node = rotateLeft(node);
+		}
+		
+		node.size = getNodeSize(node.left) + getNodeSize(node.right) + 1;
+		
+		return node;
+	}
+	
+	private Node<K, V> moveRedRight(Node<K, V> node) {
+		node.color = Node.BLACK;
+		node.right.color = Node.RED;
+		
+		if (isRed(node.left.left)) {
+			node = rotateRight(node);
+			
+			node.color = Node.RED;
+			
+			node.left.color = Node.BLACK;
+		}else {
+			node.left.color = Node.RED;
+		}
+		
+		return node;
 	}
 
 	@Override
@@ -328,8 +415,9 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 //		System.out.println("rank of X: " + st.rank("X"));
 //		System.out.println("key of rank 9: " + st.select(9));
 //		System.out.println("delete min key");
-//		st.deleteMin();
-//		System.out.println(st);
+		st.deleteMin();
+		System.out.println(st);
+		System.out.println("size: " + st.size());
 //		System.out.println("delete max key");
 //		st.deleteMax();
 //		System.out.println(st);
