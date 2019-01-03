@@ -145,18 +145,29 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 		root.color = Node.BLACK;
 	}
 
+	/*
+	 * The basic idea is based on the observation that we can easily delete a key from a 3-node at the bottom of the tree,
+	 * but not from a 2-node. Deleting the key from a 2-node would violate the perfect balance condition. So, to ensure
+	 * that we do not end up on a 2-node, we perform appropriate transformations on the way down the tree to preserve the
+	 * invariant that the current node is not a 2-node (it might be a 3-node or a temporary 4-node).
+	 */
 	private Node<K, V> deleteMin(Node<K, V> node) {
 		if (node.left == null) {
 			return null;
 		}
 		
-		// Adjust tree only when node.left and node.left.left are both BLACK, i.e. when the node is a 2-node
+		/*
+		 * adjust tree only when node.left and node.left.left are both BLACK, i.e. when the node is a 2-node on the way
+		 * down the tree. Only left-leaning red links are allowed by invariant (a 4-node is node with two left-leaning
+		 * red links consecutive)
+		 */
 		if (!isRed(node.left) && !isRed(node.left.left)) {
 			node = moveRedLeft(node);
 		}
 		
 		node.left = deleteMin(node.left);
 		
+		// fix right-leaning red links on the way up the tree
 		if (isRed(node.right)) {
 			node = rotateLeft(node);
 		}
@@ -188,10 +199,17 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 	
 	@Override
 	public void deleteMax() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		root = deleteMax(root);
+		
+		root.color = Node.BLACK;
 	}
 	
+	/*
+	 * The basic idea is based on the observation that we can easily delete a key from a 3-node at the bottom of the tree,
+	 * but not from a 2-node. Deleting the key from a 2-node would violate the perfect balance condition. So, to ensure
+	 * that we do not end up on a 2-node, we perform appropriate transformations on the way down the tree to preserve the
+	 * invariant that the current node is not a 2-node (it might be a 3-node or a temporary 4-node).
+	 */
 	private Node<K, V> deleteMax(Node<K, V> node) {
 		if (node.right == null) {
 			if (isRed(node.left)) {
@@ -201,16 +219,23 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 			return node.left;
 		}
 		
+		// if its immediate sibling is not a 2-node, move a key from the sibling to the right child
 		if (isRed(node.left)) {
 			node = rotateRight(node);
 		}
 		
-		if (!isRed(node.right) &&!isRed(node.right.left)) {
+		/*
+		 * adjust tree only when node.right and node.right.left are both BLACK, i.e. when the node is a 2-node on the way
+		 * down the tree. Only left-leaning red links are allowed by invariant (a 4-node is node with two left-leaning
+		 * red links consecutive)
+		 */
+		if (!isRed(node.right) && !isRed(node.right.left)) {
 			node = moveRedRight(node);
 		}
 		
 		node.right = deleteMax(node.right);
 		
+		// fix right-leaning red links on the way up the tree
 		if (isRed(node.right)) {
 			node = rotateLeft(node);
 		}
@@ -225,12 +250,17 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 		node.right.color = Node.RED;
 		
 		if (isRed(node.left.left)) {
+			// if its immediate sibling is not a 2-node, move a key from the sibling to the right child
 			node = rotateRight(node);
 			
 			node.color = Node.RED;
 			
 			node.left.color = Node.BLACK;
 		}else {
+			/*
+			 * if its immediate sibling is a 2-node, then combine them with the smallest key in the parent
+			 * to make a 4-node, changing the parent from a 3-node to a 2-node or from a 4-node to a 3-node.
+			 */
 			node.left.color = Node.RED;
 		}
 		
@@ -343,7 +373,7 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 	}
 	
 	/*
-	 * A private nested class to define nodes in BSTs.
+	 * A private nested class to define nodes in Left-Leaning Red-Black BSTs.
 	 * Each node contains a key, a value, a left link, a right link, and a node count.
 	 * The left link points to a BST for nodes with smaller keys, and the right link points
 	 * to a BST for nodes with larger keys.
@@ -415,12 +445,18 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 //		System.out.println("rank of X: " + st.rank("X"));
 //		System.out.println("key of rank 9: " + st.select(9));
 //		System.out.println("delete min key");
-		st.deleteMin();
+//		st.deleteMin();
+//		System.out.println(st);
+//		System.out.println("size: " + st.size());
+		System.out.println("delete max key");
+		st.deleteMax();
 		System.out.println(st);
 		System.out.println("size: " + st.size());
-//		System.out.println("delete max key");
-//		st.deleteMax();
-//		System.out.println(st);
+		System.out.println("insert W");
+		st.put("W", 13);
+		System.out.println(st);
+		System.out.println("size: " + st.size());
+		
 //		System.out.println("delete M");
 //		st.delete("M");
 //		System.out.println(st);
