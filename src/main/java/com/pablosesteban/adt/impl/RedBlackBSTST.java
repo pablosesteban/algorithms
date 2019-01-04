@@ -87,8 +87,64 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 
 	@Override
 	public void delete(K key) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		root = delete(root, key);
+		
+		root.color = Node.BLACK;
+	}
+	
+	private Node<K, V> delete (Node<K, V> node, K key) {
+		int comparison = key.compareTo(node.key);
+		
+		if (comparison < 0) {
+			/*
+			 * adjust tree only when node.left and node.left.left are both BLACK, i.e. when the node is a 2-node on the way
+			 * down the tree. Only left-leaning red links are allowed by invariant (a 4-node is node with two left-leaning
+			 * red links consecutive)
+			 */
+			if (!isRed(node.left) && !isRed(node.left.left)) {
+				node = moveRedLeft(node);
+			}
+			
+			node.left = delete(node.left, key);
+		}else {
+			if (isRed(node.left)) {
+				node = rotateRight(node);
+			}
+			
+			// search hit at the bottom of the tree: delete the node
+			if (comparison == 0 && node.right == null) {
+				return null;
+			}
+			
+			/*
+			 * adjust tree only when node.left and node.left.left are both BLACK, i.e. when the node is a 2-node on the way
+			 * down the tree. Only left-leaning red links are allowed by invariant (a 4-node is node with two left-leaning
+			 * red links consecutive)
+			 */
+			if (!isRed(node.right) && !isRed(node.right.left)) {
+				node = moveRedRight(node);
+			}
+			
+			// search hit in the middle of the tree: exchange the node with its successor as in regular BSTs
+			if (comparison == 0) {
+				node.key = min(node.right).key;
+				
+				node.value = get(node.key, node.right);
+				
+				node.right = deleteMin(node.right);
+			}else {
+				node.right = delete(node.right, key);
+			}
+		}
+		
+		// fix right-leaning red links on the way up the tree
+		if (isRed(node.right)) {
+			node = rotateLeft(node);
+		}
+		
+		node.size = getNodeSize(node.left) + getNodeSize(node.right) + 1;
+		
+		return node;
 	}
 
 	@Override
@@ -104,8 +160,19 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 
 	@Override
 	public K min() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		if (root == null) {
+			return null;
+		}
+		
+		return min(root).key;
+	}
+	
+	private Node<K, V> min(Node<K, V> node) {
+		if (node.left == null) {
+			return node;
+		}
+		
+		return min(node.left);
 	}
 
 	@Override
@@ -430,7 +497,7 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 		System.out.println("get C: " + st.get("C"));
 		System.out.println("get P: " + st.get("P"));
 //		System.out.println("keys: " + st.keys());
-//		System.out.println("min key: " + st.min());
+		System.out.println("min key: " + st.min());
 //		System.out.println("max key: " + st.max());
 //		System.out.println("floor A: " + st.floor("A"));
 //		System.out.println("floor G: " + st.floor("G"));
@@ -448,17 +515,17 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 //		st.deleteMin();
 //		System.out.println(st);
 //		System.out.println("size: " + st.size());
-		System.out.println("delete max key");
-		st.deleteMax();
-		System.out.println(st);
-		System.out.println("size: " + st.size());
-		System.out.println("insert W");
-		st.put("W", 13);
-		System.out.println(st);
-		System.out.println("size: " + st.size());
-		
-//		System.out.println("delete M");
-//		st.delete("M");
+//		System.out.println("delete max key");
+//		st.deleteMax();
 //		System.out.println(st);
+//		System.out.println("size: " + st.size());
+//		System.out.println("insert J");
+//		st.put("J", 13);
+//		System.out.println(st);
+//		System.out.println("size: " + st.size());
+		System.out.println("delete L");
+		st.delete("L");
+		System.out.println(st);
+		System.out.println("size: " + st.size());
 	}
 }
