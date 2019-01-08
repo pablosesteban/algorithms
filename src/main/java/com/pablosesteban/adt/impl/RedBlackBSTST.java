@@ -6,7 +6,7 @@ package com.pablosesteban.adt.impl;
 import com.pablosesteban.adt.SymbolTable;
 
 /**
- * 
+ * Left-Leaning Red-Black BST
  * 
  * @param <K> the key
  * @param <V> the value
@@ -92,10 +92,8 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 		root.color = Node.BLACK;
 	}
 	
-	private Node<K, V> delete (Node<K, V> node, K key) {
-		int comparison = key.compareTo(node.key);
-		
-		if (comparison < 0) {
+	private Node<K, V> delete(Node<K, V> node, K key) {
+		if (key.compareTo(node.key) < 0) {
 			/*
 			 * adjust tree only when node.left and node.left.left are both BLACK, i.e. when the node is a 2-node on the way
 			 * down the tree. Only left-leaning red links are allowed by invariant (a 4-node is node with two left-leaning
@@ -112,12 +110,12 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 			}
 			
 			// search hit at the bottom of the tree: delete the node
-			if (comparison == 0 && node.right == null) {
+			if (key.compareTo(node.key) == 0 && node.right == null) {
 				return null;
 			}
 			
 			/*
-			 * adjust tree only when node.left and node.left.left are both BLACK, i.e. when the node is a 2-node on the way
+			 * adjust tree only when node.right and node.right.left are both BLACK, i.e. when the node is a 2-node on the way
 			 * down the tree. Only left-leaning red links are allowed by invariant (a 4-node is node with two left-leaning
 			 * red links consecutive)
 			 */
@@ -125,8 +123,8 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 				node = moveRedRight(node);
 			}
 			
-			// search hit in the middle of the tree: exchange the node with its successor as in regular BSTs
-			if (comparison == 0) {
+			// search hit in the middle of the tree: exchange the node with its successor as in regular BSTs and delete the node
+			if (key.compareTo(node.key) == 0) {
 				node.key = min(node.right).key;
 				
 				node.value = get(node.key, node.right);
@@ -511,18 +509,18 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 //		System.out.println("key of rank 3: " + st.select(3));
 //		System.out.println("rank of X: " + st.rank("X"));
 //		System.out.println("key of rank 9: " + st.select(9));
-//		System.out.println("delete min key");
-//		st.deleteMin();
-//		System.out.println(st);
-//		System.out.println("size: " + st.size());
-//		System.out.println("delete max key");
-//		st.deleteMax();
-//		System.out.println(st);
-//		System.out.println("size: " + st.size());
-//		System.out.println("insert J");
-//		st.put("J", 13);
-//		System.out.println(st);
-//		System.out.println("size: " + st.size());
+		System.out.println("delete min key");
+		st.deleteMin();
+		System.out.println(st);
+		System.out.println("size: " + st.size());
+		System.out.println("delete max key");
+		st.deleteMax();
+		System.out.println(st);
+		System.out.println("size: " + st.size());
+		System.out.println("insert J");
+		st.put("J", 13);
+		System.out.println(st);
+		System.out.println("size: " + st.size());
 		System.out.println("delete L");
 		st.delete("L");
 		System.out.println(st);
