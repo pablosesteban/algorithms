@@ -6,7 +6,8 @@ package com.pablosesteban.adt.impl;
 import com.pablosesteban.adt.SymbolTable;
 
 /**
- * Left-Leaning Red-Black BST
+ * Left-Leaning Red-Black BST is a simple implementation of 2-3-4 trees where the nodes can hold more than one key.
+ * The tree is ordered and perfectly balanced: the number of links on the path from the root to any null link is the same.
  * 
  * @param <K> the key
  * @param <V> the value
@@ -35,8 +36,8 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 		}
 		
 		/*
-		 * Local transformations: provide near-perfect balance in the tree by maintaining a 1-1 correspondence 
-		 * with 2-3 trees, on the way up the search path.
+		 * local transformations: provide near-perfect balance in the tree by maintaining a 1-1 correspondence 
+		 * with 2-3 trees, on the way up the search path
 		 */
 		if (isRed(node.right) && !isRed(node.left)) {
 			// rotates left any right-leaning 3-node (or a right-leaning red link at the bottom of a temporary 4-node)
@@ -439,7 +440,7 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 	
 	/*
 	 * A private nested class to define nodes in Left-Leaning Red-Black BSTs.
-	 * Each node contains a key, a value, a left link, a right link, and a node count.
+	 * Each node contains a key, a value, a left link, a right link, a color and a node count.
 	 * The left link points to a BST for nodes with smaller keys, and the right link points
 	 * to a BST for nodes with larger keys.
 	 * The size gives the node count in the subtree rooted at the node. The invariant size
@@ -489,13 +490,13 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 		System.out.println("size: " + st.size());
 //		System.out.println("keys between D and O: " + st.keys("D", "O"));
 //		System.out.println("size between D and O: " + st.size("D", "O"));
-		System.out.println("get Z: " + st.get("Z"));
-		System.out.println("get B: " + st.get("B"));
-		System.out.println("get A: " + st.get("A"));
-		System.out.println("get C: " + st.get("C"));
-		System.out.println("get P: " + st.get("P"));
+//		System.out.println("get Z: " + st.get("Z"));
+//		System.out.println("get B: " + st.get("B"));
+//		System.out.println("get A: " + st.get("A"));
+//		System.out.println("get C: " + st.get("C"));
+//		System.out.println("get P: " + st.get("P"));
 //		System.out.println("keys: " + st.keys());
-		System.out.println("min key: " + st.min());
+//		System.out.println("min key: " + st.min());
 //		System.out.println("max key: " + st.max());
 //		System.out.println("floor A: " + st.floor("A"));
 //		System.out.println("floor G: " + st.floor("G"));
@@ -509,20 +510,23 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 //		System.out.println("key of rank 3: " + st.select(3));
 //		System.out.println("rank of X: " + st.rank("X"));
 //		System.out.println("key of rank 9: " + st.select(9));
-		System.out.println("delete min key");
-		st.deleteMin();
-		System.out.println(st);
-		System.out.println("size: " + st.size());
+//		System.out.println("delete min key");
+//		st.deleteMin();
+//		System.out.println(st);
+//		System.out.println("size: " + st.size());
+		
 		System.out.println("delete max key");
 		st.deleteMax();
 		System.out.println(st);
 		System.out.println("size: " + st.size());
+		
+//		System.out.println("delete L");
+//		st.delete("L");
+//		System.out.println(st);
+//		System.out.println("size: " + st.size());
+		
 		System.out.println("insert J");
 		st.put("J", 13);
-		System.out.println(st);
-		System.out.println("size: " + st.size());
-		System.out.println("delete L");
-		st.delete("L");
 		System.out.println(st);
 		System.out.println("size: " + st.size());
 	}
