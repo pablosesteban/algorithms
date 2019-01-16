@@ -37,10 +37,18 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 			node.value = value;
 		}
 		
-		/*
-		 * local transformations: provide near-perfect balance in the tree by maintaining a 1-1 correspondence 
-		 * with 2-3 trees, on the way up the search path
-		 */
+		node = localTransformations(node);
+		
+		node.size = getNodeSize(node.left) + getNodeSize(node.right) + 1;
+		
+		return node;
+	}
+	
+	/*
+	 * local transformations: provide near-perfect balance in the tree by maintaining a 1-1 correspondence 
+	 * with 2-3 trees on the way up the search path
+	 */
+	private Node<K, V> localTransformations(Node<K, V> node) {
 		if (isRed(node.right) && !isRed(node.left)) {
 			// rotates left any right-leaning 3-node (or a right-leaning red link at the bottom of a temporary 4-node)
 			node = rotateLeft(node);
@@ -55,8 +63,6 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 			// flips colors to pass a red link up the tree
 			flipColors(node);
 		}
-		
-		node.size = getNodeSize(node.left) + getNodeSize(node.right) + 1;
 		
 		return node;
 	}
@@ -138,24 +144,7 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 			}
 		}
 		
-		/*
-		 * local transformations: provide near-perfect balance in the tree by maintaining a 1-1 correspondence 
-		 * with 2-3 trees, on the way up the search path
-		 */
-		if (isRed(node.right) && !isRed(node.left)) {
-			// rotates left any right-leaning 3-node (or a right-leaning red link at the bottom of a temporary 4-node)
-			node = rotateLeft(node);
-		}
-		
-		if (isRed(node.left) && isRed(node.left.left)) {
-			// rotates right the top link in a temporary 4-node with two left-leaning red links
-			node = rotateRight(node);
-		}
-		
-		if (isRed(node.right) && isRed(node.left)) {
-			// flips colors to pass a red link up the tree
-			flipColors(node);
-		}
+		node = localTransformations(node);
 		
 		node.size = getNodeSize(node.left) + getNodeSize(node.right) + 1;
 		
@@ -249,24 +238,7 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 		
 		node.left = deleteMin(node.left);
 		
-		/*
-		 * local transformations: provide near-perfect balance in the tree by maintaining a 1-1 correspondence 
-		 * with 2-3 trees, on the way up the search path
-		 */
-		if (isRed(node.right) && !isRed(node.left)) {
-			// rotates left any right-leaning 3-node (or a right-leaning red link at the bottom of a temporary 4-node)
-			node = rotateLeft(node);
-		}
-		
-		if (isRed(node.left) && isRed(node.left.left)) {
-			// rotates right the top link in a temporary 4-node with two left-leaning red links
-			node = rotateRight(node);
-		}
-		
-		if (isRed(node.right) && isRed(node.left)) {
-			// flips colors to pass a red link up the tree
-			flipColors(node);
-		}
+		node = localTransformations(node);
 		
 		node.size = getNodeSize(node.left) + getNodeSize(node.right) + 1;
 		
@@ -331,24 +303,7 @@ public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K,
 		
 		node.right = deleteMax(node.right);
 		
-		/*
-		 * local transformations: provide near-perfect balance in the tree by maintaining a 1-1 correspondence 
-		 * with 2-3 trees, on the way up the search path
-		 */
-		if (isRed(node.right) && !isRed(node.left)) {
-			// rotates left any right-leaning 3-node (or a right-leaning red link at the bottom of a temporary 4-node)
-			node = rotateLeft(node);
-		}
-		
-		if (isRed(node.left) && isRed(node.left.left)) {
-			// rotates right the top link in a temporary 4-node with two left-leaning red links
-			node = rotateRight(node);
-		}
-		
-		if (isRed(node.right) && isRed(node.left)) {
-			// flips colors to pass a red link up the tree
-			flipColors(node);
-		}
+		node = localTransformations(node);
 		
 		node.size = getNodeSize(node.left) + getNodeSize(node.right) + 1;
 		
