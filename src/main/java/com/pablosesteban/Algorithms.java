@@ -689,12 +689,55 @@ public class Algorithms<Key extends Comparable<Key>, Value> {
      */
     public static void main(String[] args) { 
         Algorithms<String, Integer> st = new Algorithms<String, Integer>();
+
         String[] input = {"S", "E", "A", "R", "C", "H", "E", "X", "A", "M", "P", "L", "E"};
 		
 		for (int i = 0; i < input.length; i++) {
 			st.put(input[i], i);
 		}
-        
+		
 		System.out.println(st);
+		System.out.println("size: " + st.size());
+//		System.out.println("keys between D and O: " + st.keys("D", "O"));
+//		System.out.println("size between D and O: " + st.size("D", "O"));
+//		System.out.println("get Z: " + st.get("Z"));
+//		System.out.println("get B: " + st.get("B"));
+//		System.out.println("get A: " + st.get("A"));
+//		System.out.println("get C: " + st.get("C"));
+//		System.out.println("get P: " + st.get("P"));
+//		System.out.println("keys: " + st.keys());
+//		System.out.println("min key: " + st.min());
+//		System.out.println("max key: " + st.max());
+//		System.out.println("floor A: " + st.floor("A"));
+//		System.out.println("floor G: " + st.floor("G"));
+//		System.out.println("ceiling G: " + st.ceiling("G"));
+//		System.out.println("ceiling X: " + st.ceiling("X"));
+//		System.out.println("rank of E: " + st.rank("E"));
+//		System.out.println("key of rank 2: " + st.select(2));
+//		System.out.println("rank of S: " + st.rank("S"));
+//		System.out.println("key of rank 8: " + st.select(8));
+//		System.out.println("rank of H: " + st.rank("H"));
+//		System.out.println("key of rank 3: " + st.select(3));
+//		System.out.println("rank of X: " + st.rank("X"));
+//		System.out.println("key of rank 9: " + st.select(9));
+//		System.out.println("delete min key");
+//		st.deleteMin();
+//		System.out.println(st);
+//		System.out.println("size: " + st.size());
+		
+		System.out.println("delete max key");
+		st.deleteMax();
+		System.out.println(st);
+		System.out.println("size: " + st.size());
+		
+//		System.out.println("delete L");
+//		st.delete("L");
+//		System.out.println(st);
+//		System.out.println("size: " + st.size());
+		
+		System.out.println("insert J");
+		st.put("J", 13);
+		System.out.println(st);
+		System.out.println("size: " + st.size());
     }
 }
