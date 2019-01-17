@@ -7,9 +7,6 @@ import com.pablosesteban.adt.SymbolTable;
 
 /**
  * Left-Leaning Red-Black BST is a simple implementation of 2-3 trees where the nodes can hold more than one key.
- * The tree is ordered and perfectly balanced: the number of links on the path from the root to any null link is
- * the same.
- * TODO: finish deletion operations.
  * 
  * @param <K> the key
  * @param <V> the value
