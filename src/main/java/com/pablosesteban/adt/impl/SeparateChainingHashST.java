@@ -5,6 +5,13 @@ package com.pablosesteban.adt.impl;
 
 import com.pablosesteban.adt.SymbolTable;
 
+/**
+ * A unordered symbol table implementation based on hashing.
+ * 
+ * 
+ * @param <K> the kind of keys
+ * @param <V> the kind of values
+ */
 public class SeparateChainingHashST<K extends Comparable<K>, V> implements SymbolTable<K, V> {
 	private static final int TABLE_SIZE = 11;
 	

@@ -8,8 +8,8 @@ import com.pablosesteban.adt.SymbolTable;
 /**
  * Left-Leaning Red-Black BST is a simple implementation of 2-3 trees where the nodes can hold more than one key.
  * 
- * @param <K> the key
- * @param <V> the value
+ * @param <K> the kind of keys
+ * @param <V> the kind of values
  */
 public class RedBlackBSTST<K extends Comparable<K>, V> implements SymbolTable<K, V> {
 	private Node<K, V> root;
