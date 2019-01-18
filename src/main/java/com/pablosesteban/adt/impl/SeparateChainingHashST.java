@@ -6,21 +6,25 @@ package com.pablosesteban.adt.impl;
 import com.pablosesteban.adt.SymbolTable;
 
 public class SeparateChainingHashST<K extends Comparable<K>, V> implements SymbolTable<K, V> {
-	private static final int TABLE_SIZE = 7;
+	private static final int TABLE_SIZE = 11;
 	
-	private SequentialSearch<K, V>[] table;
+	private SequentialSearch[] table;
 	
 	public SeparateChainingHashST() {
-		this.table = new SequentialSearch[TABLE_SIZE];
+		this.table = new SeparateChainingHashST.SequentialSearch[TABLE_SIZE];
 	}
 
 	/*
 	 * Modular Hashing: choose the array size M to be prime and, for any positive integer key k,
 	 * compute the remainder when dividing k by M. This function is effective in dispersing the
 	 * keys evenly between 0 and M-1.
-	 * Since hashCode method returns a 32-bit signed integer, so it can be negative, the code masks
-	 * off the sign bit to turn the 32-bit integer into a 31-bit nonnegative integer using bitwise
-	 * AND operator (&), then combine it with modular hashing to produce integers between 0 and M – 1.
+	 * Since hashCode method returns a 32-bit signed integer (can be negative) the code masks off
+	 * the sign bit to turn the 32-bit integer into a 31-bit nonnegative integer using bitwise
+	 * AND operator (&) with the maximum value an integer can hold, then combine it with modular
+	 * hashing to produce integers between 0 and M – 1.
+	 * This code expects that hashCode method from keys disperses them uniformly among the possible
+	 * 32-bit result values. That is, for any object x, you can write x.hashCode() and, in principle,
+	 * expect to get any one of the 2^32 possible 32-bit values with equal likelihood.
 	 * A bad hash function is a classic example of a performance bug, everything will work properly,
 	 * but much more slowly than expected. The easiest way to ensure uniformity is to make sure
 	 * that all the bits of the key play an equal role in computing every hash value. The most 
@@ -35,7 +39,7 @@ public class SeparateChainingHashST<K extends Comparable<K>, V> implements Symbo
 		int index = hash(key);
 		
 		if (table[index] == null) {
-			table[index] = new SequentialSearch<K, V>();
+			table[index] = new SequentialSearch();
 		}
 		
 		table[index].put(key, value);
@@ -45,13 +49,16 @@ public class SeparateChainingHashST<K extends Comparable<K>, V> implements Symbo
 	public V get(K key) {
 		int index = hash(key);
 		
-		return table[index].get(key);
+		return table[index] != null ? table[index].get(key) : null;
 	}
 
 	@Override
 	public void delete(K key) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		int index = hash(key);
+		
+		if (table[index] != null) {
+			table[index].delete(key);
+		}
 	}
 
 	@Override
@@ -75,61 +82,51 @@ public class SeparateChainingHashST<K extends Comparable<K>, V> implements Symbo
 
 	@Override
 	public K min() {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public K max() {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public K floor(K key) {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public K ceiling(K key) {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public int rank(K key) {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public K select(int rank) {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void deleteMin() {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void deleteMax() {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public int size(K lo, K hi) {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Iterable<K> keys(K lo, K hi) {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
 	
@@ -137,35 +134,45 @@ public class SeparateChainingHashST<K extends Comparable<K>, V> implements Symbo
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getClass().getSimpleName());
-		sb.append(" {");
+		sb.append(" {\n");
 		
 		int i = 0;
 		for (i = 0; i < table.length - 1; i++) {
+			sb.append("\t");
+			sb.append(i);
+			sb.append(": [");
+			
 			if (table[i] != null) {
 				sb.append(table[i]);
-				
-				sb.append(", ");
 			}
+			
+			sb.append("],\n");
 		}
 		
-		sb.append(table[i]);
+		if (table[i] != null) {
+			sb.append("\t");
+			sb.append(i);
+			sb.append(": [");
+			sb.append(table[i]);
+			sb.append("]\n");
+		}
 		
 		sb.append("}");
 		
 		return sb.toString();
 	}
 
-	private class SequentialSearch<K, V> {
-		private Node<K, V> first;
+	private class SequentialSearch {
+		private Node first;
 		private int size;
 		
 		public V get(K key) {
-			Node<K, V> node = get(first, key);
+			Node node = get(first, key);
 			
 			return node != null ? node.value : null;
 		}
 		
-		private Node<K, V> get(Node<K, V> node, K key) {
+		private Node get(Node node, K key) {
 			if (node == null || node.key.equals(key)) {
 				return node;
 			}
@@ -177,11 +184,11 @@ public class SeparateChainingHashST<K extends Comparable<K>, V> implements Symbo
 			first = put(first, key, value);
 		}
 		
-		private Node<K, V> put(Node<K, V> node, K key, V value) {
+		private Node put(Node node, K key, V value) {
 			if (node == null) {
 				size++;
 				
-				return new Node<>(key, value);
+				return new Node(key, value);
 			}
 			
 			if (node.key.equals(key)) {
@@ -192,7 +199,25 @@ public class SeparateChainingHashST<K extends Comparable<K>, V> implements Symbo
 			
 			return node;
 		}
+		
+		public void delete(K key) {
+			first = delete(first, key);
+		}
 
+		private Node delete(Node node, K key) {
+			if (node == null) {
+				return null;
+			}else if (node.key.equals(key)) {
+				size--;
+				
+				return null;
+			}
+			
+			node.next = delete(node.next, key);
+			
+			return node;
+		}
+		
 		@Override
 		public String toString() {
 			if (first == null) {
@@ -201,7 +226,7 @@ public class SeparateChainingHashST<K extends Comparable<K>, V> implements Symbo
 			
 			StringBuilder sb = new StringBuilder();
 			
-			Node<K, V> node = first;
+			Node node = first;
 			
 			while (node.next != null) {
 				sb.append(node);
@@ -216,10 +241,10 @@ public class SeparateChainingHashST<K extends Comparable<K>, V> implements Symbo
 		}
 	}
 	
-	private class Node<K, V> {
+	private class Node {
 		private K key;
 		private V value;
-		private Node<K, V> next;
+		private Node next;
 		
 		public Node(K key, V value) {
 			this.key = key;
@@ -242,7 +267,6 @@ public class SeparateChainingHashST<K extends Comparable<K>, V> implements Symbo
 		}
 		
 		System.out.println(st);
-		
 		System.out.println("size: " + st.size());
 		
 		System.out.println("get Z: " + st.get("Z"));
@@ -250,5 +274,20 @@ public class SeparateChainingHashST<K extends Comparable<K>, V> implements Symbo
 		System.out.println("get A: " + st.get("A"));
 		System.out.println("get C: " + st.get("C"));
 		System.out.println("get P: " + st.get("P"));
+		
+		System.out.println("delete P");
+		st.delete("P");
+		System.out.println(st);
+		System.out.println("size: " + st.size());
+		
+		System.out.println("delete R");
+		st.delete("R");
+		System.out.println(st);
+		System.out.println("size: " + st.size());
+		
+		System.out.println("delete Z");
+		st.delete("Z");
+		System.out.println(st);
+		System.out.println("size: " + st.size());
 	}
 }
