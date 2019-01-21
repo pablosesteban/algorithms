@@ -3,17 +3,34 @@
  */
 package com.pablosesteban.adt.impl;
 
+import com.pablosesteban.adt.Queue;
+import com.pablosesteban.adt.Stack;
 import com.pablosesteban.adt.SymbolTable;
 
 /**
- * A unordered symbol table implementation based on hashing.
- * 
+ * An unordered symbol table implementation based on hashing and separate chaining for collision resolution.
+ * A straightforward and general approach to collision resolution is to build, for each of the M array indices,
+ * a linked list of the key-value pairs whose keys hash to that index. Items that collide are chained together
+ * in separate linked lists. The basic idea is to choose M to be sufficiently large that the lists are sufficiently
+ * short to enable efficient search through a two-step process: hash to find the list that could contain the key,
+ * then sequentially search through that list for the key.
+ * If the hash function is not uniform and independent, the search and insert cost could be proportional to N.
+ * The whole point of hashing is to uniformly disperse the keys, so any order in the keys is lost when hashing.
+ * Hashing with separate chaining is easy to implement and probably the fastest (and most widely used) symbol-table
+ * implementation for applications where key order is not important.
  * 
  * @param <K> the kind of keys
  * @param <V> the kind of values
  */
 public class SeparateChainingHashST<K extends Comparable<K>, V> implements SymbolTable<K, V> {
-	private static final int TABLE_SIZE = 11;
+	/*
+	 * Choose the table size M to be sufficiently small that we do not waste a huge area of contiguous memory
+	 * with empty chains but sufficiently large that we do not waste time searching through long chains.
+	 * When space is not a critical resource, M can be chosen sufficiently large that search time is constant.
+	 * When space is a critical resource, we still can get a factor of M improvement in performance by choosing
+	 * M to be as large as we can afford.
+	 */
+	private static final int TABLE_SIZE = 17;
 	
 	private SequentialSearch[] table;
 	
@@ -83,8 +100,21 @@ public class SeparateChainingHashST<K extends Comparable<K>, V> implements Symbo
 
 	@Override
 	public Iterable<K> keys() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		Queue<K> queue = new LinkedQueue<>();
+		
+		for (int i = 0; i < table.length; i++) {
+			if (table[i] != null) {
+				Node node = table[i].first;
+				
+				while (node != null) {
+					queue.enqueue(node.key);
+					
+					node = node.next;
+				}
+			}
+		}
+		
+		return queue;
 	}
 
 	@Override
@@ -156,13 +186,15 @@ public class SeparateChainingHashST<K extends Comparable<K>, V> implements Symbo
 			sb.append("],\n");
 		}
 		
+		sb.append("\t");
+		sb.append(i);
+		sb.append(": [");
+		
 		if (table[i] != null) {
-			sb.append("\t");
-			sb.append(i);
-			sb.append(": [");
 			sb.append(table[i]);
-			sb.append("]\n");
 		}
+		
+		sb.append("]\n");
 		
 		sb.append("}");
 		
@@ -275,6 +307,7 @@ public class SeparateChainingHashST<K extends Comparable<K>, V> implements Symbo
 		
 		System.out.println(st);
 		System.out.println("size: " + st.size());
+		System.out.println("keys: " + st.keys());
 		
 		System.out.println("get Z: " + st.get("Z"));
 		System.out.println("get B: " + st.get("B"));
@@ -286,15 +319,18 @@ public class SeparateChainingHashST<K extends Comparable<K>, V> implements Symbo
 		st.delete("P");
 		System.out.println(st);
 		System.out.println("size: " + st.size());
+		System.out.println("keys: " + st.keys());
 		
 		System.out.println("delete R");
 		st.delete("R");
 		System.out.println(st);
 		System.out.println("size: " + st.size());
+		System.out.println("keys: " + st.keys());
 		
 		System.out.println("delete Z");
 		st.delete("Z");
 		System.out.println(st);
 		System.out.println("size: " + st.size());
+		System.out.println("keys: " + st.keys());
 	}
 }
