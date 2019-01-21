@@ -4,7 +4,6 @@
 package com.pablosesteban.adt.impl;
 
 import com.pablosesteban.adt.Queue;
-import com.pablosesteban.adt.Stack;
 import com.pablosesteban.adt.SymbolTable;
 
 /**
