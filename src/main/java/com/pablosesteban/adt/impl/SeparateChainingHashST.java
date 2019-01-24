@@ -15,6 +15,13 @@ import com.pablosesteban.adt.SymbolTable;
  * then sequentially search through that list for the key.
  * If the hash function is not uniform and independent, the search and insert cost could be proportional to N.
  * The whole point of hashing is to uniformly disperse the keys, so any order in the keys is lost when hashing.
+ * The performance of hashing with separate chaining depends on the ratio N/M. The load factor of a hash table
+ * for separate chaining, is the average number of keys per list and is generally larger than 1. Choose the table
+ * size M to be sufficiently small that we do not waste a huge area of contiguous memory with empty chains but
+ * sufficiently large that we do not waste time searching through long chains. When space is not a critical resource,
+ * M can be chosen sufficiently large that search time is constant. When space is a critical resource, we still
+ * can get a factor of M improvement in performance by choosing M to be as large as we can afford. Another option is
+ * to use array resizing to keep the lists short (same method as linear probing).
  * Hashing with separate chaining is easy to implement and probably the fastest (and most widely used) symbol-table
  * implementation for applications where key order is not important.
  * 
@@ -22,13 +29,6 @@ import com.pablosesteban.adt.SymbolTable;
  * @param <V> the kind of values
  */
 public class SeparateChainingHashST<K extends Comparable<K>, V> implements SymbolTable<K, V> {
-	/*
-	 * Choose the table size M to be sufficiently small that we do not waste a huge area of contiguous memory
-	 * with empty chains but sufficiently large that we do not waste time searching through long chains.
-	 * When space is not a critical resource, M can be chosen sufficiently large that search time is constant.
-	 * When space is a critical resource, we still can get a factor of M improvement in performance by choosing
-	 * M to be as large as we can afford.
-	 */
 	private static final int TABLE_SIZE = 17;
 	
 	private SequentialSearch[] table;
